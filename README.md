@@ -1,2 +1,3 @@
 # vqro
-Vaquero database server and clients
+This repo contains the Vaquero time-series database server and clients.
+
