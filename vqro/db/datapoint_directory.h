@@ -14,10 +14,6 @@
 namespace vqro {
 namespace db {
 
-using std::string;
-using std::vector;
-using std::set;
-
 
 class DatapointDirectory {
  public:

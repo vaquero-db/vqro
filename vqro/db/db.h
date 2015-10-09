@@ -9,7 +9,8 @@
 
 #include "vqro/base/base.h"
 #include "vqro/base/worker.h"
-#include "vqro/rpc/vqro.pb.h"
+#include "vqro/rpc/core.pb.h"
+#include "vqro/rpc/storage.pb.h"
 #include "vqro/db/series.h"
 #include "vqro/db/search_engine.h"
 
@@ -49,6 +50,8 @@ class InvalidSeriesProto : public DatabaseError {
 
 class Database {
  public:
+  std::unique_ptr<SearchEngine> search_engine;
+
   Database(string dir);
 
   string GetDataDirectory() { return root_dir; }
@@ -62,15 +65,9 @@ class Database {
             bool prefer_latest,
             DatapointsCallback callback);
 
-  void SearchSeries(const vqro::rpc::SeriesQuery& query,
-                    SearchSeriesResultCallback callback);
-  void SearchLabels(const vqro::rpc::LabelsQuery& query,
-                    SearchLabelsResultCallback callback);
-
  private:
   string root_dir;
   std::vector<WorkerThread*> workers;
-  std::unique_ptr<SearchEngine> search_engine;
   std::unordered_map<string,Series*> series_by_key {};
   std::mutex series_by_key_mutex;
 

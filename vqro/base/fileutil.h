@@ -16,8 +16,6 @@
 
 namespace vqro {
 
-using std::string;
-using std::vector;
 using Iovec = struct iovec;
 
 

@@ -5,12 +5,16 @@ package(
 cc_library(
     name = "vqro_cc_proto",
     srcs = [
-        "vqro.pb.cc",
-        "vqro.grpc.pb.cc",
+        "controller.pb.cc",
+        "core.pb.cc",
+        "search.pb.cc",
+        "storage.pb.cc",
     ],
     hdrs = [
-        "vqro.pb.h",
-        "vqro.grpc.pb.h",
+        "controller.pb.h",
+        "core.pb.h",
+        "search.pb.h",
+        "storage.pb.h",
     ],
     linkopts = [
         "-lm",
@@ -18,6 +22,72 @@ cc_library(
         "-lgrpc++",
     ],
     deps = [
+        "//third_party/protobuf:protoc_lib",
+    ],
+)
+
+
+cc_library(
+    name = "search_service",
+    srcs = [
+        "search.grpc.pb.cc",
+    ],
+    hdrs = [
+        "search.grpc.pb.h",
+        "search.h",
+    ],
+    linkopts = [
+        "-lm",
+        "-lgrpc",
+        "-lgrpc++",
+    ],
+    deps = [
+        ":vqro_cc_proto",
+        "//vqro/db",
+        "//third_party/protobuf:protoc_lib",
+    ],
+)
+
+
+cc_library(
+    name = "storage_service",
+    srcs = [
+        "storage.grpc.pb.cc",
+    ],
+    hdrs = [
+        "storage.grpc.pb.h",
+        "storage.h",
+    ],
+    linkopts = [
+        "-lm",
+        "-lgrpc",
+        "-lgrpc++",
+    ],
+    deps = [
+        ":vqro_cc_proto",
+        "//vqro/db",
+        "//third_party/protobuf:protoc_lib",
+    ],
+)
+
+
+cc_library(
+    name = "controller_service",
+    srcs = [
+        "controller.grpc.pb.cc",
+    ],
+    hdrs = [
+        "controller.grpc.pb.h",
+        "controller.h",
+    ],
+    linkopts = [
+        "-lm",
+        "-lgrpc",
+        "-lgrpc++",
+    ],
+    deps = [
+        ":vqro_cc_proto",
+        "//vqro/db",
         "//third_party/protobuf:protoc_lib",
     ],
 )

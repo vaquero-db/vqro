@@ -23,10 +23,14 @@ function run() {
 function build_proto() {
   filename=$1
   run cd $VQRO_ROOT/proto
-  run $PROTOC --plugin=protoc-gen-grpc=`which $GRPC_CPP_PLUGIN` --grpc_out=../vqro/rpc/ $filename || exit $?
   run $PROTOC --cpp_out=../vqro/rpc/ $filename || exit $?
+  if grep -qi "^service " "$filename"; then
+    run $PROTOC --plugin=protoc-gen-grpc=`which $GRPC_CPP_PLUGIN` --grpc_out=../vqro/rpc/ $filename || exit $?
+  fi
   run cd -
 }
 
-build_proto vqro.proto
+for p in *.proto; do
+  build_proto $p
+done
 echo "Generated protobuf and grpc code successfully."

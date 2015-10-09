@@ -3,14 +3,15 @@
 #include <csignal>
 #include <thread>
 
-#include <json/json.h>
+#include <jsoncpp/json/json.h>
 #include <gflags/gflags.h>
 #include <grpc/grpc.h>
 #include <grpc++/client_context.h>
 #include <grpc++/create_channel.h>
 
 #include "vqro/base/base.h"
-#include "vqro/rpc/vqro.grpc.pb.h"
+#include "vqro/rpc/core.pb.h"
+#include "vqro/rpc/storage.grpc.pb.h"
 
 using grpc::Channel;
 using grpc::ClientContext;

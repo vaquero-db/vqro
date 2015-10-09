@@ -17,21 +17,16 @@
 #include <iostream>
 #include <chrono>
 
-using std::string;
-using std::to_string;
-using std::mutex;
-using std::lock_guard;
-
 
 namespace vqro {
 
 static bool _signal_handlers_setup = false;
-static mutex  _signal_handler_mutex;
+static std::mutex  _signal_handler_mutex;
 const long pagesize = sysconf(_SC_PAGESIZE);
 
 
 void SetupSignalHandlers() {
-  lock_guard<mutex> lck(_signal_handler_mutex);
+  std::lock_guard<std::mutex> lck(_signal_handler_mutex);
   if (_signal_handlers_setup) return;
   LOG(INFO) << "Setting up signal handlers";
   // Some bugs, like the existence of SIGPIPE, are so old that it is a "bug" to
