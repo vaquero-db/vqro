@@ -9,7 +9,8 @@
 
 #include "vqro/base/base.h"
 #include "vqro/base/worker.h"
-#include "vqro/rpc/vqro.pb.h"
+#include "vqro/rpc/core.pb.h"
+#include "vqro/rpc/storage.pb.h"
 #include "vqro/db/series.h"
 #include "vqro/db/search_engine.h"
 #include "vqro/db/storage_optimizer.h"
@@ -62,11 +63,6 @@ class Database {
             int64_t datapoint_limit,
             bool prefer_latest,
             DatapointsCallback callback);
-
-  void SearchSeries(const vqro::rpc::SeriesQuery& query,
-                    SearchSeriesResultCallback callback);
-  void SearchLabels(const vqro::rpc::LabelsQuery& query,
-                    SearchLabelsResultCallback callback);
 
  private:
   string root_dir;

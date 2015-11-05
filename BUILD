@@ -8,7 +8,32 @@ cc_binary(
     srcs = ["vqro_server.cc"],
     deps = [
         "//vqro/db",
-        "//vqro/rpc:vqro_cc_proto",
+        "//vqro/rpc:search_service",
+        "//vqro/rpc:storage_service",
+    ],
+    linkopts = [
+        "-lglog",
+        "-lgflags",
+        "-lgpr",
+        "-lgrpc",
+        "-lgrpc++",
+        "-lpthread",
+        "-lre2",
+        "-lsqlite3",
+        "-ltcmalloc",
+    ],
+)
+
+cc_binary(
+    name = "vqro-controller",
+    args = [
+        "--alsologtostderr",
+    ],
+    srcs = ["vqro_controller.cc"],
+    deps = [
+        "//vqro/control:controller",
+        "//vqro/rpc:controller_service",
+        "//vqro/rpc:search_service",
     ],
     linkopts = [
         "-lgpr",
@@ -24,7 +49,7 @@ cc_binary(
     srcs = ["vqro_write.cc"],
     deps = [
         "//vqro/base",
-        "//vqro/rpc:vqro_cc_proto",
+        "//vqro/rpc:storage_service",
     ],
     linkopts = [
         "-lgpr",
@@ -41,7 +66,8 @@ cc_binary(
     srcs = ["vqro_read.cc"],
     deps = [
         "//vqro/base",
-        "//vqro/rpc:vqro_cc_proto",
+        "//vqro/rpc:search_service",
+        "//vqro/rpc:storage_service",
     ],
     linkopts = [
         "-lgpr",

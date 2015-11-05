@@ -1,0 +1,37 @@
+syntax = "proto3";
+option cc_enable_arenas = true;
+import "core.proto";
+import "search.proto";
+
+package vqro.rpc;
+
+
+service VaqueroStorage {
+  rpc WriteDatapoints(stream WriteOperation)
+    returns (stream StatusMessage);
+
+  rpc ReadDatapoints(ReadOperation)
+    returns (stream ReadResult);
+}
+
+
+message WriteOperation {
+  Series series = 1;
+  repeated Datapoint datapoints = 2;
+}
+
+
+message ReadOperation {
+  SeriesQuery query = 1;
+  int64 start_time = 2;
+  int64 end_time = 3;
+  int64 datapoint_limit = 4;
+  bool prefer_latest = 5;
+}
+
+
+message ReadResult {
+  Series series = 1;
+  repeated Datapoint datapoints = 2;
+  StatusMessage status = 3;
+}

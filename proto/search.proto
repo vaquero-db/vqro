@@ -1,0 +1,49 @@
+syntax = "proto3";
+option cc_enable_arenas = true;
+import "core.proto";
+
+package vqro.rpc;
+
+
+service VaqueroSearch {
+  rpc SearchSeries(SeriesQuery)
+    returns (stream SearchSeriesResults);
+
+  rpc SearchLabels(LabelsQuery)
+    returns (stream SearchLabelsResults);
+}
+
+
+// SearchSeries
+message SeriesQuery {
+  repeated LabelConstraint constraints = 1;
+  int64 result_offset = 2;
+  int64 result_limit = 3;
+}
+
+message LabelConstraint {
+  string label_name = 1;
+
+  oneof predicate {
+    string exact_value = 2;
+    string regex = 3;
+  }
+}
+
+message SearchSeriesResults {
+  repeated Series matches = 1;
+  StatusMessage status = 2;
+}
+
+
+// SearchLabels
+message LabelsQuery {
+  string regex = 1;
+  int64 result_offset = 2;
+  int64 result_limit = 3;
+}
+
+message SearchLabelsResults {
+  repeated string labels = 1;
+  StatusMessage status = 2;
+}

@@ -19,6 +19,7 @@ DEFINE_string(sqlite_pragma_journal_mode,"WAL",
 DEFINE_int32(search_results_batch_size, 1024, "Maximum number of results "
              "contained in each search result protobuf.");
 
+using vqro::rpc::LabelConstraint;
 
 namespace vqro {
 namespace db {
@@ -174,7 +175,7 @@ void SearchEngine::IndexLabel(int64_t series_id, string name, string value) {
 
 
 void SearchEngine::SearchSeries(const vqro::rpc::SeriesQuery& query,
-                                SearchSeriesResultCallback callback)
+                                SearchSeriesResultsCallback callback)
 {
   std::vector<string> parameters;
   string sql;
@@ -185,6 +186,7 @@ void SearchEngine::SearchSeries(const vqro::rpc::SeriesQuery& query,
   sql.reserve(1024);
   sql += R"(SELECT protobuf FROM "vqro:series" )";
   for (auto it : query.constraints()) {
+    //TODO sql += "NATURAL JOIN " + SqlQuoteIdentifier(it.label_name()) + " "
     string table = SqlQuoteIdentifier(it.label_name());
     sql += "INNER JOIN " + table
         + R"( ON "vqro:series".series_id = )" + table + ".series_id ";
@@ -194,10 +196,22 @@ void SearchEngine::SearchSeries(const vqro::rpc::SeriesQuery& query,
   int constraints_left = query.constraints_size();
   for (auto it : query.constraints()) {
     string table = SqlQuoteIdentifier(it.label_name());
-    sql += table + ".value "
-        + ((it.constraint_op() == vqro::rpc::LabelConstraint::EQUALS) ? "=" : "REGEXP")
-        + " ? ";
-    parameters.push_back(it.operand());
+
+    switch (it.predicate_case()) {
+      case LabelConstraint::kExactValue:
+        sql += table + ".value = ? ";
+        parameters.push_back(it.exact_value());
+        break;
+
+      case LabelConstraint::kRegex:
+        sql += table + ".value REGEXP ? ";
+        parameters.push_back(it.regex());
+        break;
+
+      default:
+        LOG(WARNING) << "Invalid SeriesQuery missing label constraint predicate";
+        break;
+    }
 
     if (--constraints_left)
       sql += "AND ";
@@ -221,7 +235,7 @@ void SearchEngine::SearchSeries(const vqro::rpc::SeriesQuery& query,
   // Read the rows into result protos we can feed to our callback function
   int ret;
   int row_count = 0;
-  vqro::rpc::SearchSeriesResult result;
+  vqro::rpc::SearchSeriesResults result;
   while (true) {
     ret = sqlite3_step(select.stmt);
 
@@ -230,25 +244,25 @@ void SearchEngine::SearchSeries(const vqro::rpc::SeriesQuery& query,
 
     const char* protobuf = static_cast<const char*>(sqlite3_column_blob(select.stmt, 0));
     int len = sqlite3_column_bytes(select.stmt, 0);
-    bool parsed_ok = result.add_matching_series()->ParseFromArray(protobuf, len);
+    bool parsed_ok = result.add_matches()->ParseFromArray(protobuf, len);
     row_count++;
 
     if (!parsed_ok) {
       LOG(ERROR) << "Error: vqro:series row contains invalid protobuf";
-      result.mutable_matching_series()->RemoveLast();
+      result.mutable_matches()->RemoveLast();
       // I *could* callback(result) sans labels but pass an error via the StatusMessage
       continue;
     }
 
     // Batch results for callbacks
-    if (result.matching_series_size() >= FLAGS_search_results_batch_size) {
+    if (result.matches_size() >= FLAGS_search_results_batch_size) {
       callback(result);
       result.Clear();
     }
   }
 
   // Handle the final batch that didn't exceed the limit
-  if (result.matching_series_size())
+  if (result.matches_size())
     callback(result);
 
   // ret != SQLITE_ROW so we're done processing rows
@@ -261,7 +275,7 @@ void SearchEngine::SearchSeries(const vqro::rpc::SeriesQuery& query,
 
 
 void SearchEngine::SearchLabels(const vqro::rpc::LabelsQuery& query,
-                                SearchLabelsResultCallback callback)
+                                SearchLabelsResultsCallback callback)
 {
   if (query.regex().empty())
     return;
@@ -287,7 +301,7 @@ void SearchEngine::SearchLabels(const vqro::rpc::LabelsQuery& query,
 
   int ret;
   int row_count = 0;
-  vqro::rpc::SearchLabelsResult result;
+  vqro::rpc::SearchLabelsResults result;
   while (true) {
     ret = sqlite3_step(select.stmt);
 

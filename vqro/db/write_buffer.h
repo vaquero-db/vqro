@@ -9,7 +9,7 @@
 
 #include "vqro/base/base.h"
 #include "vqro/base/fileutil.h"
-#include "vqro/rpc/vqro.pb.h"
+#include "vqro/rpc/storage.pb.h"
 #include "vqro/db/datapoint.h"
 #include "vqro/db/datapoint_buffer.h"
 

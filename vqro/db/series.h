@@ -4,7 +4,8 @@
 #include <functional>
 
 #include "vqro/base/base.h"
-#include "vqro/rpc/vqro.pb.h"
+#include "vqro/rpc/core.pb.h"
+#include "vqro/rpc/storage.pb.h"
 #include "vqro/db/datapoint_directory.h"
 #include "vqro/db/read_op.h"
 #include "vqro/db/write_op.h"

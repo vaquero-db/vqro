@@ -1,0 +1,4 @@
+bazel-*
+data/
+.*.sw*
+third_party/protobuf

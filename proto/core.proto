@@ -1,0 +1,23 @@
+syntax = "proto3";
+option cc_enable_arenas = true;
+
+package vqro.rpc;
+
+
+message Series {
+  map<string,string> labels = 1;
+}
+
+
+message Datapoint {
+  int64 timestamp = 1;
+  int64 duration = 2;
+  double value = 3;
+}
+
+
+message StatusMessage {
+  string text = 1;
+  bool error = 2;
+  bool go_away = 3;
+}

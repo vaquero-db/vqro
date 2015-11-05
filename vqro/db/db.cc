@@ -6,7 +6,8 @@
 
 #include "vqro/base/base.h"
 #include "vqro/base/worker.h"
-#include "vqro/rpc/vqro.pb.h"
+#include "vqro/rpc/core.pb.h"
+#include "vqro/rpc/storage.pb.h"
 #include "vqro/db/db.h"
 #include "vqro/db/series.h"
 #include "vqro/db/storage_optimizer.h"
@@ -107,28 +108,6 @@ void Database::Read(
 
     callback(read_op.buffer, read_op.DatapointsInBuffer());
     read_op.ClearBuffer();
-  }
-}
-
-
-void Database::SearchSeries(const vqro::rpc::SeriesQuery& query,
-                            SearchSeriesResultCallback callback)
-{
-  try {
-    search_engine->SearchSeries(query, callback);
-  } catch (SqliteError& err) {
-    throw DatabaseError(err.message);
-  }
-}
-
-
-void Database::SearchLabels(const vqro::rpc::LabelsQuery& query,
-                            SearchLabelsResultCallback callback)
-{
-  try {
-    search_engine->SearchLabels(query, callback);
-  } catch (SqliteError& err) {
-    throw DatabaseError(err.message);
   }
 }
 

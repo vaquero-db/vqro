@@ -24,6 +24,7 @@ namespace vqro {
 
 using std::string;
 using std::to_string;
+using std::vector;
 
 using VoidFunc = std::function<void()>;
 

@@ -33,10 +33,14 @@ class WorkerThread {
   }
 
   std::future<void> Do(VoidFunc func) {
-    std::lock_guard<std::mutex> guard(tasks_mutex);
-    tasks.emplace_back(std::packaged_task<void()>(func));
-    tasks_available.notify_all();
-    return tasks.back().get_future();
+    std::future<void> done;
+    {
+      std::lock_guard<std::mutex> guard(tasks_mutex);
+      tasks.emplace_back(std::packaged_task<void()>(func));
+      done = std::move(tasks.back().get_future());
+    }
+    tasks_available.notify_one();
+    return done;
   }
 
   size_t TasksQueued() {

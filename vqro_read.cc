@@ -15,7 +15,9 @@
 #include <re2/re2.h>
 
 #include "vqro/base/base.h"
-#include "vqro/rpc/vqro.grpc.pb.h"
+#include "vqro/rpc/core.pb.h"
+#include "vqro/rpc/search.grpc.pb.h"
+#include "vqro/rpc/storage.grpc.pb.h"
 
 using grpc::Channel;
 using grpc::ClientContext;
@@ -23,6 +25,7 @@ using grpc::ClientReader;
 using grpc::Status;
 
 using vqro::rpc::VaqueroStorage;
+using vqro::rpc::VaqueroSearch;
 using vqro::rpc::Series;
 using vqro::rpc::Datapoint;
 using vqro::rpc::ReadOperation;
@@ -30,8 +33,8 @@ using vqro::rpc::ReadResult;
 using vqro::rpc::SeriesQuery;
 using vqro::rpc::LabelsQuery;
 using vqro::rpc::LabelConstraint;
-using vqro::rpc::SearchSeriesResult;
-using vqro::rpc::SearchLabelsResult;
+using vqro::rpc::SearchSeriesResults;
+using vqro::rpc::SearchLabelsResults;
 
 using std::cout;
 using std::cerr;
@@ -67,7 +70,8 @@ DEFINE_bool(search_series, false, "If true, perform a SearchSeries call instead 
 class VaqueroClient {
  public:
   VaqueroClient(std::shared_ptr<Channel> channel)
-      : stub_(VaqueroStorage::NewStub(channel)) {}
+      : storage_stub(VaqueroStorage::NewStub(channel)),
+        search_stub(VaqueroSearch::NewStub(channel)) {}
 
   bool ReadDatapoints(const SeriesQuery& query,
                       int64_t start_time,
@@ -87,7 +91,7 @@ class VaqueroClient {
     read_op.set_prefer_latest(prefer_latest);
 
     std::unique_ptr<ClientReader<ReadResult>> reader(
-        stub_->ReadDatapoints(&context, read_op)
+        storage_stub->ReadDatapoints(&context, read_op)
     );
 
     while (reader->Read(&result)) {
@@ -99,39 +103,43 @@ class VaqueroClient {
   }
 
   bool SearchLabels(const LabelsQuery& query,
-                    std::function<void(const SearchLabelsResult&)> callback)
+                    std::function<void(const SearchLabelsResults&)> callback)
   {
     ClientContext context;
-    SearchLabelsResult result;
-    std::unique_ptr<ClientReader<SearchLabelsResult>> reader(
-        stub_->SearchLabels(&context, query));
+    SearchLabelsResults results;
+    std::unique_ptr<ClientReader<SearchLabelsResults>> reader(
+        search_stub->SearchLabels(&context, query));
 
-    while (reader->Read(&result))
-      callback(result);
+    while (reader->Read(&results))
+      callback(results);
 
     Status status = reader->Finish();
     return status.ok();
   }
 
   bool SearchSeries(const SeriesQuery& query,
-                    std::function<void(const SearchSeriesResult&)> callback)
+                    std::function<void(const SearchSeriesResults&)> callback)
   {
     ClientContext context;
-    SearchSeriesResult result;
-    std::unique_ptr<ClientReader<SearchSeriesResult>> reader(
-        stub_->SearchSeries(&context, query));
+    SearchSeriesResults results;
+    std::unique_ptr<ClientReader<SearchSeriesResults>> reader(
+        search_stub->SearchSeries(&context, query));
 
-    while (reader->Read(&result))
-      callback(result);
+    while (reader->Read(&results))
+      callback(results);
 
     Status status = reader->Finish();
     return status.ok();
   }
 
-  void Shutdown() { stub_.reset(); }
+  void Shutdown() {
+    storage_stub.reset();
+    search_stub.reset();
+  }
 
  private:
-  std::unique_ptr<VaqueroStorage::Stub> stub_;
+  std::unique_ptr<VaqueroStorage::Stub> storage_stub;
+  std::unique_ptr<VaqueroSearch::Stub> search_stub;
 };
 
 
@@ -255,28 +263,28 @@ void PrintReadResult(const ReadResult& result) {
 }
 
 
-void PrintSearchLabelsResult(const SearchLabelsResult& result) {
+void PrintSearchLabelsResults(const SearchLabelsResults& results) {
   if (FLAGS_json) {
     Json::Value list;
-    for (auto label : result.labels()) {
+    for (auto label : results.labels()) {
       list.append(label);
     }
     cout << list << endl;
   } else { // non-json
-    for (auto label : result.labels()) {
+    for (auto label : results.labels()) {
       cout << label << endl;
     }
-    if (result.has_status())
-      cout << "StatusMessage: " << result.status().text()
-           << " error=" << result.status().error() << endl;
+    if (results.has_status())
+      cout << "StatusMessage: " << results.status().text()
+           << " error=" << results.status().error() << endl;
   }
 }
 
 
-void PrintSearchSeriesResult(const SearchSeriesResult& result) {
+void PrintSearchSeriesResults(const SearchSeriesResults& results) {
   if (FLAGS_json) {
     Json::Value list;
-    for (auto series : result.matching_series()) {
+    for (auto series : results.matches()) {
       Json::Value obj;
       for (auto label : series.labels()) {
         obj[label.first] = label.second;
@@ -285,12 +293,12 @@ void PrintSearchSeriesResult(const SearchSeriesResult& result) {
     }
     cout << list;
   } else { // non-json
-    for (auto series : result.matching_series()) {
+    for (auto series : results.matches()) {
       cout << FormatLabels(series) << endl;
     }
-    if (result.has_status())
-      cout << "StatusMessage: " << result.status().text()
-           << " error=" << result.status().error() << endl;
+    if (results.has_status())
+      cout << "StatusMessage: " << results.status().text()
+           << " error=" << results.status().error() << endl;
   }
 }
 
@@ -383,21 +391,27 @@ SeriesQuery BuildSeriesQuery(int argc, char** argv) {
 
   LabelConstraint* con;
   string label_name;
-  string operand;
+  string predicate;
   for (int i = 1; i < argc; i++) {
     string arg(argv[i]);
     con = query.add_constraints();
 
-    if (RE2::FullMatch(arg, R"(([^=]+)=~(.+))", &label_name, &operand)) { //TODO This is fugly.
-      con->set_constraint_op(LabelConstraint::REGEX_MATCHES);
-    } else if (RE2::FullMatch(arg, R"(([^=]+)=(.+))", &label_name, &operand)) {
-      con->set_constraint_op(LabelConstraint::EQUALS);
+    //TODO This is fugly.
+    if (RE2::FullMatch(arg, R"(([^=]+)=~(.+))",
+                       &label_name,
+                       &predicate))
+    {
+      con->set_regex(predicate);
+    } else if (RE2::FullMatch(arg, R"(([^=]+)=(.+))",
+               &label_name,
+               &predicate))
+    {
+      con->set_exact_value(predicate);
     } else {
       throw "Failed to parse label constraint \"" + arg + "\"";
     }
 
     con->set_label_name(label_name);
-    con->set_operand(operand);
   }
   return query;
 }
@@ -433,7 +447,7 @@ int DoSearchLabels(int argc, char** argv) {
     cerr << "SearchLabels() regex=" << query.regex() << endl;
 
   client.SearchLabels(query,
-                      PrintSearchLabelsResult);
+                      PrintSearchLabelsResults);
 
   client.Shutdown();
   grpc_shutdown();
@@ -466,7 +480,7 @@ int DoSearchSeries(int argc, char** argv) {
     cerr << "SearchSeries()\n";
 
   client.SearchSeries(query,
-                      PrintSearchSeriesResult);
+                      PrintSearchSeriesResults);
 
   client.Shutdown();
   grpc_shutdown();

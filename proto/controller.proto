@@ -1,0 +1,112 @@
+syntax = "proto3";
+option cc_enable_arenas = true;
+import "core.proto";
+import "search.proto";
+
+package vqro.rpc;
+
+
+service VaqueroController {
+  rpc LocateSeries(SeriesQuery)
+    returns (LocateSeriesResults);
+
+  rpc ExchangeState(ExchangeStateRequest)
+    returns (ExchangeStateResponse);
+
+  // TODO: RAFT methods
+  // rpc RequestVote(VotingRequest)
+  //   returns (VotingDecision);
+  //
+  // ExchangeState will probably serve the purpose of "AppendEntries"
+}
+
+
+// LocateSeries
+message LocateSeriesResults {
+  repeated Server servers = 1;
+  StatusMessage status = 2;
+}
+
+
+// Basic Types
+message Server {
+  string name = 1;
+
+  oneof address {
+    string ipv4_address = 2;
+    string ipv6_address = 3;
+  }
+
+  int32 port = 4;
+}
+
+
+message Range {
+  int32 lower_bound = 1;
+  int32 upper_bound = 2;
+  // Protobuf doesn't have to store false bools because thats the default
+  // value for a bool field, so we make the common case false. In this case,
+  // false means that the Server associated with this range has all datapoints
+  // for Series covered by this range.
+  bool not_synced = 3;
+}
+
+
+message ServerRanges {
+  Server server = 1;
+  repeated Range range = 2;
+}
+
+
+// ExchangeState
+message ExchangeStateRequest {
+  CellLocalState local_state = 1;
+
+  // When this is 0, we get the full CellGlobalState back in our response.
+  // Otherwise we just get a CellGlobalStateDiff
+  int64 only_diff_since_revision = 2;
+}
+
+
+message ExchangeStateResponse {
+  oneof state {
+    CellGlobalState full = 1;
+    CellGlobalStateDiff diff = 2;
+  }
+}
+
+
+message CellGlobalState {
+  int64 revision = 1;
+  repeated Server controllers = 2;
+  repeated ServerRanges range_assignments = 3;
+}
+
+
+message CellGlobalStateDiff {
+  int64 from_revision = 1;
+  int64 to_revision = 2;
+  repeated ServerRanges additions = 3;
+  repeated ServerRanges removals = 4;
+}
+
+
+message CellLocalState {
+  repeated VaqueroState vaqueros = 1;
+}
+
+
+message VaqueroState {
+  Server server = 1;
+  VaqueroMetrics metrics = 2;
+  repeated Series new_series = 3;
+  repeated Series expired_series = 4;
+}
+
+
+message VaqueroMetrics { //XXX made up example
+  double cpu_usage = 1;
+  int32 num_series_written_to = 2;
+  int32 num_datapoints_written = 3;
+  int32 storage_bytes_change = 4;
+}

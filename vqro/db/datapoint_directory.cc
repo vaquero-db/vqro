@@ -21,9 +21,6 @@
 #include "vqro/db/read_op.h"
 #include "vqro/db/write_op.h"
 
-using std::string;
-using std::to_string;
-using std::vector;
 
 namespace vqro {
 namespace db {
