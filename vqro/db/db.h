@@ -64,10 +64,11 @@ class Database {
             bool prefer_latest,
             DatapointsCallback callback);
 
+  std::unique_ptr<SearchEngine> search_engine;
+
  private:
   string root_dir;
   std::vector<WorkerThread*> workers;
-  std::unique_ptr<SearchEngine> search_engine;
   std::unique_ptr<StorageOptimizer> storage_optimizer;
   std::unordered_map<string,Series*> series_by_key {};
   std::mutex series_by_key_mutex;
