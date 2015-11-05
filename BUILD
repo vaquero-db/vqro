@@ -11,17 +11,13 @@ cc_binary(
         "//vqro/rpc:vqro_cc_proto",
     ],
     linkopts = [
-        "-lglog",
-        "-lgflags",
         "-lgpr",
         "-lgrpc",
         "-lgrpc++",
-        "-lpthread",
-        "-lre2",
-        "-lsqlite3",
         "-ltcmalloc",
     ],
 )
+
 
 cc_binary(
     name = "vqro-write",
@@ -31,13 +27,10 @@ cc_binary(
         "//vqro/rpc:vqro_cc_proto",
     ],
     linkopts = [
-        "-lglog",
-        "-lgflags",
         "-lgpr",
         "-lgrpc",
         "-lgrpc++",
         "-ljsoncpp",
-        "-lpthread",
         "-ltcmalloc",
     ],
 )
@@ -51,13 +44,10 @@ cc_binary(
         "//vqro/rpc:vqro_cc_proto",
     ],
     linkopts = [
-        "-lglog",
-        "-lgflags",
         "-lgpr",
         "-lgrpc",
         "-lgrpc++",
         "-ljsoncpp",
-        "-lpthread",
         "-lre2",
         "-ltcmalloc",
     ],

@@ -1,12 +1,10 @@
-#ifndef VQRO_DB_DENSE_FILE_H
-#define VQRO_DB_DENSE_FILE_H
+#ifndef VQRO_DB_CONSTANT_FILE_H
+#define VQRO_DB_CONSTANT_FILE_H
 
 #include <cstdint>
 #include <memory>
 
 #include "vqro/base/base.h"
-#include "vqro/base/fileutil.h"
-#include "vqro/db/datapoint.h"
 #include "vqro/db/datapoint_file.h"
 #include "vqro/db/read_op.h"
 #include "vqro/db/write_op.h"
@@ -14,21 +12,26 @@
 namespace vqro {
 namespace db {
 
-constexpr size_t dense_datapoint_size = sizeof(double);
 
 class DatapointDirectory;
 
 
-class DenseFile: public DatapointFile {
+class ConstantFile: public DatapointFile {
  public:
-  int64_t duration;
+  const int64_t duration;
+  int64_t count;
+  const double value;
 
-  DenseFile() = default;
-  DenseFile(DatapointDirectory* _dir, int64_t start_time, int64_t dur) :
-    DatapointFile(_dir, start_time, start_time),
-    duration(dur) {
-      max_timestamp = start_time + GetFileSize(GetPath()) / dense_datapoint_size * dur;
-    }
+  ConstantFile() = default;
+  ConstantFile(DatapointDirectory* _dir,
+               int64_t start_time,
+               int64_t dur,
+               int64_t cnt,
+               double val) :
+      DatapointFile(_dir, start_time, start_time + cnt * dur),
+      duration(dur),
+      count(cnt),
+      value(val) {}
 
   static std::unique_ptr<DatapointFile> FromFilename(
       DatapointDirectory* dir,
@@ -44,4 +47,4 @@ class DenseFile: public DatapointFile {
 } // namespace db
 } // namespace vqro
 
-#endif // VQRO_DB_DENSE_FILE_H
+#endif // VQRO_DB_CONSTANT_FILE_H

@@ -15,7 +15,6 @@
 #include "vqro/db/datapoint_directory.h"
 
 
-DECLARE_int32(datapoint_file_mode);  // 0644
 DEFINE_int32(max_dense_nan_gap,
              256,
              "How many NAN datapoints will be padded before creating a new file.");
@@ -24,7 +23,7 @@ namespace vqro {
 namespace db {
 
 
-string DenseFile::GetPath() {
+string DenseFile::GetPath() const {
   return dir->path + "/" + to_string(min_timestamp) + "@" + to_string(duration);
 }
 
@@ -54,7 +53,7 @@ std::unique_ptr<DatapointFile> DenseFile::FromFilename(
 }
 
 
-void DenseFile::Read(ReadOperation& read_op) {
+void DenseFile::Read(ReadOperation& read_op) const {
   // Adjust read_op.next_time to match our alignment.
   // TODO: User should be able to flag if they want their read_op.start_time to extend backwards
   if (read_op.next_time % duration)
@@ -67,7 +66,7 @@ void DenseFile::Read(ReadOperation& read_op) {
   if (file.fd == -1)
     throw IOErrorFromErrno("DenseFile::Read open() failed");
 
-  off64_t offset = (read_op.next_time - min_timestamp) / duration * DENSE_DATAPOINT_SIZE;
+  off64_t offset = (read_op.next_time - min_timestamp) / duration * dense_datapoint_size;
   if (lseek(file.fd, offset, SEEK_SET) == -1)
     throw IOErrorFromErrno("DenseFile::Read lseek() failed");
 
@@ -81,11 +80,10 @@ void DenseFile::Read(ReadOperation& read_op) {
     read_op.cursor->timestamp = read_op.next_time;
     read_op.cursor->value = value;
     read_op.cursor->duration = duration;
-    read_op.Append(*read_op.cursor); // Self assignment, but hey it works... right?
+    read_op.Advance();
   }
 }
 
-//TODO Fix underflow everywhere
 
 size_t DenseFile::Write(const WriteOperation& write_op) {
   size_t datapoints_to_write = write_op.WritableDatapoints();
@@ -119,13 +117,12 @@ size_t DenseFile::Write(const WriteOperation& write_op) {
   if (file.fd == -1)
     throw IOErrorFromErrno("DenseFile::Write open() failed");
 
-  off64_t offset = std::min(it->timestamp, max_timestamp) / duration * DENSE_DATAPOINT_SIZE;
-  if (offset)
-    if (lseek(file.fd, offset, SEEK_SET) == -1) {
+  off_t offset = std::min(it->timestamp, max_timestamp) / duration * dense_datapoint_size;
+  if (offset) {
+    if (lseek(file.fd, offset, SEEK_SET) == -1)
       throw IOErrorFromErrno("DenseFile::Write lseek() failed offset=" +
                              to_string(offset));
-    }
-
+  }
   WriteValues<double>(file, values.get(), datapoints_to_write);
   max_timestamp += datapoints_to_write * duration;
   return datapoints_to_write - num_nans;

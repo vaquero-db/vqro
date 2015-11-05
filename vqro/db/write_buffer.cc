@@ -2,8 +2,6 @@
 #include <cmath>
 #include <exception>
 #include <stdlib.h>
-#include <gflags/gflags.h>
-#include <glog/logging.h>
 
 #include "vqro/base/base.h"
 #include "vqro/rpc/vqro.pb.h"
@@ -27,12 +25,15 @@ WriteBuffer::WriteBuffer() {
 }
 
 
-void WriteBuffer::Write(vqro::rpc::WriteOperation& op) {
+void WriteBuffer::Append(vqro::rpc::WriteOperation& op) {
   Datapoint* next;
   Datapoint* previous = nullptr;
 
   for (int i = 0; i < op.datapoints_size(); i++) {
     const vqro::rpc::Datapoint& op_datapoint = op.datapoints(i);
+
+    if (std::isnan(op_datapoint.value()))  // NANs not allowed
+      continue;
 
     next = GetNextDatapoint();
     next->timestamp = op_datapoint.timestamp();

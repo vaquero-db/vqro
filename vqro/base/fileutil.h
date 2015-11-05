@@ -16,7 +16,6 @@
 
 namespace vqro {
 
-using std::string;
 using std::vector;
 using Iovec = struct iovec;
 
@@ -24,7 +23,7 @@ using Iovec = struct iovec;
 // Filesystem utility functions
 string GetCurrentWorkingDirectory();
 bool FileExists(string path);
-int GetFileSize(string path, bool error_returns_zero=false);
+off_t GetFileSize(string path, bool error_returns_zero=false);
 void CreateDirectory(string dir_path);
 
 
@@ -66,7 +65,7 @@ class DirectoryHandle {
 };
 
 
-// File descriptor I/O
+// File I/O
 void WriteVector(FileHandle file, Iovec* iov, size_t iov_len);
 
 template <class T>

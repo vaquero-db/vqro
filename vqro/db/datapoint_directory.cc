@@ -15,6 +15,7 @@
 #include "vqro/base/fileutil.h"
 #include "vqro/db/datapoint_directory.h"
 #include "vqro/db/datapoint_file.h"
+#include "vqro/db/constant_file.h"
 #include "vqro/db/dense_file.h"
 #include "vqro/db/sparse_file.h"
 #include "vqro/db/read_op.h"
@@ -75,6 +76,14 @@ void DatapointDirectory::Write(WriteOperation& write_op) {
 
     // See if we can write to an existing file
     if (file_it != datapoint_files.end()) {
+      // Ensure we don't make the file too large.
+      write_op.max_writable_datapoints = (*file_it)->RemainingWritableDatapoints();
+
+      if (write_op.max_writable_datapoints == 0) {
+        file_it++;
+        continue;
+      }
+
       // The max timestamp we can write to a given file is bounded by the
       // min_timestamp of the next file.
       auto next_file = file_it + 1;
@@ -106,6 +115,8 @@ void DatapointDirectory::Write(WriteOperation& write_op) {
     // future file we may eventually be able to write to.
     write_op.max_writable_timestamp = (file_it == datapoint_files.end()) ?
         INT64_MAX : (*file_it)->min_timestamp - 1;
+
+    write_op.max_writable_datapoints = FLAGS_sparse_file_max_size / datapoint_size;
 
     // Create a new sparse file.
     std::unique_ptr<DatapointFile> new_file(
@@ -158,6 +169,10 @@ void DatapointDirectory::ReadFilenames() {
       case DT_REG:
       case DT_LNK:
       case DT_UNKNOWN:
+
+        data_file = ConstantFile::FromFilename(this, entry->d_name);
+        if (data_file.get() != nullptr)
+          new_files.push_back(std::move(data_file));
 
         data_file = DenseFile::FromFilename(this, entry->d_name);
         if (data_file.get() != nullptr) {

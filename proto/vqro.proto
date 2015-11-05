@@ -12,7 +12,6 @@ service VaqueroStorage {
   rpc ReadDatapoints(ReadOperation)
       returns (stream ReadResult) {}
 
-  // TODO: Figure out a way to communicate result count
   rpc SearchSeries(SeriesQuery)
       returns (stream SearchSeriesResult) {}
 
@@ -71,15 +70,11 @@ message SeriesQuery {
 
 message LabelConstraint {
   string label_name = 1;
-  //XXX Ditch the enum, use two fields:
-  // string exact_value = 2;
-  // string regex_pattern = 3;
-  enum Operator {
-    EQUALS = 0;
-    REGEX_MATCHES = 1;
+
+  oneof constraint {
+    string exact_value = 2;
+    string regex_pattern = 3;
   }
-  Operator constraint_op = 2;
-  string operand = 3;
 }
 
 

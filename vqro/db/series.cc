@@ -15,13 +15,13 @@ void Series::Init() {
   series_dir.insert(series_dir.begin() + 4, '/');
 
   data_dir.reset(new DatapointDirectory(
-      db->GetDataDirectory() + "datapoints/" + series_dir + "/"));
+      this, db->GetDataDirectory() + "datapoints/" + series_dir + "/"));
 }
 
 
 void Series::Write(vqro::rpc::WriteOperation& op) 
 {
-  write_buffer->Write(op);
+  write_buffer->Append(op);
 }
 
 

@@ -24,14 +24,13 @@ bool FileExists(string path) {
 }
 
 
-int GetFileSize(string path, bool error_returns_zero/*=false*/) {
+off_t GetFileSize(string path, bool error_returns_zero/*=false*/) {
   struct stat my_stats;
   if (stat(path.c_str(), &my_stats) == -1) {
     if (error_returns_zero)
       return 0;
     throw IOErrorFromErrno("GetFileSize stat() failed on path=" + path);
   }
-
   return my_stats.st_size;
 }
 
@@ -60,7 +59,7 @@ void CreateDirectory(string dir_path) {
 
 
 void WriteVector(FileHandle file, Iovec* iov, size_t iov_count) {
-  int written;
+  ssize_t written;
   while (iov_count) {
     written = writev(file.fd, iov, iov_count);
     LOG(INFO) << "writev() wrote " << written << " bytes";
@@ -70,7 +69,7 @@ void WriteVector(FileHandle file, Iovec* iov, size_t iov_count) {
       throw IOErrorFromErrno("WriteVector writev() failed");
     } else {
       // Advance the iov pointer to reflect what we just wrote
-      while (iov_count && iov->iov_len <= static_cast<unsigned int>(written)) {
+      while (iov_count && iov->iov_len <= static_cast<size_t>(written)) {
         written -= iov->iov_len;
         iov++;
         iov_count--;

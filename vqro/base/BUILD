@@ -9,6 +9,14 @@ cc_library(
     hdrs = [
         "base.h",
         "fileutil.h",
-        "worker.h"
+        "floatutil.h",
+        "worker.h",
+    ],
+    linkopts = [
+        "-lglog",
+        "-lgflags",
+        "-lm",
+        "-lpthread",
+        "-ltcmalloc",
     ],
 )

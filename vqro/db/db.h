@@ -12,12 +12,10 @@
 #include "vqro/rpc/vqro.pb.h"
 #include "vqro/db/series.h"
 #include "vqro/db/search_engine.h"
-
-#include <gflags/gflags.h>
-#include <glog/logging.h>
+#include "vqro/db/storage_optimizer.h"
 
 
-DECLARE_int32(db_worker_threads);
+DECLARE_int32(read_buffer_size);
 
 
 namespace vqro {
@@ -49,9 +47,12 @@ class InvalidSeriesProto : public DatabaseError {
 
 class Database {
  public:
+  friend class StorageOptimizer;
   Database(string dir);
 
   string GetDataDirectory() { return root_dir; }
+
+  StorageOptimizer* GetStorageOptimizer() { return storage_optimizer.get(); }
 
   void Write(vqro::rpc::WriteOperation& op);
 
@@ -71,6 +72,7 @@ class Database {
   string root_dir;
   std::vector<WorkerThread*> workers;
   std::unique_ptr<SearchEngine> search_engine;
+  std::unique_ptr<StorageOptimizer> storage_optimizer;
   std::unordered_map<string,Series*> series_by_key {};
   std::mutex series_by_key_mutex;
 

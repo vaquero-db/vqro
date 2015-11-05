@@ -10,21 +10,25 @@
 #include "vqro/db/write_op.h"
 #include "vqro/db/datapoint.h"
 #include "vqro/db/datapoint_file.h"
+#include "vqro/db/storage_optimizer.h"
 
 namespace vqro {
 namespace db {
 
-using std::string;
-using std::vector;
-using std::set;
+
+class Series;
 
 
 class DatapointDirectory {
+  friend class StorageOptimizer;
+
  public:
+  Series* const series;
   string path;
 
-  DatapointDirectory(string _path) :
-    path(_path)
+  DatapointDirectory(Series* s, string p) :
+    series(s),
+    path(p)
   {
     while (!path.empty() && path.back() == '/')
       path = path.substr(0, path.length() - 1);

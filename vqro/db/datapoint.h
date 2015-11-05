@@ -5,10 +5,6 @@
 #include <cstdint>
 #include <functional>
 
-#define TIMESTAMP_SIZE sizeof(int64_t)
-#define VALUE_SIZE sizeof(double)
-#define DURATION_SIZE sizeof(int64_t)
-
 namespace vqro {
 namespace db {
 
@@ -23,6 +19,16 @@ class Datapoint {
 
   bool operator<(const Datapoint& other) const {
     return timestamp < other.timestamp;
+  }
+
+  bool operator==(const Datapoint& rhs) const {
+    return (timestamp == rhs.timestamp &&
+            value == rhs.value &&
+            duration == rhs.duration);
+  }
+
+  bool operator!=(const Datapoint& rhs) const {
+    return !(*this == rhs);
   }
 
   int64_t timestamp;
@@ -40,13 +46,13 @@ inline void swap(Datapoint& a, Datapoint& b) {
 
 using DatapointsFunc = std::function<void(Datapoint*, size_t)>;
 
-#define DATAPOINT_SIZE sizeof(::vqro::db::Datapoint)
+constexpr int8_t datapoint_size = sizeof(::vqro::db::Datapoint);
 
 // If this fails, look at your compiler flags. Any three 64-bit types should be
 // able to fit into a 24 byte struct without padding. While no code actually
 // *depends* on this being true, having any padding in this type is extremely
 // wasteful and unnecessary.
-static_assert(DATAPOINT_SIZE == 24, "Datapoints are not 24 bytes!!!");
+static_assert(datapoint_size == 24, "Datapoints are not 24 bytes!!!");
 
 
 } // namespace db

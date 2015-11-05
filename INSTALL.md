@@ -1,12 +1,13 @@
 # vqro
 Vaquero consists of 3 binaries:
 
-- vqro-server - The vaquero database server.
-- vqro-read - A client for reading / searching a vqro-server via rpc.
-- vqro-write - A client for writing datapoints to a vqro-server via rpc.
+- `vqro-server` - The vaquero database server.
+- `vqro-read` - A client for reading / searching a vqro-server via rpc.
+- `vqro-write` - A client for writing datapoints to a vqro-server via rpc.
 
 Both clients speak json over stdio so they should be pretty easy to integrate
-with other programs. Client libraries for other languages will be coming soon.
+with other programs. Since vaquero uses gRPC it is very easy to use vaquero
+from [a bunch of languages](http://www.grpc.io/) already.
 
 
 # Dependencies
@@ -85,6 +86,9 @@ list of ubuntu packages you'll need (plus the usual build tool chain, g++, etc):
 - libre2-dev
 - libsqlite3-dev
 - libjsoncpp-dev
+- libgflags-dev
+- libgtest-dev
+- zlib1g-dev
 
 Additionally you will need to build and install gRPC (into `/usr/local` or some
 other location on your system include/library path). The steps for doing that

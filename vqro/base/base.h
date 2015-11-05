@@ -16,6 +16,7 @@
 #include <iomanip>
 #include <functional>
 
+#include <gflags/gflags.h>
 #include <glog/logging.h>
 
 
@@ -25,10 +26,6 @@ using std::string;
 using std::to_string;
 
 using VoidFunc = std::function<void()>;
-
-constexpr size_t datapoint_size = sizeof(int64_t) +
-                                  sizeof(double) +
-                                  sizeof(int64_t);
 
 constexpr double double_nan = std::numeric_limits<double>::quiet_NaN();
 
@@ -63,7 +60,7 @@ class IOError : public Error {
 };
 
 
-inline IOError IOErrorFromErrno(string msg, bool log_it=false) {
+inline IOError IOErrorFromErrno(string msg, bool log_it=true) {
   if (log_it)
     PLOG(ERROR) << "IOError: " << msg;
 

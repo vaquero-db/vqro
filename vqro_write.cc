@@ -3,7 +3,7 @@
 #include <csignal>
 #include <thread>
 
-#include <json/json.h>
+#include <jsoncpp/json/json.h>
 #include <gflags/gflags.h>
 #include <grpc/grpc.h>
 #include <grpc++/client_context.h>
@@ -17,7 +17,6 @@ using grpc::ClientContext;
 using grpc::ClientReaderWriter;
 
 using vqro::rpc::VaqueroStorage;
-using vqro::rpc::Series;
 using vqro::rpc::Datapoint;
 using vqro::rpc::WriteOperation;
 using vqro::rpc::StatusMessage;

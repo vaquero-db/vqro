@@ -45,6 +45,7 @@ class WorkerThread {
 
   std::condition_variable* Stop() {
     keep_processing = false;
+    Do([] {});  // Wake up the DoTasks loop if its waiting on tasks
     return &death;
   }
 

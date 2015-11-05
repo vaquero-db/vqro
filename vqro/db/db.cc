@@ -4,25 +4,23 @@
 #include <mutex>
 #include <thread>
 
-#include <gflags/gflags.h>
-#include <glog/logging.h>
-
 #include "vqro/base/base.h"
 #include "vqro/base/worker.h"
 #include "vqro/rpc/vqro.pb.h"
 #include "vqro/db/db.h"
 #include "vqro/db/series.h"
+#include "vqro/db/storage_optimizer.h"
 
 
 DEFINE_int32(read_buffer_size,
-             1048576 / vqro::datapoint_size, // 43,690 datapoints
+             1048576 / vqro::db::datapoint_size, // 43,690 datapoints
              "Number of datapoints to read in one iteration of read work.");
 DEFINE_int32(db_worker_threads,
              64,
              "Number of database worker threads.");
 DEFINE_int32(flusher_resort_interval,
-             5,
-             "How often (in seconds) the flusher thread will re-sort its "
+             5000,
+             "How often (milliseconds) the flusher thread will re-sort its "
              "series list.");
 
 
@@ -42,6 +40,9 @@ Database::Database(string dir) {
 
   LOG(INFO) << "initializing search engine";
   search_engine.reset(new SearchEngine(root_dir));
+
+  LOG(INFO) << "initializing storage optimizer";
+  storage_optimizer.reset(new StorageOptimizer(this));
 
   // Create worker threads
   int num_workers = std::max(FLAGS_db_worker_threads, 1);
@@ -69,8 +70,9 @@ void Database::Write(vqro::rpc::WriteOperation& op)
   }).wait();
 
   if (!series->is_indexed)
-    try { search_engine->IndexSeries(series); }
-    catch (SqliteError& err) {
+    try {
+      search_engine->IndexSeries(series);
+    } catch (SqliteError& err) {
       LOG(WARNING) << "Failed to index series: " << err.message;
     }
 }
@@ -94,6 +96,7 @@ void Database::Read(
                                   read_buffer.get(),
                                   FLAGS_read_buffer_size);
 
+  // TODO Use two read buffers to keep both threads busy simultaneously
   while (!read_op.Complete()) {
     worker->Do([&] {
       series->Read(read_op);
@@ -111,8 +114,9 @@ void Database::Read(
 void Database::SearchSeries(const vqro::rpc::SeriesQuery& query,
                             SearchSeriesResultCallback callback)
 {
-  try { search_engine->SearchSeries(query, callback); }
-  catch (SqliteError& err) {
+  try {
+    search_engine->SearchSeries(query, callback);
+  } catch (SqliteError& err) {
     throw DatabaseError(err.message);
   }
 }
@@ -121,8 +125,9 @@ void Database::SearchSeries(const vqro::rpc::SeriesQuery& query,
 void Database::SearchLabels(const vqro::rpc::LabelsQuery& query,
                             SearchLabelsResultCallback callback)
 {
-  try { search_engine->SearchLabels(query, callback); }
-  catch (SqliteError& err) {
+  try {
+    search_engine->SearchLabels(query, callback);
+  } catch (SqliteError& err) {
     throw DatabaseError(err.message);
   }
 }
@@ -169,7 +174,7 @@ void Database::FlushWriteBuffers() {
 
   vector<Series*> all_series;
   int64_t now = TimeInMillis();
-  int64_t resort_deadline = now + FLAGS_flusher_resort_interval * 1000;
+  int64_t resort_deadline = now + FLAGS_flusher_resort_interval;
 
   while (true) {
     // Prioritize which series should be flushed first.
@@ -204,7 +209,7 @@ void Database::FlushWriteBuffers() {
       if (flushed % 50 == 0) {
         now = TimeInMillis();
         if (now >= resort_deadline) {
-          resort_deadline += FLAGS_flusher_resort_interval * 1000;
+          resort_deadline += FLAGS_flusher_resort_interval;
           break;
         }
       }

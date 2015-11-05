@@ -41,9 +41,14 @@ struct ReadOperation {
   const size_t buffer_size;
   Datapoint* cursor;
 
+  void Advance() {
+    cursor++;
+    next_time = cursor->timestamp + (cursor->duration ? cursor->duration : 1);
+  }
+
   void Append(Datapoint& point) {
-    *cursor++ = point;
-    next_time = point.timestamp + (point.duration ? point.duration : 1);
+    *cursor = point;
+    Advance();
   }
 
   size_t DatapointsInBuffer() { return cursor - buffer; }

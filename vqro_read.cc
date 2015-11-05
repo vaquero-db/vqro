@@ -7,7 +7,7 @@
 #include <sstream>
 #include <functional>
 
-#include <json/json.h>
+#include <jsoncpp/json/json.h>
 #include <gflags/gflags.h>
 #include <grpc/grpc.h>
 #include <grpc++/client_context.h>

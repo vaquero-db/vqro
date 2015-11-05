@@ -3,6 +3,7 @@
 #include <fcntl.h>
 
 #include <algorithm>
+#include <cstring>
 
 #include <gflags/gflags.h>
 
@@ -10,29 +11,40 @@
 #include "vqro/base/fileutil.h"
 #include "vqro/db/sparse_file.h"
 #include "vqro/db/datapoint_directory.h"
+#include "vqro/db/series.h"
+#include "vqro/db/db.h"
+#include "vqro/db/storage_optimizer.h"
 
 
-DECLARE_int32(datapoint_file_mode);  // 0644
-DECLARE_int32(max_sparse_file_size); // 2**22 (4MB) seems like a reasonable default, fits ~175k points
+DEFINE_int32(sparse_file_optimize_size,
+             1 << 12,  // 4kb fits 170 datapoints
+             "When a sparse file reaches this size in bytes, it may be "
+             "converted to a more optimal storage format.");
+DEFINE_int64(sparse_file_max_size,
+             1 << 22,  // 4MB fits ~175k datapoints
+             "Maximum allowable size in bytes for a sparse file.");
 
 
 namespace vqro {
 namespace db {
 
 
-string SparseFile::GetPath() {
-  return dir->path + "/" + to_string(min_timestamp) + "-" + to_string(max_timestamp);
+string SparseFile::GetPath() const {
+  return (dir->path + "/" +
+          to_string(min_timestamp) + "-" + to_string(max_timestamp) +
+          (optimized ? SPARSE_OPT_SUFFIX : ""));
 }
 
 
 std::unique_ptr<DatapointFile> SparseFile::FromFilename(
     DatapointDirectory* dir,
     char* filename) {
-  // sparse filename format is "<min_timestamp>-<max_timestamp>"
+  // sparse filename format is "<min_timestamp>-<max_timestamp>(.opt)?"
   std::unique_ptr<DatapointFile> failed_to_parse(nullptr);
   char* endptr;
   int64_t min;
   int64_t max;
+  bool opt = false;
 
   min = strtoll(filename, &endptr, 10);
   if (endptr == filename || *endptr != '-')
@@ -40,16 +52,24 @@ std::unique_ptr<DatapointFile> SparseFile::FromFilename(
 
   filename = endptr + 1;
   max = strtoll(filename, &endptr, 10);
-  if (endptr == filename || *endptr != '\0')
+  if (endptr == filename)
+    return failed_to_parse;
+
+  if (strncmp(endptr, SPARSE_OPT_SUFFIX, SPARSE_OPT_SUFFIX_LEN) == 0) {
+    opt = true;
+    endptr += SPARSE_OPT_SUFFIX_LEN;
+  }
+
+  if (*endptr != '\0')
     return failed_to_parse;
 
   return std::unique_ptr<DatapointFile>(
-    static_cast<DatapointFile*>(new SparseFile(dir, min, max))
+    static_cast<DatapointFile*>(new SparseFile(dir, min, max, opt))
   );
 }
 
 
-void SparseFile::Read(ReadOperation& read_op)
+void SparseFile::Read(ReadOperation& read_op) const
 {
   // We read the entire file into memory (up to our safety limit).
   LOG(INFO) << "SparseFile::Read() opening file " << GetPath();
@@ -57,18 +77,18 @@ void SparseFile::Read(ReadOperation& read_op)
   if (file.fd == -1)
     throw IOErrorFromErrno("SparseFile::Read open() failed");
 
-  int file_size = GetFileSize(file.path);
-  if (file_size > FLAGS_max_sparse_file_size) {
-    LOG(ERROR) << "SparseFile::Scan() oversized file " << file.path << " ignoring some datapoints.";
-    //TODO: Signal that the file should be split up asap
+  int64_t file_size = GetFileSize(file.path);
+  if (file_size > FLAGS_sparse_file_max_size) {
+    LOG(ERROR) << "SparseFile::Read oversized file, ignoring some datapoints. "
+               << "file=" << file.path;
   }
-  int num_points = std::min(file_size, FLAGS_max_sparse_file_size) / DATAPOINT_SIZE;
+  int num_points = std::min(file_size, FLAGS_sparse_file_max_size) / datapoint_size;
   std::unique_ptr<vector<Datapoint>> datapoints =
       ReadValues<Datapoint>(file, num_points);
 
   // Datapoint ordering is based on timestamp only, duration is ignored. Thus
   // doing a stable_sort will preserve the order in which different datapoints
-  // with the same timestamp were written in, making it easier to find the right one.
+  // with the same timestamp were written in, so we can use the latest one.
   std::stable_sort(datapoints->begin(), datapoints->end());
 
   // Search for the first datapoint with timestamp >= read_start
@@ -112,10 +132,12 @@ void SparseFile::Read(ReadOperation& read_op)
 size_t SparseFile::Write(const WriteOperation& write_op) {
   // Find the max_timestamp we'll be writing
   int64_t buffer_max_timestamp = max_timestamp;
-  for (auto it = write_op.cursor; it != write_op.buffer->end(); it++)
-    if (it->timestamp > buffer_max_timestamp)
-      buffer_max_timestamp = std::min(it->timestamp,
+  for (auto it : write_op) {
+    if (it.timestamp > buffer_max_timestamp) {
+      buffer_max_timestamp = std::min(it.timestamp,
                                       write_op.max_writable_timestamp);
+    }
+  }
 
   FileHandle file(GetPath(),
                   O_WRONLY|O_CREAT|O_APPEND,
@@ -140,7 +162,29 @@ size_t SparseFile::Write(const WriteOperation& write_op) {
       throw IOErrorFromErrno("SparseFile::Write rename() failed");
   }
 
+  if (!optimized &&
+      GetFileSize(file.path) > FLAGS_sparse_file_optimize_size)
+      FileIsTooBig();
+
   return writable_datapoints;
+}
+
+
+size_t SparseFile::RemainingWritableDatapoints() const {
+  off_t filesize = GetFileSize(GetPath());
+  if (filesize < FLAGS_sparse_file_max_size)
+    return (FLAGS_sparse_file_max_size - filesize) / datapoint_size;
+  return 0;
+}
+
+
+void SparseFile::FileIsTooBig() {
+  LOG(INFO) << "SparseFile too big, queueing for optimization. file=" << GetPath();
+  dir->series->db->GetStorageOptimizer()->SparseFileTooBig(this);
+  string old_path = GetPath();
+  optimized = true;
+  if (rename(old_path.c_str(), GetPath().c_str()) == -1)
+    throw IOErrorFromErrno("SparseFile::FileIsTooBig rename() failed");
 }
 
 
