@@ -12,7 +12,19 @@
 #include "vqro/base/base.h"
 
 
+DECLARE_int32(worker_task_queue_limit);
+
+
 namespace vqro {
+
+
+class WorkerThreadTooBusy: public Error {
+ public:
+  WorkerThreadTooBusy() { Error("WorkerThreadTooBusy"); }
+  WorkerThreadTooBusy(string msg) : Error(msg) {}
+  WorkerThreadTooBusy(char* msg) : Error(msg) {}
+  virtual ~IOError() {}
+};
 
 
 class WorkerThread {
@@ -36,6 +48,8 @@ class WorkerThread {
     std::future<void> done;
     {
       std::lock_guard<std::mutex> guard(tasks_mutex);
+      if (tasks.size() >= FLAGS_worker_task_queue_limit)
+        throw WorkerThreadTooBusy("WorkerThreadTooBusy:" + GetThreadId());
       tasks.emplace_back(std::packaged_task<void()>(func));
       done = std::move(tasks.back().get_future());
     }

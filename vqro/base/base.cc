@@ -18,6 +18,11 @@
 #include <chrono>
 
 
+DEFINE_int32(worker_task_queue_limit, 16,
+    "Maximum number of tasks a worker thread will queue up before rejecting "
+    "additional tasks.");
+
+
 namespace vqro {
 
 static bool _signal_handlers_setup = false;
