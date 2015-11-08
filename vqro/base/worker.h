@@ -23,7 +23,7 @@ class WorkerThreadTooBusy: public Error {
   WorkerThreadTooBusy() { Error("WorkerThreadTooBusy"); }
   WorkerThreadTooBusy(string msg) : Error(msg) {}
   WorkerThreadTooBusy(char* msg) : Error(msg) {}
-  virtual ~IOError() {}
+  virtual ~WorkerThreadTooBusy() {}
 };
 
 
@@ -48,7 +48,7 @@ class WorkerThread {
     std::future<void> done;
     {
       std::lock_guard<std::mutex> guard(tasks_mutex);
-      if (tasks.size() >= FLAGS_worker_task_queue_limit)
+      if (static_cast<int>(tasks.size()) >= FLAGS_worker_task_queue_limit)
         throw WorkerThreadTooBusy("WorkerThreadTooBusy:" + GetThreadId());
       tasks.emplace_back(std::packaged_task<void()>(func));
       done = std::move(tasks.back().get_future());
