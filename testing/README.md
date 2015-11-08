@@ -22,12 +22,12 @@ labels that every "entity" has. In our example EC2 instances are the entities.
 
 Each entity will have many metrics we want to measure about it. Unlike entity
 labels which are always present, some metrics will have distinct labels of their
-own. For instance a `bytes_written` metric might comes with a `dev` metric that
+own. For instance a `bytes_written` metric might comes with a `dev` label that
 specifies which disk device the bytes were written to. However an `uptime`
 metric probably would not have a `dev` label. Basically the "label topology"
 is trivial for entities but non-trivial for metrics.
 
-To solve this we simply write a file called a _template_ that specifies
+To solve this we simply write a file called a _metrics template_ that specifies
 the non-entity labels of all the metrics that each entity will have.
 
 The idea is that we will invoke our script like so:
