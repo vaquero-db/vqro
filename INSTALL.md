@@ -45,10 +45,8 @@ assumption that all of Vaquero's dependencies (except protobuf 3) are installed
 in a standard system location so no extra compiler hints (`-I` or `-L`) are
 needed.
 
-Once you checkout the vqro repository you will need to create a symlink called
-`tools` in the same directory as this file that points to the `tools` directory
-in your bazel installation. Then, under the `third_party` directory you must
-create a symlink called `protobuf` that points to your checkout of
+Once you checkout the vqro repository you will need to create a symlink under
+the `third_party` directory called `protobuf` that points to your checkout of
 [https://github.com/google/protobuf].
 
 Here is a quick overview of the steps to get you up and running:
