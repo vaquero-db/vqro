@@ -160,6 +160,8 @@ size_t SparseFile::Write(const WriteOperation& write_op) {
               << " to " << new_path;
     if (rename(file.path.c_str(), new_path.c_str()) == -1)
       throw IOErrorFromErrno("SparseFile::Write rename() failed");
+
+    file.path = new_path;
   }
 
   if (!optimized &&
