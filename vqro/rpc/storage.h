@@ -99,8 +99,12 @@ class VaqueroStorageServiceImpl final : public VaqueroStorage::Service {
     }; // read_series
 
     // Kick off the search, read, respond sequence.
-    db->search_engine->SearchSeries(read_op->query(),
-                                    read_series);
+    try {
+      db->search_engine->SearchSeries(read_op->query(),
+                                      read_series);
+    } catch (vqro::db::SqliteError& err) {
+      //TODO: increment an error counter
+    }
 
     LOG(INFO) << "ReadDatapoints() matched " << matched_series
               << " series and read " << datapoints_read << " datapoints.";
