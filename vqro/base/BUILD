@@ -20,3 +20,14 @@ cc_library(
         "-ltcmalloc",
     ],
 )
+
+
+cc_test(
+    name = "base_test",
+    size = "small",
+    srcs = ["base_test.cc"],
+    deps = [
+        ":base",
+        "@gtest//:main",
+    ],
+)
