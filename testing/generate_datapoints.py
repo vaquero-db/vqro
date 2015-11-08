@@ -176,11 +176,11 @@ def main(argv):
       labels_text = what + '{%s}' % ', '.join('%s="%s"' % item for item in sorted(labels.items()))
 
       if FLAGS.sparse:
-        datapoints_text = ' '.join('%d+%d=%s' % point if point[1] != 1 else '%d:%s' % (point[0], point[2])
+        datapoints_text = ' '.join('%d+%d:%s' % point if point[1] != 1 else '%d:%s' % (point[0], point[2])
                                    for point in datapoints)
       else:
         first_timestamp = datapoints[0][0]
-        datapoints_text = '%d+%d=' % (first_timestamp, FLAGS.duration) + ' '.join(
+        datapoints_text = '%d+%d:' % (first_timestamp, FLAGS.duration) + ' '.join(
             str(v) for t,d,v in datapoints)
       print labels_text, datapoints_text
 
