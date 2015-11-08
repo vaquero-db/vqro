@@ -1,4 +1,5 @@
 #include "vqro/base/base.h"
+#include "vqro/base/fileutil.h"
 
 #include "syscall.h"
 #include <sys/types.h>
@@ -70,7 +71,8 @@ void PrintBacktrace() {
 // Resource usage
 int ReadProcStat(ProcStat* s) {
   // Measure our own CPU ticks and memory usage
-  FILE *f = fopen("/proc/self/stat", "r"); //TODO FileHandle handle; FILE* stream = fdopen(handle.fd, "r"); (C++-ify it basically)
+  FileHandle file("/proc/self/stat", O_RDONLY);
+  FILE *f = fdopen(file.fd, "r");
   if (f == NULL) {
     perror("fopen(/proc/self/stat)");
     return -1;
