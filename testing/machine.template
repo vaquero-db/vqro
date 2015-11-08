@@ -1,0 +1,57 @@
+# CPU usage
+utilization {resource=cpu_time, state=user}
+utilization {resource=cpu_time, state=system}
+utilization {resource=cpu_time, state=io_wait}
+utilization {resource=cpu_time, state=idle}
+
+
+# Memory usage
+~ <what>.<resource>.<unit>
+used.memory.MB  {type[sum]=user}
+used.memory.MB  {type[sum]=buffers}
+used.memory.MB  {type[sum]=cache}
+total.memory.MB
+# Filesystem usage
+used.space.MB  {filesystem="/"}
+total.space.MB {"filesystem"=/}
+
+
+# Disk I/O
+~ <what>.<unit>/<time_unit>
+rate.ops/sec {resource=disk_read, disk=/dev/sda1}
+rate.MB/sec  {resource=disk_read, disk=/dev/sda1}
+rate.ops/sec {resource=disk_write, disk=/dev/sda1}
+rate.MB/sec  {resource=disk_write, disk=/dev/sda1}
+
+~ <what>.<statistic>
+latency.min  {resource=disk_read, disk=/dev/sda1}
+latency.mean {resource=disk_read, disk=/dev/sda1}
+latency.max  {resource=disk_read, disk=/dev/sda1}
+latency.min  {resource=disk_write, disk=/dev/sda1}
+latency.mean {resource=disk_write, disk=/dev/sda1}
+latency.max  {resource=disk_write, disk=/dev/sda1}
+
+
+# Network metrics
+~ <what>.<interface>.<flow>.<unit>/<time_unit>
+rate.eth0.rx.MB/sec
+rate.eth0.rx.packets/sec
+max_rate.eth0.rx.MB/sec
+rate.eth0.tx.MB/sec
+rate.eth0.tx.packets/sec
+max_rate.eth0.tx.MB/sec
+
+
+# OS metrics
+~ <what>.<resource>
+used.file_descriptors
+total.file_descriptors
+maximum.file_descriptors
+
+~ <what>.<time_period>
+loadavg.5m
+loadavg.10m
+loadavg.15m
+
+~ <what>
+uptime
