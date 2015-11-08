@@ -23,6 +23,7 @@ using vqro::rpc::WriteOperation;
 using vqro::rpc::StatusMessage;
 
 using std::cin;
+using std::cout;
 using std::cerr;
 using std::endl;
 using std::string;
@@ -31,12 +32,26 @@ using std::to_string;
 
 DEFINE_string(ip, "127.0.0.1", "Server IP to connect to");
 DEFINE_int32(port, 7950, "Server port to connect to");
+DEFINE_bool(h, false, "Print help on important flags");
 
 bool running = true;
 
 // The type of a literal 0 is ambiguous because it is both an int and a NULL pointer.
 // We need to use zero as an index into a json array, so we disambiguate here.
 Json::Value::ArrayIndex zero(0);
+
+
+const string kUsage(R"(
+  vqro-write [flags]
+
+Datapoints are read on STDIN via newline-delimited json objects like this:
+
+{"labels": {"foo": "bar"}, "datapoints": [[0, 10, 42], [10, 10, 3.14]]}
+
+This specifies two datapoints with the labels {foo="bar"}. The first has
+timestamp=0, duration=10, value=42.0. The second has timestamp=10, duration=10,
+value=3.14. Note that newlines are not allowed within a json object.
+)");
 
 
 class VaqueroClient {
@@ -83,13 +98,6 @@ class VaqueroClient {
 };
 
 
-void PrintUsage(string err) {
-  cerr << "Usage:\n\n";
-  cerr << "  vqro-write [flags]\n\n";
-  cerr << "Error: " << err << endl;
-}
-
-
 void handle_sigint(int sig_num) {
   running = false;
   fclose(stdin);
@@ -97,7 +105,14 @@ void handle_sigint(int sig_num) {
 
 
 int main(int argc, char** argv) {
+  google::SetUsageMessage(kUsage);
   google::ParseCommandLineFlags(&argc, &argv, true);
+
+  if (FLAGS_h) {
+    google::ShowUsageWithFlagsRestrict(
+        google::ProgramInvocationShortName(), __FILE__);
+    return 0;
+  }
 
   string server_address(FLAGS_ip + ":" + to_string(FLAGS_port));
 

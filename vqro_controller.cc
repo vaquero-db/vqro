@@ -30,6 +30,7 @@ using std::to_string;
 
 DEFINE_string(listen_ip, "127.0.0.1", "IP to listen on");
 DEFINE_int32(listen_port, 7960, "Port to listen on");
+DEFINE_bool(h, false, "Print help on important flags");
 DEFINE_string(state_directory, "", "Where state is saved. Important stuff.");
 
 
@@ -51,8 +52,15 @@ void RunServer(string server_address) {
 
 
 int main(int argc, char** argv) {
+  google::SetUsageMessage("");
   google::ParseCommandLineFlags(&argc, &argv, true);
   google::InitGoogleLogging(argv[0]);
+
+  if (FLAGS_h) {
+    google::ShowUsageWithFlagsRestrict(
+        google::ProgramInvocationShortName(), __FILE__);
+    return 0;
+  }
 
   if (FLAGS_state_directory.empty()) {
     cerr << "You must specify --state_directory" << endl;

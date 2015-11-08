@@ -20,6 +20,7 @@
 
 DEFINE_string(listen_ip, "127.0.0.1", "IP to listen on");
 DEFINE_int32(listen_port, 7950, "Port to listen on");
+DEFINE_bool(h, false, "Print help on important flags");
 DEFINE_string(data_directory, "", "Directory that stores datapoints.");
 DEFINE_int32(datapoint_file_mode, 0644, "Permissions for datapoint files.");
 DEFINE_int32(max_sparse_file_size, 1 << 22, "Max size in bytes of a sparse file.");
@@ -46,8 +47,15 @@ void RunServer(string server_address) {
 
 
 int main(int argc, char** argv) {
+  google::SetUsageMessage("");
   google::ParseCommandLineFlags(&argc, &argv, true);
   google::InitGoogleLogging(argv[0]);
+
+  if (FLAGS_h) {
+    google::ShowUsageWithFlagsRestrict(
+        google::ProgramInvocationShortName(), __FILE__);
+    return 0;
+  }
 
   if (FLAGS_data_directory.empty()) {
     std::cerr << "You must specify --data_directory" << std::endl;

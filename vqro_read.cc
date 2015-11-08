@@ -47,6 +47,7 @@ constexpr int64_t ONE_BILLION = 1000000000; // Don't forget the evil laugh
 
 DEFINE_string(server_ip, "127.0.0.1", "Server IP to connect to");
 DEFINE_int32(server_port, 7950, "Server port to connect to");
+DEFINE_bool(h, false, "Print help on important flags");
 DEFINE_string(start, "-5m", "Start of time range to read datapoints for."); //TODO more doc
 DEFINE_string(end, "now", "End of time range ot read datapoints for.");
 DEFINE_string(tick_unit, "", "A tick is the finest precision time unit vaquero can store. "
@@ -65,6 +66,18 @@ DEFINE_bool(search_labels, false, "If true, perform a SearchLabels call instead 
             "of ReadDatapoints.");
 DEFINE_bool(search_series, false, "If true, perform a SearchSeries call instead "
             "of ReadDatapoints.");
+
+
+const string kUsage(R"(
+  vqro-read [flags] <label-query>
+
+Valid tick_units: ns, us, ms, s, m, h, d
+
+Absolute time formats:
+  YYYY-mm-dd
+  YYYY-mm-dd_HH:MM
+  YYYY-mm-dd_HH:MM:SS
+)");
 
 
 class VaqueroClient {
@@ -187,19 +200,10 @@ int64_t NanosecondsPerTick(TickUnit t) {
 }
 
 
-void PrintUsage(string err) {
-  cerr << "Usage:\n\n";
-  cerr << "  vqro-read [options] <labels>\n\n";
-  cerr << "Error: " << err << endl << endl;
-
-  cerr << "Valid tick_units: ns, us, ms, s, m, h, d\n\n";
-
-  cerr << "Valid absolute time formats:\n";
-  cerr << "  YYYY-mm-dd\n";
-  cerr << "  YYYY-mm-dd_HH:MM\n";
-  cerr << "  YYYY-mm-dd_HH:MM:SS\n\n";
-  cerr << "Use of absolute times or relative times with units requires a "
-       << "tick_unit to be specified.\n";
+void PrintUsage(string error) {
+  google::ShowUsageWithFlagsRestrict(
+      google::ProgramInvocationShortName(), __FILE__);
+  cout << "\n\n" << error << "\n";
 }
 
 
@@ -581,7 +585,13 @@ int DoReadDatapoints(int argc, char** argv) {
 
 
 int main(int argc, char** argv) {
+  google::SetUsageMessage(kUsage);
   google::ParseCommandLineFlags(&argc, &argv, true);
+
+  if (FLAGS_h) {
+    PrintUsage("");
+    return 0;
+  }
 
   if (FLAGS_search_labels) {
     return DoSearchLabels(argc, argv);
