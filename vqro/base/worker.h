@@ -44,13 +44,25 @@ class WorkerThread {
     my_thread.detach();
   }
 
+  std::future<void> Stop() {
+    keep_processing = false;
+    try {
+      Do([] {});  // Wake up the DoTasks loop if its waiting on tasks
+    } catch (WorkerThreadTooBusy& err) {}
+    return death_promise.get_future();
+  }
+
+  bool Alive() { return alive; }
+
   std::future<void> Do(VoidFunc func) {
     std::future<void> done;
+
+    if (static_cast<int>(tasks.size()) >= FLAGS_worker_task_queue_limit)
+      throw WorkerThreadTooBusy("WorkerThreadTooBusy:" + GetThreadId());
+
     {
       std::lock_guard<std::mutex> guard(tasks_mutex);
-      if (static_cast<int>(tasks.size()) >= FLAGS_worker_task_queue_limit)
-        throw WorkerThreadTooBusy("WorkerThreadTooBusy:" + GetThreadId());
-      tasks.emplace_back(std::packaged_task<void()>(func));
+      tasks.emplace_back(func);
       done = std::move(tasks.back().get_future());
     }
     tasks_available.notify_one();
@@ -61,17 +73,11 @@ class WorkerThread {
     return tasks.size();
   }
 
-  std::condition_variable* Stop() {
-    keep_processing = false;
-    Do([] {});  // Wake up the DoTasks loop if its waiting on tasks
-    return &death;
-  }
-
  private:
   std::thread my_thread;
   bool alive = false;
   bool keep_processing = true;
-  std::condition_variable death;
+  std::promise<void> death_promise;
 
   std::deque<std::packaged_task<void()>> tasks;
   std::mutex tasks_mutex;
@@ -103,7 +109,7 @@ class WorkerThread {
 
     }
     alive = false;
-    death.notify_all();
+    death_promise.set_value();
   }
 };
 
