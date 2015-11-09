@@ -2,6 +2,7 @@
 #include <chrono>
 
 #include "vqro/base/base.h"
+#include "vqro/base/fileutil.h"
 #include "vqro/base/worker.h"
 #include "gtest/gtest.h"
 
@@ -72,5 +73,19 @@ TEST(WorkerTest, WorkerRefusesTooMuchWork) {
 
   EXPECT_FALSE(worker.Alive());
 }
+
+
+TEST(FileutilTest, FileHandleClosesFD) {
+  int fd;
+  {
+    vqro::FileHandle file("/dev/null", O_RDONLY);
+    fd = file.fd;
+    ASSERT_NE(fd, -1);
+    EXPECT_EQ(lseek(fd, 0, SEEK_SET), 0);
+  }
+  EXPECT_EQ(lseek(fd, 0, SEEK_SET), -1);
+  EXPECT_EQ(errno, EBADF);
+}
+
 
 }  // namespace
