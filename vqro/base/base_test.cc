@@ -9,15 +9,17 @@
 
 namespace {
 
+using namespace vqro;
+
 
 TEST(BaseTest, ReadProcStatWorks) {
-  vqro::ProcStat stats;
+  ProcStat stats;
   ASSERT_EQ(stats.open_fd, 0);
 
   int fd = open("/dev/null", O_RDONLY);
   ASSERT_NE(fd, -1);
 
-  int ret = vqro::ReadProcStat(&stats);
+  int ret = ReadProcStat(&stats);
   EXPECT_EQ(ret, 0);
   EXPECT_GT(stats.open_fd, 0);
   close(fd);
@@ -25,7 +27,7 @@ TEST(BaseTest, ReadProcStatWorks) {
 
 
 TEST(WorkerTest, WorkerDoesWorkAndStops) {
-  vqro::WorkerThread worker {};
+  WorkerThread worker {};
   bool work_got_done = false;
 
   worker.Start();
@@ -40,7 +42,7 @@ TEST(WorkerTest, WorkerDoesWorkAndStops) {
 
 
 TEST(WorkerTest, WorkerRefusesTooMuchWork) {
-  vqro::WorkerThread worker {};
+  WorkerThread worker {};
   std::promise<void> will_start;
   std::future<void> work_started = will_start.get_future();
   bool keep_working = true;
@@ -64,7 +66,7 @@ TEST(WorkerTest, WorkerRefusesTooMuchWork) {
   auto last_queued = worker.Do(some_work);
   ASSERT_EQ(worker.TasksQueued(), 2);
 
-  EXPECT_THROW(worker.Do(some_work), vqro::WorkerThreadTooBusy);
+  EXPECT_THROW(worker.Do(some_work), WorkerThreadTooBusy);
 
   keep_working = false;
   last_queued.wait();
@@ -79,7 +81,7 @@ TEST(FileutilTest, FileHandleDestructorClosesFD) {
   struct stat s;
   int fd;
   {
-    vqro::FileHandle file("/dev/null", O_RDONLY);
+    FileHandle file("/dev/null", O_RDONLY);
     fd = file.fd;
     ASSERT_NE(fd, -1);
     EXPECT_EQ(lseek(fd, 0, SEEK_SET), 0);
@@ -95,7 +97,7 @@ TEST(FileutilTest, DirectoryHandleDestructorClosesStream) {
   struct stat s;
   int fd;
   {
-    vqro::DirectoryHandle dir("/");
+    DirectoryHandle dir("/");
     stream = dir.stream;
     ASSERT_TRUE(stream != NULL);
     // We can't tell if the DIR* is closed or not, but we can tell if the fd
@@ -106,6 +108,24 @@ TEST(FileutilTest, DirectoryHandleDestructorClosesStream) {
   // fd should be closed
   EXPECT_EQ(fstat(fd, &s), -1);
   EXPECT_EQ(errno, EBADF);
+}
+
+
+TEST(FileutilTest, CreateDirectoryWorks) {
+  string tmpdir(getenv("TEST_TMPDIR"));
+  string path =  tmpdir + "/testdir/subdir";
+  EXPECT_NO_THROW(CreateDirectory(path));
+  ASSERT_TRUE(FileExists(path));
+  // Shouldn't fail if the directory already exists
+  EXPECT_NO_THROW(CreateDirectory(path));
+}
+
+
+TEST(FileutilTest, CreateDirectoryThrowsOnFailure) {
+  string tmpdir(getenv("TEST_TMPDIR"));
+  FileHandle file(tmpdir + "/testfile", O_WRONLY|O_CREAT|O_TRUNC);
+  EXPECT_THROW(CreateDirectory(file.path), IOError);
+  EXPECT_THROW(CreateDirectory("/dev/null/subnull"), IOError);
 }
 
 

@@ -53,7 +53,7 @@ void CreateDirectory(string dir_path) {
       throw IOErrorFromErrno("CreateDirectory mkdir() failed");
     }   
   } else {
-    LOG(INFO) << "Created directory: " << dir_path;
+    VLOG(1) << "Created directory: " << dir_path;
   }
 }
 
@@ -62,7 +62,7 @@ void WriteVector(FileHandle file, Iovec* iov, size_t iov_count) {
   ssize_t written;
   while (iov_count) {
     written = writev(file.fd, iov, iov_count);
-    LOG(INFO) << "writev() wrote " << written << " bytes";
+    VLOG(2) << "writev() wrote " << written << " bytes";
 
     if (written < 0) {
       if (errno == EINTR) continue;
