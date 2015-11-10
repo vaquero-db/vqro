@@ -75,7 +75,8 @@ TEST(WorkerTest, WorkerRefusesTooMuchWork) {
 }
 
 
-TEST(FileutilTest, FileHandleClosesFD) {
+TEST(FileutilTest, FileHandleDestructorClosesFD) {
+  struct stat s;
   int fd;
   {
     vqro::FileHandle file("/dev/null", O_RDONLY);
@@ -83,7 +84,27 @@ TEST(FileutilTest, FileHandleClosesFD) {
     ASSERT_NE(fd, -1);
     EXPECT_EQ(lseek(fd, 0, SEEK_SET), 0);
   }
-  EXPECT_EQ(lseek(fd, 0, SEEK_SET), -1);
+  // fd should be closed
+  EXPECT_EQ(fstat(fd, &s), -1);
+  EXPECT_EQ(errno, EBADF);
+}
+
+
+TEST(FileutilTest, DirectoryHandleDestructorClosesStream) {
+  DIR* stream;
+  struct stat s;
+  int fd;
+  {
+    vqro::DirectoryHandle dir("/");
+    stream = dir.stream;
+    ASSERT_TRUE(stream != NULL);
+    // We can't tell if the DIR* is closed or not, but we can tell if the fd
+    // associated with the DIR* is.
+    ASSERT_NE(fd = dirfd(stream), -1);
+    EXPECT_TRUE(readdir(stream) != NULL);
+  }
+  // fd should be closed
+  EXPECT_EQ(fstat(fd, &s), -1);
   EXPECT_EQ(errno, EBADF);
 }
 
