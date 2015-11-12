@@ -120,6 +120,7 @@ TEST(FileutilTest, CreateDirectoryWorks) {
   EXPECT_NO_THROW(CreateDirectory(path));
 }
 
+
 TEST(FileutilTest, CreateDirectoryThrowsOnFailure) {
   string tmpdir = GetEnvVar("TEST_TMPDIR");
   FileHandle file(tmpdir + "/testfile", O_WRONLY|O_CREAT|O_TRUNC);
@@ -143,7 +144,7 @@ TEST(FileutilTest, WriteVectorWorks) {
   (iov+2)->iov_len = 2;
 
   // write the vector
-  string tmpdir(getenv("TEST_TMPDIR"));
+  string tmpdir = GetEnvVar("TEST_TMPDIR");
   FileHandle wfile(tmpdir + "/testfile", O_WRONLY|O_CREAT|O_TRUNC, 0644);
   ASSERT_NE(wfile.fd, -1);
   EXPECT_NO_THROW(WriteVector(wfile, iov, iov_size));
@@ -152,11 +153,38 @@ TEST(FileutilTest, WriteVectorWorks) {
   FileHandle rfile(wfile.path, O_RDONLY);
   ASSERT_NE(rfile.fd, -1);
   char buf[64];
-  ASSERT_EQ(read(rfile.fd, buf, 64), 10);
   const char* expected_contents = "567cdefgkl";
+  ASSERT_EQ(read(rfile.fd, buf, 64), 10);
   EXPECT_TRUE(memcmp(buf, expected_contents, 10) == 0);
 
   delete iov;
+  ASSERT_EQ(unlink(wfile.path.c_str()), 0);
+}
+
+
+TEST(FileutilTest, WriteValuesWorks) {
+  string tmpdir = GetEnvVar("TEST_TMPDIR");
+  FileHandle wfile(tmpdir + "/testfile", O_WRONLY|O_CREAT|O_TRUNC, 0644);
+  ASSERT_NE(wfile.fd, -1);
+
+  struct Foo {
+    char a = 'a';
+    char b = 'B';
+    char c = 'c';
+  };
+  constexpr size_t num_foo = 4;
+  Foo foobuf[num_foo];
+  EXPECT_NO_THROW(WriteValues<Foo>(wfile, foobuf, num_foo));
+
+  // re-read file and check contents to be correct.
+  FileHandle rfile(wfile.path, O_RDONLY);
+  ASSERT_NE(rfile.fd, -1);
+  char buf[64];
+  size_t foo_bytes = num_foo * sizeof(Foo);
+  EXPECT_EQ(read(rfile.fd, buf, 64), foo_bytes);
+  const char* expected_contents = "aBcaBcaBcaBc";
+  EXPECT_TRUE(memcmp(buf, expected_contents, foo_bytes) == 0);
+
   ASSERT_EQ(unlink(wfile.path.c_str()), 0);
 }
 
