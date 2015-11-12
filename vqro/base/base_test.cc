@@ -189,4 +189,33 @@ TEST(FileutilTest, WriteValuesWorks) {
 }
 
 
+TEST(FileutilTest, ReadValuesWorks) {
+  struct Foo {
+    char a = 'a';
+    char b = 'B';
+    char c = 'c';
+  };
+  constexpr ssize_t num_foo = 4;
+  size_t foo_bytes = num_foo * sizeof(Foo);
+  const char* testdata = "XyzXyzXyzXyz";
+
+  string tmpdir = GetEnvVar("TEST_TMPDIR");
+  FileHandle wfile(tmpdir + "/testfile", O_WRONLY|O_CREAT|O_TRUNC, 0644);
+  ASSERT_EQ(write(wfile.fd, testdata, foo_bytes), foo_bytes);
+
+  FileHandle rfile(wfile.path, O_RDONLY);
+  ASSERT_NE(rfile.fd, -1);
+  std::unique_ptr<vector<Foo>> foobuf = ReadValues<Foo>(rfile, num_foo);
+
+  // check that we read what we wrote
+  for (int i = 0; i < num_foo; i++) {
+    EXPECT_EQ(foobuf->at(i).a, 'X');
+    EXPECT_EQ(foobuf->at(i).b, 'y');
+    EXPECT_EQ(foobuf->at(i).c, 'z');
+  }
+
+  ASSERT_EQ(unlink(wfile.path.c_str()), 0);
+}
+
+
 }  // namespace
