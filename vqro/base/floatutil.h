@@ -31,7 +31,7 @@ bool AlmostEquals(const double a, const double b) {
   // So to compensate we use an absolute epsilon. For now I'm going with
   // 3 * FLT_EPSILSON, which is 3 * 1.19e-7 for me. We'll see. Note that this
   // handles the 0.0 == -0.0 case.
-  if (fabs(a - b) < FLT_EPSILON)
+  if (fabs(a - b) < std::numeric_limits<double>::epsilon())
     return true;
 
   // Casting to an unsigned integral type makes it really easy to do
