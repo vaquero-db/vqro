@@ -27,7 +27,7 @@ DEFINE_int32(worker_task_queue_limit, 16,
 namespace vqro {
 
 static bool _signal_handlers_setup = false;
-static std::mutex  _signal_handler_mutex;
+static std::mutex _signal_handler_mutex;
 const long pagesize = sysconf(_SC_PAGESIZE);
 
 
