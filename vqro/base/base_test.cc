@@ -112,20 +112,52 @@ TEST(FileutilTest, DirectoryHandleDestructorClosesStream) {
 
 
 TEST(FileutilTest, CreateDirectoryWorks) {
-  string tmpdir(getenv("TEST_TMPDIR"));
-  string path =  tmpdir + "/testdir/subdir";
+  string tmpdir = GetEnvVar("TEST_TMPDIR");
+  string path = tmpdir + "/testdir/subdir";
   EXPECT_NO_THROW(CreateDirectory(path));
   ASSERT_TRUE(FileExists(path));
   // Shouldn't fail if the directory already exists
   EXPECT_NO_THROW(CreateDirectory(path));
 }
 
-
 TEST(FileutilTest, CreateDirectoryThrowsOnFailure) {
-  string tmpdir(getenv("TEST_TMPDIR"));
+  string tmpdir = GetEnvVar("TEST_TMPDIR");
   FileHandle file(tmpdir + "/testfile", O_WRONLY|O_CREAT|O_TRUNC);
   EXPECT_THROW(CreateDirectory(file.path), IOError);
   EXPECT_THROW(CreateDirectory("/dev/null/subnull"), IOError);
+  ASSERT_EQ(unlink(file.path.c_str()), 0);
+}
+
+
+TEST(FileutilTest, WriteVectorWorks) {
+  // prepare a non-trivial io vector to write
+  char data[] = "0123456789abcdefghijklmnopqrstuvwxyz";
+  const size_t iov_size = 3;
+  Iovec* iov = new Iovec[iov_size];
+
+  iov->iov_base = data + 5;
+  iov->iov_len = 3;
+  (iov+1)->iov_base = data + 12;
+  (iov+1)->iov_len = 5;
+  (iov+2)->iov_base = data + 20;
+  (iov+2)->iov_len = 2;
+
+  // write the vector
+  string tmpdir(getenv("TEST_TMPDIR"));
+  FileHandle wfile(tmpdir + "/testfile", O_WRONLY|O_CREAT|O_TRUNC, 0644);
+  ASSERT_NE(wfile.fd, -1);
+  EXPECT_NO_THROW(WriteVector(wfile, iov, iov_size));
+
+  // re-read file and check contents to be correct.
+  FileHandle rfile(wfile.path, O_RDONLY);
+  ASSERT_NE(rfile.fd, -1);
+  char buf[64];
+  ASSERT_EQ(read(rfile.fd, buf, 64), 10);
+  const char* expected_contents = "567cdefgkl";
+  EXPECT_TRUE(memcmp(buf, expected_contents, 10) == 0);
+
+  delete iov;
+  ASSERT_EQ(unlink(wfile.path.c_str()), 0);
 }
 
 
