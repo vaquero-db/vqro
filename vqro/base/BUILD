@@ -31,3 +31,36 @@ cc_test(
         "@gtest//:main",
     ],
 )
+
+
+cc_test(
+    name = "worker_test",
+    size = "small",
+    srcs = ["worker_test.cc"],
+    deps = [
+        ":base",
+        "@gtest//:main",
+    ],
+)
+
+
+cc_test(
+    name = "fileutil_test",
+    size = "small",
+    srcs = ["fileutil_test.cc"],
+    deps = [
+        ":base",
+        "@gtest//:main",
+    ],
+)
+
+
+cc_test(
+    name = "floatutil_test",
+    size = "small",
+    srcs = ["floatutil_test.cc"],
+    deps = [
+        ":base",
+        "@gtest//:main",
+    ],
+)
