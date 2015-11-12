@@ -42,6 +42,26 @@ TEST(FileutilTest, DirectoryHandleDestructorClosesStream) {
 }
 
 
+TEST(FileutilTest, GetFileSizeWorks) {
+  // create a file, confirm i see right size
+  string tmpdir = GetEnvVar("TEST_TMPDIR");
+  FileHandle file(tmpdir + "/testfile", O_WRONLY|O_CREAT|O_TRUNC);
+  ASSERT_NE(file.fd, -1);
+
+  const char* buf = "testing123";
+  size_t buflen = strlen(buf);
+  ASSERT_EQ(write(file.fd, buf, buflen), buflen);
+  EXPECT_EQ(GetFileSize(file.path), buflen);
+
+  // second arg is return_zero_on_error
+  EXPECT_EQ(GetFileSize("/path/to/nowhere", true), 0);
+  // otherwise we should get an IOError
+  EXPECT_THROW(GetFileSize("/path/to/nowhere", false), IOError);
+  // the default is to throw the exception
+  EXPECT_THROW(GetFileSize("/path/to/nowhere"), IOError);
+}
+
+
 TEST(FileutilTest, CreateDirectoryWorks) {
   string tmpdir = GetEnvVar("TEST_TMPDIR");
   string path = tmpdir + "/testdir/subdir";
