@@ -10,7 +10,6 @@
 #include <string.h>
 #include <execinfo.h>
 
-#include <csignal>
 #include <ctime>
 #include <string>
 #include <mutex>
@@ -26,21 +25,7 @@ DEFINE_int32(worker_task_queue_limit, 16,
 
 namespace vqro {
 
-static bool _signal_handlers_setup = false;
-static std::mutex _signal_handler_mutex;
 const long pagesize = sysconf(_SC_PAGESIZE);
-
-
-void SetupSignalHandlers() {
-  std::lock_guard<std::mutex> lck(_signal_handler_mutex);
-  if (_signal_handlers_setup) return;
-  LOG(INFO) << "Setting up signal handlers";
-  // Some bugs, like the existence of SIGPIPE, are so old that it is a "bug" to
-  // not explicitly work around them. It's not going anywhere anytime soon and
-  // that is truly a shame.
-  signal(SIGPIPE, SIG_IGN);
-  _signal_handlers_setup = true;
-}
 
 
 string GetEnvVar(string var_name) {

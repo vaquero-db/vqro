@@ -37,11 +37,12 @@ class WorkerThread {
   // Disable assignment
   WorkerThread& operator=(const WorkerThread& other) = delete;
 
-  void Start() {
+  std::future<void> Start() {
     my_thread = std::move(
         std::thread([this] { this->DoTasks(); })
     );
     my_thread.detach();
+    return will_start.get_future();
   }
 
   std::future<void> Stop() {
@@ -49,7 +50,7 @@ class WorkerThread {
     try {
       Do([] {});  // Wake up the DoTasks loop if its waiting on tasks
     } catch (WorkerThreadTooBusy& err) {}
-    return death_promise.get_future();
+    return will_die.get_future();
   }
 
   bool Alive() { return alive; }
@@ -77,7 +78,8 @@ class WorkerThread {
   std::thread my_thread;
   bool alive = false;
   bool keep_processing = true;
-  std::promise<void> death_promise;
+  std::promise<void> will_start;
+  std::promise<void> will_die;
 
   std::deque<std::packaged_task<void()>> tasks;
   std::mutex tasks_mutex;
@@ -87,6 +89,8 @@ class WorkerThread {
   void DoTasks() {
     std::unique_lock<std::mutex> wait_lock(tasks_available_mutex);
     std::packaged_task<void()> task;
+    VLOG(2) << "WorkerThread start";
+    will_start.set_value();
 
     alive = true;
     while (keep_processing) {
@@ -109,7 +113,8 @@ class WorkerThread {
 
     }
     alive = false;
-    death_promise.set_value();
+    will_die.set_value();
+    VLOG(2) << "WorkerThread stop";
   }
 };
 

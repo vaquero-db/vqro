@@ -1,3 +1,4 @@
+#include <csignal>
 #include <iostream>
 #include <string>
 
@@ -26,12 +27,50 @@ DEFINE_int32(datapoint_file_mode, 0644, "Permissions for datapoint files.");
 DEFINE_int32(max_sparse_file_size, 1 << 22, "Max size in bytes of a sparse file.");
 
 using std::to_string;
+using std::lock_guard;
+using std::mutex;
+using vqro::db::Database;
+using vqro::rpc::VaqueroStorageServiceImpl;
+using vqro::rpc::VaqueroSearchServiceImpl;
+
+
+static grpc::Server* main_server = nullptr;
+static mutex main_server_mutex;
+
+
+void Shutdown() {  // Must be idempotent
+  lock_guard<mutex> lck(main_server_mutex);
+  if (main_server != nullptr) {
+    LOG(INFO) << "stopping grpc server";
+    main_server->Shutdown();
+    main_server = nullptr;
+  }
+}
+
+
+void HandleSignals(sigset_t* sigset) {
+  int sig;
+  while (true) {
+    sigwait(sigset, &sig);
+
+    switch (sig) {
+      case SIGTERM:
+        LOG(INFO) << "Caught SIGTERM, shutting down.";
+        Shutdown();
+        break;
+
+      default:
+        VLOG(2) << "Ignoring unhandled signal " << sig;
+        break;
+    }
+  }
+}
 
 
 void RunServer(string server_address) {
-  vqro::db::Database db(FLAGS_data_directory);
-  vqro::rpc::VaqueroStorageServiceImpl storage_service(&db);
-  vqro::rpc::VaqueroSearchServiceImpl search_service(db.search_engine.get());
+  Database db(FLAGS_data_directory);
+  VaqueroStorageServiceImpl storage_service(&db);
+  VaqueroSearchServiceImpl search_service(db.search_engine.get());
 
   LOG(INFO) << "Working directory: " << vqro::GetCurrentWorkingDirectory();
   LOG(INFO) << "Database initialized in data_directory=" << FLAGS_data_directory;
@@ -42,7 +81,15 @@ void RunServer(string server_address) {
   builder.RegisterService(&search_service);
   std::unique_ptr<grpc::Server> server(builder.BuildAndStart());
   std::cout << "Server listening on " << server_address << std::endl;
-  server->Wait();
+  main_server = server.get();
+  try {
+    server->Wait();
+  } catch (...) {
+    lock_guard<mutex> lck(main_server_mutex);
+    main_server = nullptr;
+    LOG(ERROR) << "grpc::Server::Wait() threw an exception";
+    throw;
+  }
 }
 
 
@@ -57,16 +104,39 @@ int main(int argc, char** argv) {
     return 0;
   }
 
+  // Validate flags
   if (FLAGS_data_directory.empty()) {
     std::cerr << "You must specify --data_directory" << std::endl;
     return 1;
   }
 
+  // Setup signal handling. All threads share a common signal disposition, so
+  // that disposition will be to block all signals, and one thread will
+  // explicitly wait on incoming signals as they become pending. This ensures
+  // random threads do not get interrupted by signals.
+  sigset_t sigset;
+  sigemptyset(&sigset);
+  sigaddset(&sigset, SIGHUP);
+  sigaddset(&sigset, SIGPIPE);
+  sigaddset(&sigset, SIGTERM);
+  if (pthread_sigmask(SIG_BLOCK, &sigset, NULL)) {
+    PLOG(FATAL) << "pthread_sigmask failed";
+  }
+  std::thread sighandler(HandleSignals, &sigset);
+  sighandler.detach();
+
   string server_address(FLAGS_listen_ip + ":" + to_string(FLAGS_listen_port));
+  int ret = 0;
 
   grpc_init();
-  RunServer(server_address);
-  grpc_shutdown();
+  try {
+    RunServer(server_address);
+  } catch (vqro::Error& error) {
+    LOG(ERROR) << "Failed to start server: " << error.message;
+    std::cerr << "Failed to start server: " << error.message << std::endl;
+    ret = 1;
+  }
+  grpc_shutdown();  // This crashes sometimes...
 
-  return 0;
+  return ret;
 }

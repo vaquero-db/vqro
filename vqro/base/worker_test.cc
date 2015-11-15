@@ -15,7 +15,7 @@ TEST(WorkerTest, WorkerDoesWorkAndStops) {
   WorkerThread worker {};
   bool work_got_done = false;
 
-  worker.Start();
+  worker.Start().wait();
   worker.Do([&work_got_done] {
     work_got_done = true;
   }).wait();
@@ -39,7 +39,7 @@ TEST(WorkerTest, WorkerRefusesTooMuchWork) {
   };
 
   FLAGS_worker_task_queue_limit = 2;
-  worker.Start();
+  worker.Start().wait();
 
   ASSERT_EQ(worker.TasksQueued(), 0);
   worker.Do(some_work);

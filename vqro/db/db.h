@@ -50,10 +50,13 @@ class Database {
  public:
   friend class StorageOptimizer;
   Database(string dir);
+  ~Database();
 
-  string GetDataDirectory() { return root_dir; }
+  string GetDataDirectory() const { return root_dir; }
 
-  StorageOptimizer* GetStorageOptimizer() { return storage_optimizer.get(); }
+  StorageOptimizer* GetStorageOptimizer() const {
+    return storage_optimizer.get();
+  }
 
   void Write(vqro::rpc::WriteOperation& op);
 

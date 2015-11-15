@@ -51,13 +51,20 @@ Database::Database(string dir) {
   LOG(INFO) << "starting " << num_workers << " worker threads";
   while (num_workers--) {
     workers.emplace_back(new WorkerThread());
-    workers.back()->Start();
+    workers.back()->Start().wait();
   }
-  LOG(INFO) << workers.size() << " worker threads started.";
 
   // Might make more sense to just have a generic schedule thread and use that plus workers.
   std::thread flusher([&] { FlushWriteBuffers(); });
   flusher.detach();
+}
+
+
+Database::~Database() {
+  LOG(INFO) << "Database::~Database()";
+  for (auto worker : workers) {
+    worker->Stop().wait();
+  }
 }
 
 

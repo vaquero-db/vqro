@@ -99,7 +99,6 @@ inline int64_t TimeInMicros() {
 }
 
 
-void SetupSignalHandlers();
 string GetEnvVar(string var_name);
 const string GetThreadId();
 void PrintBacktrace();
