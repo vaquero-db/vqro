@@ -249,7 +249,8 @@ void PrintReadResultJson(const ReadResult& result) {
     obj["status"] = status_obj;
   }
 
-  cout << obj << endl;
+  Json::FastWriter writer;
+  cout << writer.write(obj);
 }
 
 
