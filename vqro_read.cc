@@ -60,7 +60,7 @@ DEFINE_bool(prefer_latest, false, "If true you get the last N datapoints in the 
                                   "given time range, otherwise you get the first "
                                   "N datapoints, where N is defined by --datapoint_limit.");
 DEFINE_bool(debug, false, "When true, print additional debug output to stderr.");
-DEFINE_bool(json, true, "When true output is printed in JSON format, otherwise "
+DEFINE_bool(json, false, "When true output is printed in JSON format, otherwise "
             "in a more human readable form.");
 DEFINE_bool(search_labels, false, "If true, perform a SearchLabels call instead "
             "of ReadDatapoints.");
@@ -295,7 +295,8 @@ void PrintSearchSeriesResults(const SearchSeriesResults& results) {
       }
       list.append(obj);
     }
-    cout << list;
+    Json::FastWriter writer;
+    cout << writer.write(list);
   } else { // non-json
     for (auto series : results.matches()) {
       cout << FormatLabels(series) << endl;
