@@ -54,8 +54,6 @@ std::unique_ptr<DatapointFile> DenseFile::FromFilename(
 
 
 void DenseFile::Read(ReadOperation& read_op) const {
-  // Adjust read_op.next_time to match our alignment.
-  // TODO: User should be able to flag if they want their read_op.start_time to extend backwards
   if (read_op.next_time % duration)
     read_op.next_time = (read_op.next_time / duration + 1) * duration;
 
@@ -71,7 +69,7 @@ void DenseFile::Read(ReadOperation& read_op) const {
     throw IOErrorFromErrno("DenseFile::Read lseek() failed");
 
   int64_t read_end_time = std::min(max_timestamp, read_op.end_time);
-  int64_t datapoints_to_read = (read_end_time - read_op.start_time) / duration;
+  int64_t datapoints_to_read = (read_end_time - read_op.next_time) / duration;
   std::unique_ptr<vector<double>> values = ReadValues<double>(
       file, datapoints_to_read);
 
