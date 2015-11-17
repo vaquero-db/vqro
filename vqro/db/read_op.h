@@ -42,8 +42,8 @@ struct ReadOperation {
   Datapoint* cursor;
 
   void Advance() {
-    cursor++;
     next_time = cursor->timestamp + (cursor->duration ? cursor->duration : 1);
+    cursor++;
   }
 
   void Append(Datapoint& point) {
