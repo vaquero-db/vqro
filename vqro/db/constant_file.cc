@@ -75,7 +75,7 @@ void ConstantFile::Read(ReadOperation& read_op) const {
     return;
 
   int64_t read_end_time = std::min(max_timestamp, read_op.end_time);
-  int64_t datapoints_to_read = (read_end_time - read_op.start_time) / duration;
+  int64_t datapoints_to_read = (read_end_time - read_op.next_time) / duration;
 
   while (datapoints_to_read--) {
     read_op.cursor->timestamp = read_op.next_time;
