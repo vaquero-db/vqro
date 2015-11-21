@@ -39,9 +39,10 @@ void protobuf_AddDesc_storage_2eproto();
 void protobuf_AssignDesc_storage_2eproto();
 void protobuf_ShutdownFile_storage_2eproto();
 
-class ReadOperation;
-class ReadResult;
 class WriteOperation;
+class ReadOperation;
+class SeriesList;
+class ReadResult;
 
 // ===================================================================
 
@@ -136,10 +137,10 @@ class WriteOperation : public ::google::protobuf::Message {
   const ::vqro::rpc::Datapoint& datapoints(int index) const;
   ::vqro::rpc::Datapoint* mutable_datapoints(int index);
   ::vqro::rpc::Datapoint* add_datapoints();
-  ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Datapoint >*
-      mutable_datapoints();
   const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Datapoint >&
       datapoints() const;
+  ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Datapoint >*
+      mutable_datapoints();
 
   // @@protoc_insertion_point(class_scope:vqro.rpc.WriteOperation)
  private:
@@ -179,6 +180,12 @@ class ReadOperation : public ::google::protobuf::Message {
   }
   static const ::google::protobuf::Descriptor* descriptor();
   static const ReadOperation& default_instance();
+
+  enum SelectorCase {
+    kQuery = 1,
+    kList = 2,
+    SELECTOR_NOT_SET = 0,
+  };
 
   void UnsafeArenaSwap(ReadOperation* other);
   void Swap(ReadOperation* other);
@@ -245,31 +252,163 @@ class ReadOperation : public ::google::protobuf::Message {
   void unsafe_arena_set_allocated_query(
       ::vqro::rpc::SeriesQuery* query);
 
-  // optional int64 start_time = 2;
+  // optional .vqro.rpc.SeriesList list = 2;
+  bool has_list() const;
+  void clear_list();
+  static const int kListFieldNumber = 2;
+  private:
+  void _slow_mutable_list();
+  void _slow_set_allocated_list(
+      ::google::protobuf::Arena* message_arena, ::vqro::rpc::SeriesList** list);
+  ::vqro::rpc::SeriesList* _slow_release_list();
+  public:
+  const ::vqro::rpc::SeriesList& list() const;
+  ::vqro::rpc::SeriesList* mutable_list();
+  ::vqro::rpc::SeriesList* release_list();
+  void set_allocated_list(::vqro::rpc::SeriesList* list);
+  ::vqro::rpc::SeriesList* unsafe_arena_release_list();
+  void unsafe_arena_set_allocated_list(
+      ::vqro::rpc::SeriesList* list);
+
+  // optional int64 start_time = 3;
   void clear_start_time();
-  static const int kStartTimeFieldNumber = 2;
+  static const int kStartTimeFieldNumber = 3;
   ::google::protobuf::int64 start_time() const;
   void set_start_time(::google::protobuf::int64 value);
 
-  // optional int64 end_time = 3;
+  // optional int64 end_time = 4;
   void clear_end_time();
-  static const int kEndTimeFieldNumber = 3;
+  static const int kEndTimeFieldNumber = 4;
   ::google::protobuf::int64 end_time() const;
   void set_end_time(::google::protobuf::int64 value);
 
-  // optional int64 datapoint_limit = 4;
+  // optional int64 datapoint_limit = 5;
   void clear_datapoint_limit();
-  static const int kDatapointLimitFieldNumber = 4;
+  static const int kDatapointLimitFieldNumber = 5;
   ::google::protobuf::int64 datapoint_limit() const;
   void set_datapoint_limit(::google::protobuf::int64 value);
 
-  // optional bool prefer_latest = 5;
+  // optional bool prefer_latest = 6;
   void clear_prefer_latest();
-  static const int kPreferLatestFieldNumber = 5;
+  static const int kPreferLatestFieldNumber = 6;
   bool prefer_latest() const;
   void set_prefer_latest(bool value);
 
+  SelectorCase selector_case() const;
   // @@protoc_insertion_point(class_scope:vqro.rpc.ReadOperation)
+ private:
+  inline void set_has_query();
+  inline void set_has_list();
+
+  inline bool has_selector() const;
+  void clear_selector();
+  inline void clear_has_selector();
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  friend class ::google::protobuf::Arena;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  bool _is_default_instance_;
+  ::google::protobuf::int64 start_time_;
+  ::google::protobuf::int64 end_time_;
+  ::google::protobuf::int64 datapoint_limit_;
+  bool prefer_latest_;
+  union SelectorUnion {
+    SelectorUnion() {}
+    ::vqro::rpc::SeriesQuery* query_;
+    ::vqro::rpc::SeriesList* list_;
+  } selector_;
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _oneof_case_[1];
+
+  friend void  protobuf_AddDesc_storage_2eproto();
+  friend void protobuf_AssignDesc_storage_2eproto();
+  friend void protobuf_ShutdownFile_storage_2eproto();
+
+  void InitAsDefaultInstance();
+  static ReadOperation* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class SeriesList : public ::google::protobuf::Message {
+ public:
+  SeriesList();
+  virtual ~SeriesList();
+
+  SeriesList(const SeriesList& from);
+
+  inline SeriesList& operator=(const SeriesList& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline ::google::protobuf::Arena* GetArena() const { return GetArenaNoVirtual(); }
+  inline void* GetMaybeArenaPointer() const {
+    return MaybeArenaPtr();
+  }
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SeriesList& default_instance();
+
+  void UnsafeArenaSwap(SeriesList* other);
+  void Swap(SeriesList* other);
+
+  // implements Message ----------------------------------------------
+
+  inline SeriesList* New() const { return New(NULL); }
+
+  SeriesList* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SeriesList& from);
+  void MergeFrom(const SeriesList& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(SeriesList* other);
+  protected:
+  explicit SeriesList(::google::protobuf::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::google::protobuf::Arena* arena);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated .vqro.rpc.Series series = 1;
+  int series_size() const;
+  void clear_series();
+  static const int kSeriesFieldNumber = 1;
+  const ::vqro::rpc::Series& series(int index) const;
+  ::vqro::rpc::Series* mutable_series(int index);
+  ::vqro::rpc::Series* add_series();
+  const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Series >&
+      series() const;
+  ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Series >*
+      mutable_series();
+
+  // @@protoc_insertion_point(class_scope:vqro.rpc.SeriesList)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -277,18 +416,14 @@ class ReadOperation : public ::google::protobuf::Message {
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   bool _is_default_instance_;
-  ::vqro::rpc::SeriesQuery* query_;
-  ::google::protobuf::int64 start_time_;
-  ::google::protobuf::int64 end_time_;
-  ::google::protobuf::int64 datapoint_limit_;
-  bool prefer_latest_;
+  ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Series > series_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_storage_2eproto();
   friend void protobuf_AssignDesc_storage_2eproto();
   friend void protobuf_ShutdownFile_storage_2eproto();
 
   void InitAsDefaultInstance();
-  static ReadOperation* default_instance_;
+  static SeriesList* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -383,10 +518,10 @@ class ReadResult : public ::google::protobuf::Message {
   const ::vqro::rpc::Datapoint& datapoints(int index) const;
   ::vqro::rpc::Datapoint* mutable_datapoints(int index);
   ::vqro::rpc::Datapoint* add_datapoints();
-  ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Datapoint >*
-      mutable_datapoints();
   const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Datapoint >&
       datapoints() const;
+  ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Datapoint >*
+      mutable_datapoints();
 
   // optional .vqro.rpc.StatusMessage status = 3;
   bool has_status() const;
@@ -438,7 +573,7 @@ inline bool WriteOperation::has_series() const {
   return !_is_default_instance_ && series_ != NULL;
 }
 inline void WriteOperation::clear_series() {
-  if (GetArenaNoVirtual() == NULL && series_ != NULL) delete series_;
+  if (series_ != NULL) delete series_;
   series_ = NULL;
 }
 inline const ::vqro::rpc::Series& WriteOperation::series() const {
@@ -448,8 +583,7 @@ inline const ::vqro::rpc::Series& WriteOperation::series() const {
 inline ::vqro::rpc::Series* WriteOperation::mutable_series() {
   
   if (series_ == NULL) {
-    _slow_mutable_series();
-  }
+    _slow_mutable_series();  }
   // @@protoc_insertion_point(field_mutable:vqro.rpc.WriteOperation.series)
   return series_;
 }
@@ -463,7 +597,7 @@ inline ::vqro::rpc::Series* WriteOperation::release_series() {
     return temp;
   }
 }
-inline  void WriteOperation::set_allocated_series(::vqro::rpc::Series* series) {
+inline void WriteOperation::set_allocated_series(::vqro::rpc::Series* series) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete series_;
@@ -499,15 +633,15 @@ inline ::vqro::rpc::Datapoint* WriteOperation::add_datapoints() {
   // @@protoc_insertion_point(field_add:vqro.rpc.WriteOperation.datapoints)
   return datapoints_.Add();
 }
-inline ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Datapoint >*
-WriteOperation::mutable_datapoints() {
-  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.WriteOperation.datapoints)
-  return &datapoints_;
-}
 inline const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Datapoint >&
 WriteOperation::datapoints() const {
   // @@protoc_insertion_point(field_list:vqro.rpc.WriteOperation.datapoints)
   return datapoints_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Datapoint >*
+WriteOperation::mutable_datapoints() {
+  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.WriteOperation.datapoints)
+  return &datapoints_;
 }
 
 // -------------------------------------------------------------------
@@ -516,52 +650,177 @@ WriteOperation::datapoints() const {
 
 // optional .vqro.rpc.SeriesQuery query = 1;
 inline bool ReadOperation::has_query() const {
-  return !_is_default_instance_ && query_ != NULL;
+  return selector_case() == kQuery;
+}
+inline void ReadOperation::set_has_query() {
+  _oneof_case_[0] = kQuery;
 }
 inline void ReadOperation::clear_query() {
-  if (GetArenaNoVirtual() == NULL && query_ != NULL) delete query_;
-  query_ = NULL;
+  if (has_query()) {
+    if (GetArenaNoVirtual() == NULL) {
+      delete selector_.query_;
+    }
+    clear_has_selector();
+  }
 }
 inline const ::vqro::rpc::SeriesQuery& ReadOperation::query() const {
   // @@protoc_insertion_point(field_get:vqro.rpc.ReadOperation.query)
-  return query_ != NULL ? *query_ : *default_instance_->query_;
+  return has_query() ? *selector_.query_
+                      : ::vqro::rpc::SeriesQuery::default_instance();
 }
 inline ::vqro::rpc::SeriesQuery* ReadOperation::mutable_query() {
-  
-  if (query_ == NULL) {
-    _slow_mutable_query();
+  if (!has_query()) {
+    clear_selector();
+    set_has_query();
+    selector_.query_ = 
+      ::google::protobuf::Arena::CreateMessage< ::vqro::rpc::SeriesQuery >(
+      GetArenaNoVirtual());
   }
   // @@protoc_insertion_point(field_mutable:vqro.rpc.ReadOperation.query)
-  return query_;
+  return selector_.query_;
 }
 inline ::vqro::rpc::SeriesQuery* ReadOperation::release_query() {
-  
-  if (GetArenaNoVirtual() != NULL) {
-    return _slow_release_query();
+  if (has_query()) {
+    clear_has_selector();
+    if (GetArenaNoVirtual() != NULL) {
+      ::vqro::rpc::SeriesQuery* temp = new ::vqro::rpc::SeriesQuery;
+      temp->MergeFrom(*selector_.query_);
+      selector_.query_ = NULL;
+      return temp;
+    } else {
+      ::vqro::rpc::SeriesQuery* temp = selector_.query_;
+      selector_.query_ = NULL;
+      return temp;
+    }
   } else {
-    ::vqro::rpc::SeriesQuery* temp = query_;
-    query_ = NULL;
-    return temp;
+    return NULL;
   }
 }
-inline  void ReadOperation::set_allocated_query(::vqro::rpc::SeriesQuery* query) {
-  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
-  if (message_arena == NULL) {
-    delete query_;
-  }
-  if (query != NULL) {
-    _slow_set_allocated_query(message_arena, &query);
-  }
-  query_ = query;
-  if (query) {
-    
+inline ::vqro::rpc::SeriesQuery* ReadOperation::unsafe_arena_release_query() {
+  if (has_query()) {
+    clear_has_selector();
+    ::vqro::rpc::SeriesQuery* temp = selector_.query_;
+    selector_.query_ = NULL;
+    return temp;
   } else {
-    
+    return NULL;
+  }
+}
+inline void ReadOperation::set_allocated_query(::vqro::rpc::SeriesQuery* query) {
+  clear_selector();
+  if (query) {
+    if (GetArenaNoVirtual() != NULL &&
+        ::google::protobuf::Arena::GetArena(query) == NULL) {
+      GetArenaNoVirtual()->Own(query);
+    } else if (GetArenaNoVirtual() !=
+               ::google::protobuf::Arena::GetArena(query)) {
+      ::vqro::rpc::SeriesQuery* new_query = 
+          ::google::protobuf::Arena::CreateMessage< ::vqro::rpc::SeriesQuery >(
+          GetArenaNoVirtual());
+      new_query->CopyFrom(*query);
+      query = new_query;
+    }
+    set_has_query();
+    selector_.query_ = query;
   }
   // @@protoc_insertion_point(field_set_allocated:vqro.rpc.ReadOperation.query)
 }
+inline void ReadOperation::unsafe_arena_set_allocated_query(::vqro::rpc::SeriesQuery* query) {
+  clear_selector();
+  if (query) {
+    set_has_query();
+    selector_.query_ = query;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:vqro.rpc.ReadOperation.query)
+}
 
-// optional int64 start_time = 2;
+// optional .vqro.rpc.SeriesList list = 2;
+inline bool ReadOperation::has_list() const {
+  return selector_case() == kList;
+}
+inline void ReadOperation::set_has_list() {
+  _oneof_case_[0] = kList;
+}
+inline void ReadOperation::clear_list() {
+  if (has_list()) {
+    if (GetArenaNoVirtual() == NULL) {
+      delete selector_.list_;
+    }
+    clear_has_selector();
+  }
+}
+inline const ::vqro::rpc::SeriesList& ReadOperation::list() const {
+  // @@protoc_insertion_point(field_get:vqro.rpc.ReadOperation.list)
+  return has_list() ? *selector_.list_
+                      : ::vqro::rpc::SeriesList::default_instance();
+}
+inline ::vqro::rpc::SeriesList* ReadOperation::mutable_list() {
+  if (!has_list()) {
+    clear_selector();
+    set_has_list();
+    selector_.list_ = 
+      ::google::protobuf::Arena::CreateMessage< ::vqro::rpc::SeriesList >(
+      GetArenaNoVirtual());
+  }
+  // @@protoc_insertion_point(field_mutable:vqro.rpc.ReadOperation.list)
+  return selector_.list_;
+}
+inline ::vqro::rpc::SeriesList* ReadOperation::release_list() {
+  if (has_list()) {
+    clear_has_selector();
+    if (GetArenaNoVirtual() != NULL) {
+      ::vqro::rpc::SeriesList* temp = new ::vqro::rpc::SeriesList;
+      temp->MergeFrom(*selector_.list_);
+      selector_.list_ = NULL;
+      return temp;
+    } else {
+      ::vqro::rpc::SeriesList* temp = selector_.list_;
+      selector_.list_ = NULL;
+      return temp;
+    }
+  } else {
+    return NULL;
+  }
+}
+inline ::vqro::rpc::SeriesList* ReadOperation::unsafe_arena_release_list() {
+  if (has_list()) {
+    clear_has_selector();
+    ::vqro::rpc::SeriesList* temp = selector_.list_;
+    selector_.list_ = NULL;
+    return temp;
+  } else {
+    return NULL;
+  }
+}
+inline void ReadOperation::set_allocated_list(::vqro::rpc::SeriesList* list) {
+  clear_selector();
+  if (list) {
+    if (GetArenaNoVirtual() != NULL &&
+        ::google::protobuf::Arena::GetArena(list) == NULL) {
+      GetArenaNoVirtual()->Own(list);
+    } else if (GetArenaNoVirtual() !=
+               ::google::protobuf::Arena::GetArena(list)) {
+      ::vqro::rpc::SeriesList* new_list = 
+          ::google::protobuf::Arena::CreateMessage< ::vqro::rpc::SeriesList >(
+          GetArenaNoVirtual());
+      new_list->CopyFrom(*list);
+      list = new_list;
+    }
+    set_has_list();
+    selector_.list_ = list;
+  }
+  // @@protoc_insertion_point(field_set_allocated:vqro.rpc.ReadOperation.list)
+}
+inline void ReadOperation::unsafe_arena_set_allocated_list(::vqro::rpc::SeriesList* list) {
+  clear_selector();
+  if (list) {
+    set_has_list();
+    selector_.list_ = list;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:vqro.rpc.ReadOperation.list)
+}
+
+// optional int64 start_time = 3;
 inline void ReadOperation::clear_start_time() {
   start_time_ = GOOGLE_LONGLONG(0);
 }
@@ -575,7 +834,7 @@ inline void ReadOperation::set_start_time(::google::protobuf::int64 value) {
   // @@protoc_insertion_point(field_set:vqro.rpc.ReadOperation.start_time)
 }
 
-// optional int64 end_time = 3;
+// optional int64 end_time = 4;
 inline void ReadOperation::clear_end_time() {
   end_time_ = GOOGLE_LONGLONG(0);
 }
@@ -589,7 +848,7 @@ inline void ReadOperation::set_end_time(::google::protobuf::int64 value) {
   // @@protoc_insertion_point(field_set:vqro.rpc.ReadOperation.end_time)
 }
 
-// optional int64 datapoint_limit = 4;
+// optional int64 datapoint_limit = 5;
 inline void ReadOperation::clear_datapoint_limit() {
   datapoint_limit_ = GOOGLE_LONGLONG(0);
 }
@@ -603,7 +862,7 @@ inline void ReadOperation::set_datapoint_limit(::google::protobuf::int64 value) 
   // @@protoc_insertion_point(field_set:vqro.rpc.ReadOperation.datapoint_limit)
 }
 
-// optional bool prefer_latest = 5;
+// optional bool prefer_latest = 6;
 inline void ReadOperation::clear_prefer_latest() {
   prefer_latest_ = false;
 }
@@ -617,6 +876,49 @@ inline void ReadOperation::set_prefer_latest(bool value) {
   // @@protoc_insertion_point(field_set:vqro.rpc.ReadOperation.prefer_latest)
 }
 
+inline bool ReadOperation::has_selector() const {
+  return selector_case() != SELECTOR_NOT_SET;
+}
+inline void ReadOperation::clear_has_selector() {
+  _oneof_case_[0] = SELECTOR_NOT_SET;
+}
+inline ReadOperation::SelectorCase ReadOperation::selector_case() const {
+  return ReadOperation::SelectorCase(_oneof_case_[0]);
+}
+// -------------------------------------------------------------------
+
+// SeriesList
+
+// repeated .vqro.rpc.Series series = 1;
+inline int SeriesList::series_size() const {
+  return series_.size();
+}
+inline void SeriesList::clear_series() {
+  series_.Clear();
+}
+inline const ::vqro::rpc::Series& SeriesList::series(int index) const {
+  // @@protoc_insertion_point(field_get:vqro.rpc.SeriesList.series)
+  return series_.Get(index);
+}
+inline ::vqro::rpc::Series* SeriesList::mutable_series(int index) {
+  // @@protoc_insertion_point(field_mutable:vqro.rpc.SeriesList.series)
+  return series_.Mutable(index);
+}
+inline ::vqro::rpc::Series* SeriesList::add_series() {
+  // @@protoc_insertion_point(field_add:vqro.rpc.SeriesList.series)
+  return series_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Series >&
+SeriesList::series() const {
+  // @@protoc_insertion_point(field_list:vqro.rpc.SeriesList.series)
+  return series_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Series >*
+SeriesList::mutable_series() {
+  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.SeriesList.series)
+  return &series_;
+}
+
 // -------------------------------------------------------------------
 
 // ReadResult
@@ -626,7 +928,7 @@ inline bool ReadResult::has_series() const {
   return !_is_default_instance_ && series_ != NULL;
 }
 inline void ReadResult::clear_series() {
-  if (GetArenaNoVirtual() == NULL && series_ != NULL) delete series_;
+  if (series_ != NULL) delete series_;
   series_ = NULL;
 }
 inline const ::vqro::rpc::Series& ReadResult::series() const {
@@ -636,8 +938,7 @@ inline const ::vqro::rpc::Series& ReadResult::series() const {
 inline ::vqro::rpc::Series* ReadResult::mutable_series() {
   
   if (series_ == NULL) {
-    _slow_mutable_series();
-  }
+    _slow_mutable_series();  }
   // @@protoc_insertion_point(field_mutable:vqro.rpc.ReadResult.series)
   return series_;
 }
@@ -651,7 +952,7 @@ inline ::vqro::rpc::Series* ReadResult::release_series() {
     return temp;
   }
 }
-inline  void ReadResult::set_allocated_series(::vqro::rpc::Series* series) {
+inline void ReadResult::set_allocated_series(::vqro::rpc::Series* series) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete series_;
@@ -687,15 +988,15 @@ inline ::vqro::rpc::Datapoint* ReadResult::add_datapoints() {
   // @@protoc_insertion_point(field_add:vqro.rpc.ReadResult.datapoints)
   return datapoints_.Add();
 }
-inline ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Datapoint >*
-ReadResult::mutable_datapoints() {
-  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.ReadResult.datapoints)
-  return &datapoints_;
-}
 inline const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Datapoint >&
 ReadResult::datapoints() const {
   // @@protoc_insertion_point(field_list:vqro.rpc.ReadResult.datapoints)
   return datapoints_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Datapoint >*
+ReadResult::mutable_datapoints() {
+  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.ReadResult.datapoints)
+  return &datapoints_;
 }
 
 // optional .vqro.rpc.StatusMessage status = 3;
@@ -703,7 +1004,7 @@ inline bool ReadResult::has_status() const {
   return !_is_default_instance_ && status_ != NULL;
 }
 inline void ReadResult::clear_status() {
-  if (GetArenaNoVirtual() == NULL && status_ != NULL) delete status_;
+  if (status_ != NULL) delete status_;
   status_ = NULL;
 }
 inline const ::vqro::rpc::StatusMessage& ReadResult::status() const {
@@ -713,8 +1014,7 @@ inline const ::vqro::rpc::StatusMessage& ReadResult::status() const {
 inline ::vqro::rpc::StatusMessage* ReadResult::mutable_status() {
   
   if (status_ == NULL) {
-    _slow_mutable_status();
-  }
+    _slow_mutable_status();  }
   // @@protoc_insertion_point(field_mutable:vqro.rpc.ReadResult.status)
   return status_;
 }
@@ -728,7 +1028,7 @@ inline ::vqro::rpc::StatusMessage* ReadResult::release_status() {
     return temp;
   }
 }
-inline  void ReadResult::set_allocated_status(::vqro::rpc::StatusMessage* status) {
+inline void ReadResult::set_allocated_status(::vqro::rpc::StatusMessage* status) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete status_;
@@ -746,10 +1046,6 @@ inline  void ReadResult::set_allocated_status(::vqro::rpc::StatusMessage* status
 }
 
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
-// -------------------------------------------------------------------
-
-// -------------------------------------------------------------------
-
 
 // @@protoc_insertion_point(namespace_scope)
 

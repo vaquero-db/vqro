@@ -39,8 +39,8 @@ void protobuf_AddDesc_core_2eproto();
 void protobuf_AssignDesc_core_2eproto();
 void protobuf_ShutdownFile_core_2eproto();
 
-class Datapoint;
 class Series;
+class Datapoint;
 class StatusMessage;
 
 // ===================================================================
@@ -501,6 +501,7 @@ inline void StatusMessage::unsafe_arena_set_allocated_text(
   } else {
     
   }
+  
   text_.UnsafeArenaSetAllocated(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       text, GetArenaNoVirtual());
   // @@protoc_insertion_point(field_set_allocated:vqro.rpc.StatusMessage.text)
@@ -535,10 +536,6 @@ inline void StatusMessage::set_go_away(bool value) {
 }
 
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
-// -------------------------------------------------------------------
-
-// -------------------------------------------------------------------
-
 
 // @@protoc_insertion_point(namespace_scope)
 

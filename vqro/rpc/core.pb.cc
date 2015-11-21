@@ -180,7 +180,7 @@ const int Series::kLabelsFieldNumber;
 #endif  // !_MSC_VER
 
 Series::Series()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() , _internal_metadata_(NULL)  {
   SharedCtor();
   // @@protoc_insertion_point(constructor:vqro.rpc.Series)
 }
@@ -273,27 +273,16 @@ bool Series::MergePartialFromCodedStream(
       // map<string, string> labels = 1;
       case 1: {
         if (tag == 10) {
-          DO_(input->IncrementRecursionDepth());
-         parse_loop_labels:
+         parse_labels:
           ::google::protobuf::scoped_ptr<Series_LabelsEntry> entry(labels_.NewEntry());
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
               input, entry.get()));
           (*mutable_labels())[entry->key()] = *entry->mutable_value();
-          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-            entry->key().data(), entry->key().length(),
-            ::google::protobuf::internal::WireFormatLite::PARSE,
-            "vqro.rpc.Series.LabelsEntry.key"));
-          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-            entry->mutable_value()->data(),
-            entry->mutable_value()->length(),
-            ::google::protobuf::internal::WireFormatLite::PARSE,
-            "vqro.rpc.Series.LabelsEntry.value"));
           if (entry->GetArena() != NULL) entry.release();
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(10)) goto parse_loop_labels;
-        input->UnsafeDecrementRecursionDepth();
+        if (input->ExpectTag(10)) goto parse_labels;
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -326,22 +315,13 @@ void Series::SerializeWithCachedSizes(
   {
     ::google::protobuf::scoped_ptr<Series_LabelsEntry> entry;
     for (::google::protobuf::Map< ::std::string, ::std::string >::const_iterator
-        it = this->labels().begin();
-        it != this->labels().end(); ++it) {
+        it = labels().begin(); it != labels().end(); ++it) {
       if (entry.get() != NULL && entry->GetArena() != NULL) {
         entry.release();
       }
       entry.reset(labels_.NewEntryWrapper(it->first, it->second));
       ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
           1, *entry, output);
-      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-        it->first.data(), it->first.length(),
-        ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-        "vqro.rpc.Series.LabelsEntry.key");
-      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-        it->second.data(), it->second.length(),
-        ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-        "vqro.rpc.Series.LabelsEntry.value");
     }
     if (entry.get() != NULL && entry->GetArena() != NULL) {
       entry.release();
@@ -358,8 +338,7 @@ void Series::SerializeWithCachedSizes(
   {
     ::google::protobuf::scoped_ptr<Series_LabelsEntry> entry;
     for (::google::protobuf::Map< ::std::string, ::std::string >::const_iterator
-        it = this->labels().begin();
-        it != this->labels().end(); ++it) {
+        it = labels().begin(); it != labels().end(); ++it) {
       if (entry.get() != NULL && entry->GetArena() != NULL) {
         entry.release();
       }
@@ -367,14 +346,6 @@ void Series::SerializeWithCachedSizes(
       target = ::google::protobuf::internal::WireFormatLite::
           WriteMessageNoVirtualToArray(
               1, *entry, target);
-      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-        it->first.data(), it->first.length(),
-        ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-        "vqro.rpc.Series.LabelsEntry.key");
-      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-        it->second.data(), it->second.length(),
-        ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-        "vqro.rpc.Series.LabelsEntry.value");
     }
     if (entry.get() != NULL && entry->GetArena() != NULL) {
       entry.release();
@@ -393,8 +364,7 @@ int Series::ByteSize() const {
   {
     ::google::protobuf::scoped_ptr<Series_LabelsEntry> entry;
     for (::google::protobuf::Map< ::std::string, ::std::string >::const_iterator
-        it = this->labels().begin();
-        it != this->labels().end(); ++it) {
+        it = labels().begin(); it != labels().end(); ++it) {
       if (entry.get() != NULL && entry->GetArena() != NULL) {
         entry.release();
       }
@@ -415,9 +385,9 @@ int Series::ByteSize() const {
 
 void Series::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const Series* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const Series>(
-          &from);
+  const Series* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Series*>(
+      &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
@@ -481,10 +451,10 @@ void Series::InternalSwap(Series* other) {
 // Series
 
 // map<string, string> labels = 1;
-int Series::labels_size() const {
+ int Series::labels_size() const {
   return labels_.size();
 }
-void Series::clear_labels() {
+ void Series::clear_labels() {
   labels_.Clear();
 }
  const ::google::protobuf::Map< ::std::string, ::std::string >&
@@ -509,7 +479,7 @@ const int Datapoint::kValueFieldNumber;
 #endif  // !_MSC_VER
 
 Datapoint::Datapoint()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() , _internal_metadata_(NULL)  {
   SharedCtor();
   // @@protoc_insertion_point(constructor:vqro.rpc.Datapoint)
 }
@@ -747,9 +717,9 @@ int Datapoint::ByteSize() const {
 
 void Datapoint::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const Datapoint* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const Datapoint>(
-          &from);
+  const Datapoint* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Datapoint*>(
+      &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
@@ -823,7 +793,7 @@ void Datapoint::InternalSwap(Datapoint* other) {
 // Datapoint
 
 // optional int64 timestamp = 1;
-void Datapoint::clear_timestamp() {
+ void Datapoint::clear_timestamp() {
   timestamp_ = GOOGLE_LONGLONG(0);
 }
  ::google::protobuf::int64 Datapoint::timestamp() const {
@@ -837,7 +807,7 @@ void Datapoint::clear_timestamp() {
 }
 
 // optional int64 duration = 2;
-void Datapoint::clear_duration() {
+ void Datapoint::clear_duration() {
   duration_ = GOOGLE_LONGLONG(0);
 }
  ::google::protobuf::int64 Datapoint::duration() const {
@@ -851,7 +821,7 @@ void Datapoint::clear_duration() {
 }
 
 // optional double value = 3;
-void Datapoint::clear_value() {
+ void Datapoint::clear_value() {
   value_ = 0;
 }
  double Datapoint::value() const {
@@ -875,7 +845,7 @@ const int StatusMessage::kGoAwayFieldNumber;
 #endif  // !_MSC_VER
 
 StatusMessage::StatusMessage()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() , _internal_metadata_(NULL)  {
   SharedCtor();
   // @@protoc_insertion_point(constructor:vqro.rpc.StatusMessage)
 }
@@ -983,10 +953,10 @@ bool StatusMessage::MergePartialFromCodedStream(
         if (tag == 10) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_text()));
-          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
             this->text().data(), this->text().length(),
-            ::google::protobuf::internal::WireFormatLite::PARSE,
-            "vqro.rpc.StatusMessage.text"));
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "vqro.rpc.StatusMessage.text");
         } else {
           goto handle_unusual;
         }
@@ -1050,9 +1020,9 @@ void StatusMessage::SerializeWithCachedSizes(
   // @@protoc_insertion_point(serialize_start:vqro.rpc.StatusMessage)
   // optional string text = 1;
   if (this->text().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->text().data(), this->text().length(),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
       "vqro.rpc.StatusMessage.text");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       1, this->text(), output);
@@ -1076,9 +1046,9 @@ void StatusMessage::SerializeWithCachedSizes(
   // @@protoc_insertion_point(serialize_to_array_start:vqro.rpc.StatusMessage)
   // optional string text = 1;
   if (this->text().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->text().data(), this->text().length(),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
       "vqro.rpc.StatusMessage.text");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
@@ -1127,9 +1097,9 @@ int StatusMessage::ByteSize() const {
 
 void StatusMessage::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const StatusMessage* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const StatusMessage>(
-          &from);
+  const StatusMessage* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const StatusMessage*>(
+      &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
@@ -1203,7 +1173,7 @@ void StatusMessage::InternalSwap(StatusMessage* other) {
 // StatusMessage
 
 // optional string text = 1;
-void StatusMessage::clear_text() {
+ void StatusMessage::clear_text() {
   text_.ClearToEmpty(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), GetArenaNoVirtual());
 }
  const ::std::string& StatusMessage::text() const {
@@ -1261,13 +1231,14 @@ void StatusMessage::clear_text() {
   } else {
     
   }
+  
   text_.UnsafeArenaSetAllocated(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       text, GetArenaNoVirtual());
   // @@protoc_insertion_point(field_set_allocated:vqro.rpc.StatusMessage.text)
 }
 
 // optional bool error = 2;
-void StatusMessage::clear_error() {
+ void StatusMessage::clear_error() {
   error_ = false;
 }
  bool StatusMessage::error() const {
@@ -1281,7 +1252,7 @@ void StatusMessage::clear_error() {
 }
 
 // optional bool go_away = 3;
-void StatusMessage::clear_go_away() {
+ void StatusMessage::clear_go_away() {
   go_away_ = false;
 }
  bool StatusMessage::go_away() const {

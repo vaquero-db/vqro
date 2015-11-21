@@ -38,11 +38,11 @@ void protobuf_AddDesc_search_2eproto();
 void protobuf_AssignDesc_search_2eproto();
 void protobuf_ShutdownFile_search_2eproto();
 
+class SeriesQuery;
 class LabelConstraint;
+class SearchSeriesResults;
 class LabelsQuery;
 class SearchLabelsResults;
-class SearchSeriesResults;
-class SeriesQuery;
 
 // ===================================================================
 
@@ -119,10 +119,10 @@ class SeriesQuery : public ::google::protobuf::Message {
   const ::vqro::rpc::LabelConstraint& constraints(int index) const;
   ::vqro::rpc::LabelConstraint* mutable_constraints(int index);
   ::vqro::rpc::LabelConstraint* add_constraints();
-  ::google::protobuf::RepeatedPtrField< ::vqro::rpc::LabelConstraint >*
-      mutable_constraints();
   const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::LabelConstraint >&
       constraints() const;
+  ::google::protobuf::RepeatedPtrField< ::vqro::rpc::LabelConstraint >*
+      mutable_constraints();
 
   // optional int64 result_offset = 2;
   void clear_result_offset();
@@ -383,10 +383,10 @@ class SearchSeriesResults : public ::google::protobuf::Message {
   const ::vqro::rpc::Series& matches(int index) const;
   ::vqro::rpc::Series* mutable_matches(int index);
   ::vqro::rpc::Series* add_matches();
-  ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Series >*
-      mutable_matches();
   const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Series >&
       matches() const;
+  ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Series >*
+      mutable_matches();
 
   // optional .vqro.rpc.StatusMessage status = 2;
   bool has_status() const;
@@ -684,15 +684,15 @@ inline ::vqro::rpc::LabelConstraint* SeriesQuery::add_constraints() {
   // @@protoc_insertion_point(field_add:vqro.rpc.SeriesQuery.constraints)
   return constraints_.Add();
 }
-inline ::google::protobuf::RepeatedPtrField< ::vqro::rpc::LabelConstraint >*
-SeriesQuery::mutable_constraints() {
-  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.SeriesQuery.constraints)
-  return &constraints_;
-}
 inline const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::LabelConstraint >&
 SeriesQuery::constraints() const {
   // @@protoc_insertion_point(field_list:vqro.rpc.SeriesQuery.constraints)
   return constraints_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::vqro::rpc::LabelConstraint >*
+SeriesQuery::mutable_constraints() {
+  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.SeriesQuery.constraints)
+  return &constraints_;
 }
 
 // optional int64 result_offset = 2;
@@ -786,6 +786,7 @@ inline void LabelConstraint::unsafe_arena_set_allocated_label_name(
   } else {
     
   }
+  
   label_name_.UnsafeArenaSetAllocated(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       label_name, GetArenaNoVirtual());
   // @@protoc_insertion_point(field_set_allocated:vqro.rpc.LabelConstraint.label_name)
@@ -1037,15 +1038,15 @@ inline ::vqro::rpc::Series* SearchSeriesResults::add_matches() {
   // @@protoc_insertion_point(field_add:vqro.rpc.SearchSeriesResults.matches)
   return matches_.Add();
 }
-inline ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Series >*
-SearchSeriesResults::mutable_matches() {
-  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.SearchSeriesResults.matches)
-  return &matches_;
-}
 inline const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Series >&
 SearchSeriesResults::matches() const {
   // @@protoc_insertion_point(field_list:vqro.rpc.SearchSeriesResults.matches)
   return matches_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Series >*
+SearchSeriesResults::mutable_matches() {
+  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.SearchSeriesResults.matches)
+  return &matches_;
 }
 
 // optional .vqro.rpc.StatusMessage status = 2;
@@ -1053,7 +1054,7 @@ inline bool SearchSeriesResults::has_status() const {
   return !_is_default_instance_ && status_ != NULL;
 }
 inline void SearchSeriesResults::clear_status() {
-  if (GetArenaNoVirtual() == NULL && status_ != NULL) delete status_;
+  if (status_ != NULL) delete status_;
   status_ = NULL;
 }
 inline const ::vqro::rpc::StatusMessage& SearchSeriesResults::status() const {
@@ -1063,8 +1064,7 @@ inline const ::vqro::rpc::StatusMessage& SearchSeriesResults::status() const {
 inline ::vqro::rpc::StatusMessage* SearchSeriesResults::mutable_status() {
   
   if (status_ == NULL) {
-    _slow_mutable_status();
-  }
+    _slow_mutable_status();  }
   // @@protoc_insertion_point(field_mutable:vqro.rpc.SearchSeriesResults.status)
   return status_;
 }
@@ -1078,7 +1078,7 @@ inline ::vqro::rpc::StatusMessage* SearchSeriesResults::release_status() {
     return temp;
   }
 }
-inline  void SearchSeriesResults::set_allocated_status(::vqro::rpc::StatusMessage* status) {
+inline void SearchSeriesResults::set_allocated_status(::vqro::rpc::StatusMessage* status) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete status_;
@@ -1158,6 +1158,7 @@ inline void LabelsQuery::unsafe_arena_set_allocated_regex(
   } else {
     
   }
+  
   regex_.UnsafeArenaSetAllocated(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       regex, GetArenaNoVirtual());
   // @@protoc_insertion_point(field_set_allocated:vqro.rpc.LabelsQuery.regex)
@@ -1254,7 +1255,7 @@ inline bool SearchLabelsResults::has_status() const {
   return !_is_default_instance_ && status_ != NULL;
 }
 inline void SearchLabelsResults::clear_status() {
-  if (GetArenaNoVirtual() == NULL && status_ != NULL) delete status_;
+  if (status_ != NULL) delete status_;
   status_ = NULL;
 }
 inline const ::vqro::rpc::StatusMessage& SearchLabelsResults::status() const {
@@ -1264,8 +1265,7 @@ inline const ::vqro::rpc::StatusMessage& SearchLabelsResults::status() const {
 inline ::vqro::rpc::StatusMessage* SearchLabelsResults::mutable_status() {
   
   if (status_ == NULL) {
-    _slow_mutable_status();
-  }
+    _slow_mutable_status();  }
   // @@protoc_insertion_point(field_mutable:vqro.rpc.SearchLabelsResults.status)
   return status_;
 }
@@ -1279,7 +1279,7 @@ inline ::vqro::rpc::StatusMessage* SearchLabelsResults::release_status() {
     return temp;
   }
 }
-inline  void SearchLabelsResults::set_allocated_status(::vqro::rpc::StatusMessage* status) {
+inline void SearchLabelsResults::set_allocated_status(::vqro::rpc::StatusMessage* status) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete status_;
@@ -1297,14 +1297,6 @@ inline  void SearchLabelsResults::set_allocated_status(::vqro::rpc::StatusMessag
 }
 
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
-// -------------------------------------------------------------------
-
-// -------------------------------------------------------------------
-
-// -------------------------------------------------------------------
-
-// -------------------------------------------------------------------
-
 
 // @@protoc_insertion_point(namespace_scope)
 

@@ -27,6 +27,13 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* ReadOperation_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   ReadOperation_reflection_ = NULL;
+struct ReadOperationOneofInstance {
+  const ::vqro::rpc::SeriesQuery* query_;
+  const ::vqro::rpc::SeriesList* list_;
+}* ReadOperation_default_oneof_instance_ = NULL;
+const ::google::protobuf::Descriptor* SeriesList_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  SeriesList_reflection_ = NULL;
 const ::google::protobuf::Descriptor* ReadResult_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   ReadResult_reflection_ = NULL;
@@ -57,12 +64,14 @@ void protobuf_AssignDesc_storage_2eproto() {
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(WriteOperation, _internal_metadata_),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(WriteOperation, _is_default_instance_));
   ReadOperation_descriptor_ = file->message_type(1);
-  static const int ReadOperation_offsets_[5] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ReadOperation, query_),
+  static const int ReadOperation_offsets_[7] = {
+    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ReadOperation_default_oneof_instance_, query_),
+    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(ReadOperation_default_oneof_instance_, list_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ReadOperation, start_time_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ReadOperation, end_time_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ReadOperation, datapoint_limit_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ReadOperation, prefer_latest_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ReadOperation, selector_),
   };
   ReadOperation_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
@@ -72,10 +81,27 @@ void protobuf_AssignDesc_storage_2eproto() {
       -1,
       -1,
       -1,
+      ReadOperation_default_oneof_instance_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ReadOperation, _oneof_case_[0]),
       sizeof(ReadOperation),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ReadOperation, _internal_metadata_),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ReadOperation, _is_default_instance_));
-  ReadResult_descriptor_ = file->message_type(2);
+  SeriesList_descriptor_ = file->message_type(2);
+  static const int SeriesList_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SeriesList, series_),
+  };
+  SeriesList_reflection_ =
+    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
+      SeriesList_descriptor_,
+      SeriesList::default_instance_,
+      SeriesList_offsets_,
+      -1,
+      -1,
+      -1,
+      sizeof(SeriesList),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SeriesList, _internal_metadata_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SeriesList, _is_default_instance_));
+  ReadResult_descriptor_ = file->message_type(3);
   static const int ReadResult_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ReadResult, series_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ReadResult, datapoints_),
@@ -109,6 +135,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
       ReadOperation_descriptor_, &ReadOperation::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+      SeriesList_descriptor_, &SeriesList::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
       ReadResult_descriptor_, &ReadResult::default_instance());
 }
 
@@ -118,7 +146,10 @@ void protobuf_ShutdownFile_storage_2eproto() {
   delete WriteOperation::default_instance_;
   delete WriteOperation_reflection_;
   delete ReadOperation::default_instance_;
+  delete ReadOperation_default_oneof_instance_;
   delete ReadOperation_reflection_;
+  delete SeriesList::default_instance_;
+  delete SeriesList_reflection_;
   delete ReadResult::default_instance_;
   delete ReadResult_reflection_;
 }
@@ -135,25 +166,31 @@ void protobuf_AddDesc_storage_2eproto() {
     "\n\rstorage.proto\022\010vqro.rpc\032\ncore.proto\032\014s"
     "earch.proto\"[\n\016WriteOperation\022 \n\006series\030"
     "\001 \001(\0132\020.vqro.rpc.Series\022\'\n\ndatapoints\030\002 "
-    "\003(\0132\023.vqro.rpc.Datapoint\"\213\001\n\rReadOperati"
-    "on\022$\n\005query\030\001 \001(\0132\025.vqro.rpc.SeriesQuery"
-    "\022\022\n\nstart_time\030\002 \001(\003\022\020\n\010end_time\030\003 \001(\003\022\027"
-    "\n\017datapoint_limit\030\004 \001(\003\022\025\n\rprefer_latest"
-    "\030\005 \001(\010\"\200\001\n\nReadResult\022 \n\006series\030\001 \001(\0132\020."
-    "vqro.rpc.Series\022\'\n\ndatapoints\030\002 \003(\0132\023.vq"
-    "ro.rpc.Datapoint\022\'\n\006status\030\003 \001(\0132\027.vqro."
-    "rpc.StatusMessage2\235\001\n\016VaqueroStorage\022H\n\017"
-    "WriteDatapoints\022\030.vqro.rpc.WriteOperatio"
-    "n\032\027.vqro.rpc.StatusMessage(\0010\001\022A\n\016ReadDa"
-    "tapoints\022\027.vqro.rpc.ReadOperation\032\024.vqro"
-    ".rpc.ReadResult0\001B\003\370\001\001b\006proto3", 590);
+    "\003(\0132\023.vqro.rpc.Datapoint\"\277\001\n\rReadOperati"
+    "on\022&\n\005query\030\001 \001(\0132\025.vqro.rpc.SeriesQuery"
+    "H\000\022$\n\004list\030\002 \001(\0132\024.vqro.rpc.SeriesListH\000"
+    "\022\022\n\nstart_time\030\003 \001(\003\022\020\n\010end_time\030\004 \001(\003\022\027"
+    "\n\017datapoint_limit\030\005 \001(\003\022\025\n\rprefer_latest"
+    "\030\006 \001(\010B\n\n\010selector\".\n\nSeriesList\022 \n\006seri"
+    "es\030\001 \003(\0132\020.vqro.rpc.Series\"\200\001\n\nReadResul"
+    "t\022 \n\006series\030\001 \001(\0132\020.vqro.rpc.Series\022\'\n\nd"
+    "atapoints\030\002 \003(\0132\023.vqro.rpc.Datapoint\022\'\n\006"
+    "status\030\003 \001(\0132\027.vqro.rpc.StatusMessage2\235\001"
+    "\n\016VaqueroStorage\022H\n\017WriteDatapoints\022\030.vq"
+    "ro.rpc.WriteOperation\032\027.vqro.rpc.StatusM"
+    "essage(\0010\001\022A\n\016ReadDatapoints\022\027.vqro.rpc."
+    "ReadOperation\032\024.vqro.rpc.ReadResult0\001B\003\370"
+    "\001\001b\006proto3", 690);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "storage.proto", &protobuf_RegisterTypes);
   WriteOperation::default_instance_ = new WriteOperation();
   ReadOperation::default_instance_ = new ReadOperation();
+  ReadOperation_default_oneof_instance_ = new ReadOperationOneofInstance();
+  SeriesList::default_instance_ = new SeriesList();
   ReadResult::default_instance_ = new ReadResult();
   WriteOperation::default_instance_->InitAsDefaultInstance();
   ReadOperation::default_instance_->InitAsDefaultInstance();
+  SeriesList::default_instance_->InitAsDefaultInstance();
   ReadResult::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_storage_2eproto);
 }
@@ -179,7 +216,7 @@ static void MergeFromFail(int line) {
 
 void WriteOperation::_slow_mutable_series() {
   series_ = ::google::protobuf::Arena::CreateMessage< ::vqro::rpc::Series >(
-      GetArenaNoVirtual());
+        GetArenaNoVirtual());
 }
 ::vqro::rpc::Series* WriteOperation::_slow_release_series() {
   if (series_ == NULL) {
@@ -230,7 +267,7 @@ const int WriteOperation::kDatapointsFieldNumber;
 #endif  // !_MSC_VER
 
 WriteOperation::WriteOperation()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() , _internal_metadata_(NULL)  {
   SharedCtor();
   // @@protoc_insertion_point(constructor:vqro.rpc.WriteOperation)
 }
@@ -306,7 +343,7 @@ WriteOperation* WriteOperation::New(::google::protobuf::Arena* arena) const {
 }
 
 void WriteOperation::Clear() {
-  if (GetArenaNoVirtual() == NULL && series_ != NULL) delete series_;
+  if (series_ != NULL) delete series_;
   series_ = NULL;
   datapoints_.Clear();
 }
@@ -337,15 +374,12 @@ bool WriteOperation::MergePartialFromCodedStream(
       case 2: {
         if (tag == 18) {
          parse_datapoints:
-          DO_(input->IncrementRecursionDepth());
-         parse_loop_datapoints:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtualNoRecursionDepth(
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                 input, add_datapoints()));
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(18)) goto parse_loop_datapoints;
-        input->UnsafeDecrementRecursionDepth();
+        if (input->ExpectTag(18)) goto parse_datapoints;
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -436,9 +470,9 @@ int WriteOperation::ByteSize() const {
 
 void WriteOperation::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const WriteOperation* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const WriteOperation>(
-          &from);
+  const WriteOperation* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const WriteOperation*>(
+      &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
@@ -506,26 +540,25 @@ void WriteOperation::InternalSwap(WriteOperation* other) {
 // WriteOperation
 
 // optional .vqro.rpc.Series series = 1;
-bool WriteOperation::has_series() const {
+ bool WriteOperation::has_series() const {
   return !_is_default_instance_ && series_ != NULL;
 }
-void WriteOperation::clear_series() {
-  if (GetArenaNoVirtual() == NULL && series_ != NULL) delete series_;
+ void WriteOperation::clear_series() {
+  if (series_ != NULL) delete series_;
   series_ = NULL;
 }
-const ::vqro::rpc::Series& WriteOperation::series() const {
+ const ::vqro::rpc::Series& WriteOperation::series() const {
   // @@protoc_insertion_point(field_get:vqro.rpc.WriteOperation.series)
   return series_ != NULL ? *series_ : *default_instance_->series_;
 }
-::vqro::rpc::Series* WriteOperation::mutable_series() {
+ ::vqro::rpc::Series* WriteOperation::mutable_series() {
   
   if (series_ == NULL) {
-    _slow_mutable_series();
-  }
+    _slow_mutable_series();  }
   // @@protoc_insertion_point(field_mutable:vqro.rpc.WriteOperation.series)
   return series_;
 }
-::vqro::rpc::Series* WriteOperation::release_series() {
+ ::vqro::rpc::Series* WriteOperation::release_series() {
   
   if (GetArenaNoVirtual() != NULL) {
     return _slow_release_series();
@@ -553,88 +586,42 @@ const ::vqro::rpc::Series& WriteOperation::series() const {
 }
 
 // repeated .vqro.rpc.Datapoint datapoints = 2;
-int WriteOperation::datapoints_size() const {
+ int WriteOperation::datapoints_size() const {
   return datapoints_.size();
 }
-void WriteOperation::clear_datapoints() {
+ void WriteOperation::clear_datapoints() {
   datapoints_.Clear();
 }
-const ::vqro::rpc::Datapoint& WriteOperation::datapoints(int index) const {
+ const ::vqro::rpc::Datapoint& WriteOperation::datapoints(int index) const {
   // @@protoc_insertion_point(field_get:vqro.rpc.WriteOperation.datapoints)
   return datapoints_.Get(index);
 }
-::vqro::rpc::Datapoint* WriteOperation::mutable_datapoints(int index) {
+ ::vqro::rpc::Datapoint* WriteOperation::mutable_datapoints(int index) {
   // @@protoc_insertion_point(field_mutable:vqro.rpc.WriteOperation.datapoints)
   return datapoints_.Mutable(index);
 }
-::vqro::rpc::Datapoint* WriteOperation::add_datapoints() {
+ ::vqro::rpc::Datapoint* WriteOperation::add_datapoints() {
   // @@protoc_insertion_point(field_add:vqro.rpc.WriteOperation.datapoints)
   return datapoints_.Add();
 }
-::google::protobuf::RepeatedPtrField< ::vqro::rpc::Datapoint >*
-WriteOperation::mutable_datapoints() {
-  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.WriteOperation.datapoints)
-  return &datapoints_;
-}
-const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Datapoint >&
+ const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Datapoint >&
 WriteOperation::datapoints() const {
   // @@protoc_insertion_point(field_list:vqro.rpc.WriteOperation.datapoints)
   return datapoints_;
+}
+ ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Datapoint >*
+WriteOperation::mutable_datapoints() {
+  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.WriteOperation.datapoints)
+  return &datapoints_;
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // ===================================================================
 
-void ReadOperation::_slow_mutable_query() {
-  query_ = ::google::protobuf::Arena::CreateMessage< ::vqro::rpc::SeriesQuery >(
-      GetArenaNoVirtual());
-}
-::vqro::rpc::SeriesQuery* ReadOperation::_slow_release_query() {
-  if (query_ == NULL) {
-    return NULL;
-  } else {
-    ::vqro::rpc::SeriesQuery* temp = new ::vqro::rpc::SeriesQuery;
-    temp->MergeFrom(*query_);
-    query_ = NULL;
-    return temp;
-  }
-}
-::vqro::rpc::SeriesQuery* ReadOperation::unsafe_arena_release_query() {
-  
-  ::vqro::rpc::SeriesQuery* temp = query_;
-  query_ = NULL;
-  return temp;
-}
-void ReadOperation::_slow_set_allocated_query(
-    ::google::protobuf::Arena* message_arena, ::vqro::rpc::SeriesQuery** query) {
-    if (message_arena != NULL && 
-        ::google::protobuf::Arena::GetArena(*query) == NULL) {
-      message_arena->Own(*query);
-    } else if (message_arena !=
-               ::google::protobuf::Arena::GetArena(*query)) {
-      ::vqro::rpc::SeriesQuery* new_query = 
-            ::google::protobuf::Arena::CreateMessage< ::vqro::rpc::SeriesQuery >(
-            message_arena);
-      new_query->CopyFrom(**query);
-      *query = new_query;
-    }
-}
-void ReadOperation::unsafe_arena_set_allocated_query(
-    ::vqro::rpc::SeriesQuery* query) {
-  if (GetArenaNoVirtual() == NULL) {
-    delete query_;
-  }
-  query_ = query;
-  if (query) {
-    
-  } else {
-    
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:vqro.rpc.ReadOperation.query)
-}
 #ifndef _MSC_VER
 const int ReadOperation::kQueryFieldNumber;
+const int ReadOperation::kListFieldNumber;
 const int ReadOperation::kStartTimeFieldNumber;
 const int ReadOperation::kEndTimeFieldNumber;
 const int ReadOperation::kDatapointLimitFieldNumber;
@@ -642,7 +629,7 @@ const int ReadOperation::kPreferLatestFieldNumber;
 #endif  // !_MSC_VER
 
 ReadOperation::ReadOperation()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() , _internal_metadata_(NULL)  {
   SharedCtor();
   // @@protoc_insertion_point(constructor:vqro.rpc.ReadOperation)
 }
@@ -657,7 +644,8 @@ ReadOperation::ReadOperation(::google::protobuf::Arena* arena)
 
 void ReadOperation::InitAsDefaultInstance() {
   _is_default_instance_ = true;
-  query_ = const_cast< ::vqro::rpc::SeriesQuery*>(&::vqro::rpc::SeriesQuery::default_instance());
+  ReadOperation_default_oneof_instance_->query_ = const_cast< ::vqro::rpc::SeriesQuery*>(&::vqro::rpc::SeriesQuery::default_instance());
+  ReadOperation_default_oneof_instance_->list_ = const_cast< ::vqro::rpc::SeriesList*>(&::vqro::rpc::SeriesList::default_instance());
 }
 
 ReadOperation::ReadOperation(const ReadOperation& from)
@@ -671,11 +659,11 @@ ReadOperation::ReadOperation(const ReadOperation& from)
 void ReadOperation::SharedCtor() {
     _is_default_instance_ = false;
   _cached_size_ = 0;
-  query_ = NULL;
   start_time_ = GOOGLE_LONGLONG(0);
   end_time_ = GOOGLE_LONGLONG(0);
   datapoint_limit_ = GOOGLE_LONGLONG(0);
   prefer_latest_ = false;
+  clear_has_selector();
 }
 
 ReadOperation::~ReadOperation() {
@@ -688,8 +676,10 @@ void ReadOperation::SharedDtor() {
     return;
   }
 
+  if (has_selector()) {
+    clear_selector();
+  }
   if (this != default_instance_) {
-    delete query_;
   }
 }
 
@@ -720,6 +710,28 @@ ReadOperation* ReadOperation::New(::google::protobuf::Arena* arena) const {
   return ::google::protobuf::Arena::CreateMessage<ReadOperation>(arena);
 }
 
+void ReadOperation::clear_selector() {
+  switch(selector_case()) {
+    case kQuery: {
+      if (GetArenaNoVirtual() == NULL) {
+        delete selector_.query_;
+      }
+      break;
+    }
+    case kList: {
+      if (GetArenaNoVirtual() == NULL) {
+        delete selector_.list_;
+      }
+      break;
+    }
+    case SELECTOR_NOT_SET: {
+      break;
+    }
+  }
+  _oneof_case_[0] = SELECTOR_NOT_SET;
+}
+
+
 void ReadOperation::Clear() {
 #define ZR_HELPER_(f) reinterpret_cast<char*>(\
   &reinterpret_cast<ReadOperation*>(16)->f)
@@ -730,12 +742,11 @@ void ReadOperation::Clear() {
 } while (0)
 
   ZR_(start_time_, prefer_latest_);
-  if (GetArenaNoVirtual() == NULL && query_ != NULL) delete query_;
-  query_ = NULL;
 
 #undef ZR_HELPER_
 #undef ZR_
 
+  clear_selector();
 }
 
 bool ReadOperation::MergePartialFromCodedStream(
@@ -756,13 +767,26 @@ bool ReadOperation::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(16)) goto parse_start_time;
+        if (input->ExpectTag(18)) goto parse_list;
         break;
       }
 
-      // optional int64 start_time = 2;
+      // optional .vqro.rpc.SeriesList list = 2;
       case 2: {
-        if (tag == 16) {
+        if (tag == 18) {
+         parse_list:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_list()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(24)) goto parse_start_time;
+        break;
+      }
+
+      // optional int64 start_time = 3;
+      case 3: {
+        if (tag == 24) {
          parse_start_time:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
@@ -771,13 +795,13 @@ bool ReadOperation::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(24)) goto parse_end_time;
+        if (input->ExpectTag(32)) goto parse_end_time;
         break;
       }
 
-      // optional int64 end_time = 3;
-      case 3: {
-        if (tag == 24) {
+      // optional int64 end_time = 4;
+      case 4: {
+        if (tag == 32) {
          parse_end_time:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
@@ -786,13 +810,13 @@ bool ReadOperation::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(32)) goto parse_datapoint_limit;
+        if (input->ExpectTag(40)) goto parse_datapoint_limit;
         break;
       }
 
-      // optional int64 datapoint_limit = 4;
-      case 4: {
-        if (tag == 32) {
+      // optional int64 datapoint_limit = 5;
+      case 5: {
+        if (tag == 40) {
          parse_datapoint_limit:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
@@ -801,13 +825,13 @@ bool ReadOperation::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(40)) goto parse_prefer_latest;
+        if (input->ExpectTag(48)) goto parse_prefer_latest;
         break;
       }
 
-      // optional bool prefer_latest = 5;
-      case 5: {
-        if (tag == 40) {
+      // optional bool prefer_latest = 6;
+      case 6: {
+        if (tag == 48) {
          parse_prefer_latest:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
@@ -845,29 +869,35 @@ void ReadOperation::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // @@protoc_insertion_point(serialize_start:vqro.rpc.ReadOperation)
   // optional .vqro.rpc.SeriesQuery query = 1;
-  if (this->has_query()) {
+  if (has_query()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, *this->query_, output);
+      1, *selector_.query_, output);
   }
 
-  // optional int64 start_time = 2;
+  // optional .vqro.rpc.SeriesList list = 2;
+  if (has_list()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      2, *selector_.list_, output);
+  }
+
+  // optional int64 start_time = 3;
   if (this->start_time() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt64(2, this->start_time(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(3, this->start_time(), output);
   }
 
-  // optional int64 end_time = 3;
+  // optional int64 end_time = 4;
   if (this->end_time() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt64(3, this->end_time(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(4, this->end_time(), output);
   }
 
-  // optional int64 datapoint_limit = 4;
+  // optional int64 datapoint_limit = 5;
   if (this->datapoint_limit() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt64(4, this->datapoint_limit(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(5, this->datapoint_limit(), output);
   }
 
-  // optional bool prefer_latest = 5;
+  // optional bool prefer_latest = 6;
   if (this->prefer_latest() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(5, this->prefer_latest(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteBool(6, this->prefer_latest(), output);
   }
 
   // @@protoc_insertion_point(serialize_end:vqro.rpc.ReadOperation)
@@ -877,30 +907,37 @@ void ReadOperation::SerializeWithCachedSizes(
     ::google::protobuf::uint8* target) const {
   // @@protoc_insertion_point(serialize_to_array_start:vqro.rpc.ReadOperation)
   // optional .vqro.rpc.SeriesQuery query = 1;
-  if (this->has_query()) {
+  if (has_query()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        1, *this->query_, target);
+        1, *selector_.query_, target);
   }
 
-  // optional int64 start_time = 2;
+  // optional .vqro.rpc.SeriesList list = 2;
+  if (has_list()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        2, *selector_.list_, target);
+  }
+
+  // optional int64 start_time = 3;
   if (this->start_time() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(2, this->start_time(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(3, this->start_time(), target);
   }
 
-  // optional int64 end_time = 3;
+  // optional int64 end_time = 4;
   if (this->end_time() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(3, this->end_time(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(4, this->end_time(), target);
   }
 
-  // optional int64 datapoint_limit = 4;
+  // optional int64 datapoint_limit = 5;
   if (this->datapoint_limit() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(4, this->datapoint_limit(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(5, this->datapoint_limit(), target);
   }
 
-  // optional bool prefer_latest = 5;
+  // optional bool prefer_latest = 6;
   if (this->prefer_latest() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(5, this->prefer_latest(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(6, this->prefer_latest(), target);
   }
 
   // @@protoc_insertion_point(serialize_to_array_end:vqro.rpc.ReadOperation)
@@ -910,39 +947,51 @@ void ReadOperation::SerializeWithCachedSizes(
 int ReadOperation::ByteSize() const {
   int total_size = 0;
 
-  // optional .vqro.rpc.SeriesQuery query = 1;
-  if (this->has_query()) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        *this->query_);
-  }
-
-  // optional int64 start_time = 2;
+  // optional int64 start_time = 3;
   if (this->start_time() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int64Size(
         this->start_time());
   }
 
-  // optional int64 end_time = 3;
+  // optional int64 end_time = 4;
   if (this->end_time() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int64Size(
         this->end_time());
   }
 
-  // optional int64 datapoint_limit = 4;
+  // optional int64 datapoint_limit = 5;
   if (this->datapoint_limit() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int64Size(
         this->datapoint_limit());
   }
 
-  // optional bool prefer_latest = 5;
+  // optional bool prefer_latest = 6;
   if (this->prefer_latest() != 0) {
     total_size += 1 + 1;
   }
 
+  switch (selector_case()) {
+    // optional .vqro.rpc.SeriesQuery query = 1;
+    case kQuery: {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          *selector_.query_);
+      break;
+    }
+    // optional .vqro.rpc.SeriesList list = 2;
+    case kList: {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          *selector_.list_);
+      break;
+    }
+    case SELECTOR_NOT_SET: {
+      break;
+    }
+  }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
@@ -951,9 +1000,9 @@ int ReadOperation::ByteSize() const {
 
 void ReadOperation::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const ReadOperation* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const ReadOperation>(
-          &from);
+  const ReadOperation* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const ReadOperation*>(
+      &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
@@ -963,8 +1012,18 @@ void ReadOperation::MergeFrom(const ::google::protobuf::Message& from) {
 
 void ReadOperation::MergeFrom(const ReadOperation& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  if (from.has_query()) {
-    mutable_query()->::vqro::rpc::SeriesQuery::MergeFrom(from.query());
+  switch (from.selector_case()) {
+    case kQuery: {
+      mutable_query()->::vqro::rpc::SeriesQuery::MergeFrom(from.query());
+      break;
+    }
+    case kList: {
+      mutable_list()->::vqro::rpc::SeriesList::MergeFrom(from.list());
+      break;
+    }
+    case SELECTOR_NOT_SET: {
+      break;
+    }
   }
   if (from.start_time() != 0) {
     set_start_time(from.start_time());
@@ -1014,11 +1073,12 @@ void ReadOperation::UnsafeArenaSwap(ReadOperation* other) {
   InternalSwap(other);
 }
 void ReadOperation::InternalSwap(ReadOperation* other) {
-  std::swap(query_, other->query_);
   std::swap(start_time_, other->start_time_);
   std::swap(end_time_, other->end_time_);
   std::swap(datapoint_limit_, other->datapoint_limit_);
   std::swap(prefer_latest_, other->prefer_latest_);
+  std::swap(selector_, other->selector_);
+  std::swap(_oneof_case_[0], other->_oneof_case_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
 }
@@ -1035,54 +1095,179 @@ void ReadOperation::InternalSwap(ReadOperation* other) {
 // ReadOperation
 
 // optional .vqro.rpc.SeriesQuery query = 1;
-bool ReadOperation::has_query() const {
-  return !_is_default_instance_ && query_ != NULL;
+ bool ReadOperation::has_query() const {
+  return selector_case() == kQuery;
 }
-void ReadOperation::clear_query() {
-  if (GetArenaNoVirtual() == NULL && query_ != NULL) delete query_;
-  query_ = NULL;
+ void ReadOperation::set_has_query() {
+  _oneof_case_[0] = kQuery;
 }
-const ::vqro::rpc::SeriesQuery& ReadOperation::query() const {
+ void ReadOperation::clear_query() {
+  if (has_query()) {
+    if (GetArenaNoVirtual() == NULL) {
+      delete selector_.query_;
+    }
+    clear_has_selector();
+  }
+}
+ const ::vqro::rpc::SeriesQuery& ReadOperation::query() const {
   // @@protoc_insertion_point(field_get:vqro.rpc.ReadOperation.query)
-  return query_ != NULL ? *query_ : *default_instance_->query_;
+  return has_query() ? *selector_.query_
+                      : ::vqro::rpc::SeriesQuery::default_instance();
 }
-::vqro::rpc::SeriesQuery* ReadOperation::mutable_query() {
-  
-  if (query_ == NULL) {
-    _slow_mutable_query();
+ ::vqro::rpc::SeriesQuery* ReadOperation::mutable_query() {
+  if (!has_query()) {
+    clear_selector();
+    set_has_query();
+    selector_.query_ = 
+      ::google::protobuf::Arena::CreateMessage< ::vqro::rpc::SeriesQuery >(
+      GetArenaNoVirtual());
   }
   // @@protoc_insertion_point(field_mutable:vqro.rpc.ReadOperation.query)
-  return query_;
+  return selector_.query_;
 }
-::vqro::rpc::SeriesQuery* ReadOperation::release_query() {
-  
-  if (GetArenaNoVirtual() != NULL) {
-    return _slow_release_query();
+ ::vqro::rpc::SeriesQuery* ReadOperation::release_query() {
+  if (has_query()) {
+    clear_has_selector();
+    if (GetArenaNoVirtual() != NULL) {
+      ::vqro::rpc::SeriesQuery* temp = new ::vqro::rpc::SeriesQuery;
+      temp->MergeFrom(*selector_.query_);
+      selector_.query_ = NULL;
+      return temp;
+    } else {
+      ::vqro::rpc::SeriesQuery* temp = selector_.query_;
+      selector_.query_ = NULL;
+      return temp;
+    }
   } else {
-    ::vqro::rpc::SeriesQuery* temp = query_;
-    query_ = NULL;
+    return NULL;
+  }
+}
+ ::vqro::rpc::SeriesQuery* ReadOperation::unsafe_arena_release_query() {
+  if (has_query()) {
+    clear_has_selector();
+    ::vqro::rpc::SeriesQuery* temp = selector_.query_;
+    selector_.query_ = NULL;
     return temp;
+  } else {
+    return NULL;
   }
 }
  void ReadOperation::set_allocated_query(::vqro::rpc::SeriesQuery* query) {
-  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
-  if (message_arena == NULL) {
-    delete query_;
-  }
-  if (query != NULL) {
-    _slow_set_allocated_query(message_arena, &query);
-  }
-  query_ = query;
+  clear_selector();
   if (query) {
-    
-  } else {
-    
+    if (GetArenaNoVirtual() != NULL &&
+        ::google::protobuf::Arena::GetArena(query) == NULL) {
+      GetArenaNoVirtual()->Own(query);
+    } else if (GetArenaNoVirtual() !=
+               ::google::protobuf::Arena::GetArena(query)) {
+      ::vqro::rpc::SeriesQuery* new_query = 
+          ::google::protobuf::Arena::CreateMessage< ::vqro::rpc::SeriesQuery >(
+          GetArenaNoVirtual());
+      new_query->CopyFrom(*query);
+      query = new_query;
+    }
+    set_has_query();
+    selector_.query_ = query;
   }
   // @@protoc_insertion_point(field_set_allocated:vqro.rpc.ReadOperation.query)
 }
+ void ReadOperation::unsafe_arena_set_allocated_query(::vqro::rpc::SeriesQuery* query) {
+  clear_selector();
+  if (query) {
+    set_has_query();
+    selector_.query_ = query;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:vqro.rpc.ReadOperation.query)
+}
 
-// optional int64 start_time = 2;
-void ReadOperation::clear_start_time() {
+// optional .vqro.rpc.SeriesList list = 2;
+ bool ReadOperation::has_list() const {
+  return selector_case() == kList;
+}
+ void ReadOperation::set_has_list() {
+  _oneof_case_[0] = kList;
+}
+ void ReadOperation::clear_list() {
+  if (has_list()) {
+    if (GetArenaNoVirtual() == NULL) {
+      delete selector_.list_;
+    }
+    clear_has_selector();
+  }
+}
+ const ::vqro::rpc::SeriesList& ReadOperation::list() const {
+  // @@protoc_insertion_point(field_get:vqro.rpc.ReadOperation.list)
+  return has_list() ? *selector_.list_
+                      : ::vqro::rpc::SeriesList::default_instance();
+}
+ ::vqro::rpc::SeriesList* ReadOperation::mutable_list() {
+  if (!has_list()) {
+    clear_selector();
+    set_has_list();
+    selector_.list_ = 
+      ::google::protobuf::Arena::CreateMessage< ::vqro::rpc::SeriesList >(
+      GetArenaNoVirtual());
+  }
+  // @@protoc_insertion_point(field_mutable:vqro.rpc.ReadOperation.list)
+  return selector_.list_;
+}
+ ::vqro::rpc::SeriesList* ReadOperation::release_list() {
+  if (has_list()) {
+    clear_has_selector();
+    if (GetArenaNoVirtual() != NULL) {
+      ::vqro::rpc::SeriesList* temp = new ::vqro::rpc::SeriesList;
+      temp->MergeFrom(*selector_.list_);
+      selector_.list_ = NULL;
+      return temp;
+    } else {
+      ::vqro::rpc::SeriesList* temp = selector_.list_;
+      selector_.list_ = NULL;
+      return temp;
+    }
+  } else {
+    return NULL;
+  }
+}
+ ::vqro::rpc::SeriesList* ReadOperation::unsafe_arena_release_list() {
+  if (has_list()) {
+    clear_has_selector();
+    ::vqro::rpc::SeriesList* temp = selector_.list_;
+    selector_.list_ = NULL;
+    return temp;
+  } else {
+    return NULL;
+  }
+}
+ void ReadOperation::set_allocated_list(::vqro::rpc::SeriesList* list) {
+  clear_selector();
+  if (list) {
+    if (GetArenaNoVirtual() != NULL &&
+        ::google::protobuf::Arena::GetArena(list) == NULL) {
+      GetArenaNoVirtual()->Own(list);
+    } else if (GetArenaNoVirtual() !=
+               ::google::protobuf::Arena::GetArena(list)) {
+      ::vqro::rpc::SeriesList* new_list = 
+          ::google::protobuf::Arena::CreateMessage< ::vqro::rpc::SeriesList >(
+          GetArenaNoVirtual());
+      new_list->CopyFrom(*list);
+      list = new_list;
+    }
+    set_has_list();
+    selector_.list_ = list;
+  }
+  // @@protoc_insertion_point(field_set_allocated:vqro.rpc.ReadOperation.list)
+}
+ void ReadOperation::unsafe_arena_set_allocated_list(::vqro::rpc::SeriesList* list) {
+  clear_selector();
+  if (list) {
+    set_has_list();
+    selector_.list_ = list;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:vqro.rpc.ReadOperation.list)
+}
+
+// optional int64 start_time = 3;
+ void ReadOperation::clear_start_time() {
   start_time_ = GOOGLE_LONGLONG(0);
 }
  ::google::protobuf::int64 ReadOperation::start_time() const {
@@ -1095,8 +1280,8 @@ void ReadOperation::clear_start_time() {
   // @@protoc_insertion_point(field_set:vqro.rpc.ReadOperation.start_time)
 }
 
-// optional int64 end_time = 3;
-void ReadOperation::clear_end_time() {
+// optional int64 end_time = 4;
+ void ReadOperation::clear_end_time() {
   end_time_ = GOOGLE_LONGLONG(0);
 }
  ::google::protobuf::int64 ReadOperation::end_time() const {
@@ -1109,8 +1294,8 @@ void ReadOperation::clear_end_time() {
   // @@protoc_insertion_point(field_set:vqro.rpc.ReadOperation.end_time)
 }
 
-// optional int64 datapoint_limit = 4;
-void ReadOperation::clear_datapoint_limit() {
+// optional int64 datapoint_limit = 5;
+ void ReadOperation::clear_datapoint_limit() {
   datapoint_limit_ = GOOGLE_LONGLONG(0);
 }
  ::google::protobuf::int64 ReadOperation::datapoint_limit() const {
@@ -1123,8 +1308,8 @@ void ReadOperation::clear_datapoint_limit() {
   // @@protoc_insertion_point(field_set:vqro.rpc.ReadOperation.datapoint_limit)
 }
 
-// optional bool prefer_latest = 5;
-void ReadOperation::clear_prefer_latest() {
+// optional bool prefer_latest = 6;
+ void ReadOperation::clear_prefer_latest() {
   prefer_latest_ = false;
 }
  bool ReadOperation::prefer_latest() const {
@@ -1137,13 +1322,292 @@ void ReadOperation::clear_prefer_latest() {
   // @@protoc_insertion_point(field_set:vqro.rpc.ReadOperation.prefer_latest)
 }
 
+ bool ReadOperation::has_selector() const {
+  return selector_case() != SELECTOR_NOT_SET;
+}
+ void ReadOperation::clear_has_selector() {
+  _oneof_case_[0] = SELECTOR_NOT_SET;
+}
+ReadOperation::SelectorCase ReadOperation::selector_case() const {
+  return ReadOperation::SelectorCase(_oneof_case_[0]);
+}
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int SeriesList::kSeriesFieldNumber;
+#endif  // !_MSC_VER
+
+SeriesList::SeriesList()
+  : ::google::protobuf::Message() , _internal_metadata_(NULL)  {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:vqro.rpc.SeriesList)
+}
+
+SeriesList::SeriesList(::google::protobuf::Arena* arena)
+  : ::google::protobuf::Message(),
+  _internal_metadata_(arena),
+  series_(arena) {
+  SharedCtor();
+  RegisterArenaDtor(arena);
+  // @@protoc_insertion_point(arena_constructor:vqro.rpc.SeriesList)
+}
+
+void SeriesList::InitAsDefaultInstance() {
+  _is_default_instance_ = true;
+}
+
+SeriesList::SeriesList(const SeriesList& from)
+  : ::google::protobuf::Message(),
+    _internal_metadata_(NULL) {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:vqro.rpc.SeriesList)
+}
+
+void SeriesList::SharedCtor() {
+    _is_default_instance_ = false;
+  _cached_size_ = 0;
+}
+
+SeriesList::~SeriesList() {
+  // @@protoc_insertion_point(destructor:vqro.rpc.SeriesList)
+  SharedDtor();
+}
+
+void SeriesList::SharedDtor() {
+  if (GetArenaNoVirtual() != NULL) {
+    return;
+  }
+
+  if (this != default_instance_) {
+  }
+}
+
+void SeriesList::ArenaDtor(void* object) {
+  SeriesList* _this = reinterpret_cast< SeriesList* >(object);
+  (void)_this;
+}
+void SeriesList::RegisterArenaDtor(::google::protobuf::Arena* arena) {
+}
+void SeriesList::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* SeriesList::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return SeriesList_descriptor_;
+}
+
+const SeriesList& SeriesList::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_storage_2eproto();
+  return *default_instance_;
+}
+
+SeriesList* SeriesList::default_instance_ = NULL;
+
+SeriesList* SeriesList::New(::google::protobuf::Arena* arena) const {
+  return ::google::protobuf::Arena::CreateMessage<SeriesList>(arena);
+}
+
+void SeriesList::Clear() {
+  series_.Clear();
+}
+
+bool SeriesList::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:vqro.rpc.SeriesList)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // repeated .vqro.rpc.Series series = 1;
+      case 1: {
+        if (tag == 10) {
+         parse_series:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_series()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(10)) goto parse_series;
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:vqro.rpc.SeriesList)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:vqro.rpc.SeriesList)
+  return false;
+#undef DO_
+}
+
+void SeriesList::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:vqro.rpc.SeriesList)
+  // repeated .vqro.rpc.Series series = 1;
+  for (unsigned int i = 0, n = this->series_size(); i < n; i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      1, this->series(i), output);
+  }
+
+  // @@protoc_insertion_point(serialize_end:vqro.rpc.SeriesList)
+}
+
+::google::protobuf::uint8* SeriesList::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:vqro.rpc.SeriesList)
+  // repeated .vqro.rpc.Series series = 1;
+  for (unsigned int i = 0, n = this->series_size(); i < n; i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        1, this->series(i), target);
+  }
+
+  // @@protoc_insertion_point(serialize_to_array_end:vqro.rpc.SeriesList)
+  return target;
+}
+
+int SeriesList::ByteSize() const {
+  int total_size = 0;
+
+  // repeated .vqro.rpc.Series series = 1;
+  total_size += 1 * this->series_size();
+  for (int i = 0; i < this->series_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->series(i));
+  }
+
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void SeriesList::MergeFrom(const ::google::protobuf::Message& from) {
+  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  const SeriesList* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const SeriesList*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void SeriesList::MergeFrom(const SeriesList& from) {
+  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  series_.MergeFrom(from.series_);
+}
+
+void SeriesList::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void SeriesList::CopyFrom(const SeriesList& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool SeriesList::IsInitialized() const {
+
+  return true;
+}
+
+void SeriesList::Swap(SeriesList* other) {
+  if (other == this) return;
+  if (GetArenaNoVirtual() == other->GetArenaNoVirtual()) {
+    InternalSwap(other);
+  } else {
+    SeriesList temp;
+    temp.MergeFrom(*this);
+    CopyFrom(*other);
+    other->CopyFrom(temp);
+  }
+}
+void SeriesList::UnsafeArenaSwap(SeriesList* other) {
+  if (other == this) return;
+  GOOGLE_DCHECK(GetArenaNoVirtual() == other->GetArenaNoVirtual());
+  InternalSwap(other);
+}
+void SeriesList::InternalSwap(SeriesList* other) {
+  series_.UnsafeArenaSwap(&other->series_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  std::swap(_cached_size_, other->_cached_size_);
+}
+
+::google::protobuf::Metadata SeriesList::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = SeriesList_descriptor_;
+  metadata.reflection = SeriesList_reflection_;
+  return metadata;
+}
+
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// SeriesList
+
+// repeated .vqro.rpc.Series series = 1;
+ int SeriesList::series_size() const {
+  return series_.size();
+}
+ void SeriesList::clear_series() {
+  series_.Clear();
+}
+ const ::vqro::rpc::Series& SeriesList::series(int index) const {
+  // @@protoc_insertion_point(field_get:vqro.rpc.SeriesList.series)
+  return series_.Get(index);
+}
+ ::vqro::rpc::Series* SeriesList::mutable_series(int index) {
+  // @@protoc_insertion_point(field_mutable:vqro.rpc.SeriesList.series)
+  return series_.Mutable(index);
+}
+ ::vqro::rpc::Series* SeriesList::add_series() {
+  // @@protoc_insertion_point(field_add:vqro.rpc.SeriesList.series)
+  return series_.Add();
+}
+ const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Series >&
+SeriesList::series() const {
+  // @@protoc_insertion_point(field_list:vqro.rpc.SeriesList.series)
+  return series_;
+}
+ ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Series >*
+SeriesList::mutable_series() {
+  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.SeriesList.series)
+  return &series_;
+}
+
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // ===================================================================
 
 void ReadResult::_slow_mutable_series() {
   series_ = ::google::protobuf::Arena::CreateMessage< ::vqro::rpc::Series >(
-      GetArenaNoVirtual());
+        GetArenaNoVirtual());
 }
 ::vqro::rpc::Series* ReadResult::_slow_release_series() {
   if (series_ == NULL) {
@@ -1190,7 +1654,7 @@ void ReadResult::unsafe_arena_set_allocated_series(
 }
 void ReadResult::_slow_mutable_status() {
   status_ = ::google::protobuf::Arena::CreateMessage< ::vqro::rpc::StatusMessage >(
-      GetArenaNoVirtual());
+        GetArenaNoVirtual());
 }
 ::vqro::rpc::StatusMessage* ReadResult::_slow_release_status() {
   if (status_ == NULL) {
@@ -1242,7 +1706,7 @@ const int ReadResult::kStatusFieldNumber;
 #endif  // !_MSC_VER
 
 ReadResult::ReadResult()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() , _internal_metadata_(NULL)  {
   SharedCtor();
   // @@protoc_insertion_point(constructor:vqro.rpc.ReadResult)
 }
@@ -1321,9 +1785,9 @@ ReadResult* ReadResult::New(::google::protobuf::Arena* arena) const {
 }
 
 void ReadResult::Clear() {
-  if (GetArenaNoVirtual() == NULL && series_ != NULL) delete series_;
+  if (series_ != NULL) delete series_;
   series_ = NULL;
-  if (GetArenaNoVirtual() == NULL && status_ != NULL) delete status_;
+  if (status_ != NULL) delete status_;
   status_ = NULL;
   datapoints_.Clear();
 }
@@ -1354,15 +1818,12 @@ bool ReadResult::MergePartialFromCodedStream(
       case 2: {
         if (tag == 18) {
          parse_datapoints:
-          DO_(input->IncrementRecursionDepth());
-         parse_loop_datapoints:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtualNoRecursionDepth(
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                 input, add_datapoints()));
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(18)) goto parse_loop_datapoints;
-        input->UnsafeDecrementRecursionDepth();
+        if (input->ExpectTag(18)) goto parse_datapoints;
         if (input->ExpectTag(26)) goto parse_status;
         break;
       }
@@ -1486,9 +1947,9 @@ int ReadResult::ByteSize() const {
 
 void ReadResult::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const ReadResult* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const ReadResult>(
-          &from);
+  const ReadResult* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const ReadResult*>(
+      &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
@@ -1560,26 +2021,25 @@ void ReadResult::InternalSwap(ReadResult* other) {
 // ReadResult
 
 // optional .vqro.rpc.Series series = 1;
-bool ReadResult::has_series() const {
+ bool ReadResult::has_series() const {
   return !_is_default_instance_ && series_ != NULL;
 }
-void ReadResult::clear_series() {
-  if (GetArenaNoVirtual() == NULL && series_ != NULL) delete series_;
+ void ReadResult::clear_series() {
+  if (series_ != NULL) delete series_;
   series_ = NULL;
 }
-const ::vqro::rpc::Series& ReadResult::series() const {
+ const ::vqro::rpc::Series& ReadResult::series() const {
   // @@protoc_insertion_point(field_get:vqro.rpc.ReadResult.series)
   return series_ != NULL ? *series_ : *default_instance_->series_;
 }
-::vqro::rpc::Series* ReadResult::mutable_series() {
+ ::vqro::rpc::Series* ReadResult::mutable_series() {
   
   if (series_ == NULL) {
-    _slow_mutable_series();
-  }
+    _slow_mutable_series();  }
   // @@protoc_insertion_point(field_mutable:vqro.rpc.ReadResult.series)
   return series_;
 }
-::vqro::rpc::Series* ReadResult::release_series() {
+ ::vqro::rpc::Series* ReadResult::release_series() {
   
   if (GetArenaNoVirtual() != NULL) {
     return _slow_release_series();
@@ -1607,56 +2067,55 @@ const ::vqro::rpc::Series& ReadResult::series() const {
 }
 
 // repeated .vqro.rpc.Datapoint datapoints = 2;
-int ReadResult::datapoints_size() const {
+ int ReadResult::datapoints_size() const {
   return datapoints_.size();
 }
-void ReadResult::clear_datapoints() {
+ void ReadResult::clear_datapoints() {
   datapoints_.Clear();
 }
-const ::vqro::rpc::Datapoint& ReadResult::datapoints(int index) const {
+ const ::vqro::rpc::Datapoint& ReadResult::datapoints(int index) const {
   // @@protoc_insertion_point(field_get:vqro.rpc.ReadResult.datapoints)
   return datapoints_.Get(index);
 }
-::vqro::rpc::Datapoint* ReadResult::mutable_datapoints(int index) {
+ ::vqro::rpc::Datapoint* ReadResult::mutable_datapoints(int index) {
   // @@protoc_insertion_point(field_mutable:vqro.rpc.ReadResult.datapoints)
   return datapoints_.Mutable(index);
 }
-::vqro::rpc::Datapoint* ReadResult::add_datapoints() {
+ ::vqro::rpc::Datapoint* ReadResult::add_datapoints() {
   // @@protoc_insertion_point(field_add:vqro.rpc.ReadResult.datapoints)
   return datapoints_.Add();
 }
-::google::protobuf::RepeatedPtrField< ::vqro::rpc::Datapoint >*
-ReadResult::mutable_datapoints() {
-  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.ReadResult.datapoints)
-  return &datapoints_;
-}
-const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Datapoint >&
+ const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Datapoint >&
 ReadResult::datapoints() const {
   // @@protoc_insertion_point(field_list:vqro.rpc.ReadResult.datapoints)
   return datapoints_;
 }
+ ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Datapoint >*
+ReadResult::mutable_datapoints() {
+  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.ReadResult.datapoints)
+  return &datapoints_;
+}
 
 // optional .vqro.rpc.StatusMessage status = 3;
-bool ReadResult::has_status() const {
+ bool ReadResult::has_status() const {
   return !_is_default_instance_ && status_ != NULL;
 }
-void ReadResult::clear_status() {
-  if (GetArenaNoVirtual() == NULL && status_ != NULL) delete status_;
+ void ReadResult::clear_status() {
+  if (status_ != NULL) delete status_;
   status_ = NULL;
 }
-const ::vqro::rpc::StatusMessage& ReadResult::status() const {
+ const ::vqro::rpc::StatusMessage& ReadResult::status() const {
   // @@protoc_insertion_point(field_get:vqro.rpc.ReadResult.status)
   return status_ != NULL ? *status_ : *default_instance_->status_;
 }
-::vqro::rpc::StatusMessage* ReadResult::mutable_status() {
+ ::vqro::rpc::StatusMessage* ReadResult::mutable_status() {
   
   if (status_ == NULL) {
-    _slow_mutable_status();
-  }
+    _slow_mutable_status();  }
   // @@protoc_insertion_point(field_mutable:vqro.rpc.ReadResult.status)
   return status_;
 }
-::vqro::rpc::StatusMessage* ReadResult::release_status() {
+ ::vqro::rpc::StatusMessage* ReadResult::release_status() {
   
   if (GetArenaNoVirtual() != NULL) {
     return _slow_release_status();

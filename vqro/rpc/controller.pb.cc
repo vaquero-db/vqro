@@ -27,7 +27,10 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* Server_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Server_reflection_ = NULL;
-const ::google::protobuf::EnumDescriptor* Server_AF_descriptor_ = NULL;
+struct ServerOneofInstance {
+  ::google::protobuf::internal::ArenaStringPtr ipv4_address_;
+  ::google::protobuf::internal::ArenaStringPtr ipv6_address_;
+}* Server_default_oneof_instance_ = NULL;
 const ::google::protobuf::Descriptor* Range_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Range_reflection_ = NULL;
@@ -86,11 +89,12 @@ void protobuf_AssignDesc_controller_2eproto() {
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LocateSeriesResults, _internal_metadata_),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LocateSeriesResults, _is_default_instance_));
   Server_descriptor_ = file->message_type(1);
-  static const int Server_offsets_[4] = {
+  static const int Server_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Server, name_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Server, address_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Server, address_family_),
+    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(Server_default_oneof_instance_, ipv4_address_),
+    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(Server_default_oneof_instance_, ipv6_address_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Server, port_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Server, address_),
   };
   Server_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
@@ -100,10 +104,11 @@ void protobuf_AssignDesc_controller_2eproto() {
       -1,
       -1,
       -1,
+      Server_default_oneof_instance_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Server, _oneof_case_[0]),
       sizeof(Server),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Server, _internal_metadata_),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Server, _is_default_instance_));
-  Server_AF_descriptor_ = Server_descriptor_->enum_type(0);
   Range_descriptor_ = file->message_type(2);
   static const int Range_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Range, lower_bound_),
@@ -300,6 +305,7 @@ void protobuf_ShutdownFile_controller_2eproto() {
   delete LocateSeriesResults::default_instance_;
   delete LocateSeriesResults_reflection_;
   delete Server::default_instance_;
+  delete Server_default_oneof_instance_;
   delete Server_reflection_;
   delete Range::default_instance_;
   delete Range_reflection_;
@@ -334,45 +340,45 @@ void protobuf_AddDesc_controller_2eproto() {
     "\n\020controller.proto\022\010vqro.rpc\032\ncore.proto"
     "\032\014search.proto\"a\n\023LocateSeriesResults\022!\n"
     "\007servers\030\001 \003(\0132\020.vqro.rpc.Server\022\'\n\006stat"
-    "us\030\002 \001(\0132\027.vqro.rpc.StatusMessage\"|\n\006Ser"
-    "ver\022\014\n\004name\030\001 \001(\t\022\017\n\007address\030\002 \001(\t\022+\n\016ad"
-    "dress_family\030\003 \001(\0162\023.vqro.rpc.Server.AF\022"
-    "\014\n\004port\030\004 \001(\005\"\030\n\002AF\022\010\n\004IPV4\020\000\022\010\n\004IPV6\020\001\""
-    "E\n\005Range\022\023\n\013lower_bound\030\001 \001(\005\022\023\n\013upper_b"
-    "ound\030\002 \001(\005\022\022\n\nnot_synced\030\003 \001(\010\"P\n\014Server"
-    "Ranges\022 \n\006server\030\001 \001(\0132\020.vqro.rpc.Server"
-    "\022\036\n\005range\030\002 \003(\0132\017.vqro.rpc.Range\"g\n\024Exch"
-    "angeStateRequest\022-\n\013local_state\030\001 \001(\0132\030."
-    "vqro.rpc.CellLocalState\022 \n\030only_diff_sin"
-    "ce_revision\030\002 \001(\003\"z\n\025ExchangeStateRespon"
-    "se\022)\n\004full\030\001 \001(\0132\031.vqro.rpc.CellGlobalSt"
-    "ateH\000\022-\n\004diff\030\002 \001(\0132\035.vqro.rpc.CellGloba"
-    "lStateDiffH\000B\007\n\005state\"}\n\017CellGlobalState"
-    "\022\020\n\010revision\030\001 \001(\003\022%\n\013controllers\030\002 \003(\0132"
-    "\020.vqro.rpc.Server\0221\n\021range_assignments\030\003"
-    " \003(\0132\026.vqro.rpc.ServerRanges\"\226\001\n\023CellGlo"
-    "balStateDiff\022\025\n\rfrom_revision\030\001 \001(\003\022\023\n\013t"
-    "o_revision\030\002 \001(\003\022)\n\tadditions\030\003 \003(\0132\026.vq"
-    "ro.rpc.ServerRanges\022(\n\010removals\030\004 \003(\0132\026."
-    "vqro.rpc.ServerRanges\":\n\016CellLocalState\022"
-    "(\n\010vaqueros\030\001 \003(\0132\026.vqro.rpc.VaqueroStat"
-    "e\"\253\001\n\014VaqueroState\022 \n\006server\030\001 \001(\0132\020.vqr"
-    "o.rpc.Server\022)\n\007metrics\030\002 \001(\0132\030.vqro.rpc"
-    ".VaqueroMetrics\022$\n\nnew_series\030\003 \003(\0132\020.vq"
-    "ro.rpc.Series\022(\n\016expired_series\030\004 \003(\0132\020."
-    "vqro.rpc.Series\"\200\001\n\016VaqueroMetrics\022\021\n\tcp"
-    "u_usage\030\001 \001(\001\022\035\n\025num_series_written_to\030\002"
-    " \001(\005\022\036\n\026num_datapoints_written\030\003 \001(\005\022\034\n\024"
-    "storage_bytes_change\030\004 \001(\0052\253\001\n\021VaqueroCo"
-    "ntroller\022D\n\014LocateSeries\022\025.vqro.rpc.Seri"
-    "esQuery\032\035.vqro.rpc.LocateSeriesResults\022P"
-    "\n\rExchangeState\022\036.vqro.rpc.ExchangeState"
-    "Request\032\037.vqro.rpc.ExchangeStateResponse"
-    "B\003\370\001\001b\006proto3", 1493);
+    "us\030\002 \001(\0132\027.vqro.rpc.StatusMessage\"_\n\006Ser"
+    "ver\022\014\n\004name\030\001 \001(\t\022\026\n\014ipv4_address\030\002 \001(\tH"
+    "\000\022\026\n\014ipv6_address\030\003 \001(\tH\000\022\014\n\004port\030\004 \001(\005B"
+    "\t\n\007address\"E\n\005Range\022\023\n\013lower_bound\030\001 \001(\005"
+    "\022\023\n\013upper_bound\030\002 \001(\005\022\022\n\nnot_synced\030\003 \001("
+    "\010\"P\n\014ServerRanges\022 \n\006server\030\001 \001(\0132\020.vqro"
+    ".rpc.Server\022\036\n\005range\030\002 \003(\0132\017.vqro.rpc.Ra"
+    "nge\"g\n\024ExchangeStateRequest\022-\n\013local_sta"
+    "te\030\001 \001(\0132\030.vqro.rpc.CellLocalState\022 \n\030on"
+    "ly_diff_since_revision\030\002 \001(\003\"z\n\025Exchange"
+    "StateResponse\022)\n\004full\030\001 \001(\0132\031.vqro.rpc.C"
+    "ellGlobalStateH\000\022-\n\004diff\030\002 \001(\0132\035.vqro.rp"
+    "c.CellGlobalStateDiffH\000B\007\n\005state\"}\n\017Cell"
+    "GlobalState\022\020\n\010revision\030\001 \001(\003\022%\n\013control"
+    "lers\030\002 \003(\0132\020.vqro.rpc.Server\0221\n\021range_as"
+    "signments\030\003 \003(\0132\026.vqro.rpc.ServerRanges\""
+    "\226\001\n\023CellGlobalStateDiff\022\025\n\rfrom_revision"
+    "\030\001 \001(\003\022\023\n\013to_revision\030\002 \001(\003\022)\n\tadditions"
+    "\030\003 \003(\0132\026.vqro.rpc.ServerRanges\022(\n\010remova"
+    "ls\030\004 \003(\0132\026.vqro.rpc.ServerRanges\":\n\016Cell"
+    "LocalState\022(\n\010vaqueros\030\001 \003(\0132\026.vqro.rpc."
+    "VaqueroState\"\253\001\n\014VaqueroState\022 \n\006server\030"
+    "\001 \001(\0132\020.vqro.rpc.Server\022)\n\007metrics\030\002 \001(\013"
+    "2\030.vqro.rpc.VaqueroMetrics\022$\n\nnew_series"
+    "\030\003 \003(\0132\020.vqro.rpc.Series\022(\n\016expired_seri"
+    "es\030\004 \003(\0132\020.vqro.rpc.Series\"\200\001\n\016VaqueroMe"
+    "trics\022\021\n\tcpu_usage\030\001 \001(\001\022\035\n\025num_series_w"
+    "ritten_to\030\002 \001(\005\022\036\n\026num_datapoints_writte"
+    "n\030\003 \001(\005\022\034\n\024storage_bytes_change\030\004 \001(\0052\253\001"
+    "\n\021VaqueroController\022D\n\014LocateSeries\022\025.vq"
+    "ro.rpc.SeriesQuery\032\035.vqro.rpc.LocateSeri"
+    "esResults\022P\n\rExchangeState\022\036.vqro.rpc.Ex"
+    "changeStateRequest\032\037.vqro.rpc.ExchangeSt"
+    "ateResponseB\003\370\001\001b\006proto3", 1464);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "controller.proto", &protobuf_RegisterTypes);
   LocateSeriesResults::default_instance_ = new LocateSeriesResults();
   Server::default_instance_ = new Server();
+  Server_default_oneof_instance_ = new ServerOneofInstance();
   Range::default_instance_ = new Range();
   ServerRanges::default_instance_ = new ServerRanges();
   ExchangeStateRequest::default_instance_ = new ExchangeStateRequest();
@@ -418,7 +424,7 @@ static void MergeFromFail(int line) {
 
 void LocateSeriesResults::_slow_mutable_status() {
   status_ = ::google::protobuf::Arena::CreateMessage< ::vqro::rpc::StatusMessage >(
-      GetArenaNoVirtual());
+        GetArenaNoVirtual());
 }
 ::vqro::rpc::StatusMessage* LocateSeriesResults::_slow_release_status() {
   if (status_ == NULL) {
@@ -469,7 +475,7 @@ const int LocateSeriesResults::kStatusFieldNumber;
 #endif  // !_MSC_VER
 
 LocateSeriesResults::LocateSeriesResults()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() , _internal_metadata_(NULL)  {
   SharedCtor();
   // @@protoc_insertion_point(constructor:vqro.rpc.LocateSeriesResults)
 }
@@ -545,7 +551,7 @@ LocateSeriesResults* LocateSeriesResults::New(::google::protobuf::Arena* arena) 
 }
 
 void LocateSeriesResults::Clear() {
-  if (GetArenaNoVirtual() == NULL && status_ != NULL) delete status_;
+  if (status_ != NULL) delete status_;
   status_ = NULL;
   servers_.Clear();
 }
@@ -563,15 +569,13 @@ bool LocateSeriesResults::MergePartialFromCodedStream(
       // repeated .vqro.rpc.Server servers = 1;
       case 1: {
         if (tag == 10) {
-          DO_(input->IncrementRecursionDepth());
-         parse_loop_servers:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtualNoRecursionDepth(
+         parse_servers:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                 input, add_servers()));
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(10)) goto parse_loop_servers;
-        input->UnsafeDecrementRecursionDepth();
+        if (input->ExpectTag(10)) goto parse_servers;
         if (input->ExpectTag(18)) goto parse_status;
         break;
       }
@@ -675,9 +679,9 @@ int LocateSeriesResults::ByteSize() const {
 
 void LocateSeriesResults::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const LocateSeriesResults* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const LocateSeriesResults>(
-          &from);
+  const LocateSeriesResults* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const LocateSeriesResults*>(
+      &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
@@ -745,56 +749,55 @@ void LocateSeriesResults::InternalSwap(LocateSeriesResults* other) {
 // LocateSeriesResults
 
 // repeated .vqro.rpc.Server servers = 1;
-int LocateSeriesResults::servers_size() const {
+ int LocateSeriesResults::servers_size() const {
   return servers_.size();
 }
-void LocateSeriesResults::clear_servers() {
+ void LocateSeriesResults::clear_servers() {
   servers_.Clear();
 }
-const ::vqro::rpc::Server& LocateSeriesResults::servers(int index) const {
+ const ::vqro::rpc::Server& LocateSeriesResults::servers(int index) const {
   // @@protoc_insertion_point(field_get:vqro.rpc.LocateSeriesResults.servers)
   return servers_.Get(index);
 }
-::vqro::rpc::Server* LocateSeriesResults::mutable_servers(int index) {
+ ::vqro::rpc::Server* LocateSeriesResults::mutable_servers(int index) {
   // @@protoc_insertion_point(field_mutable:vqro.rpc.LocateSeriesResults.servers)
   return servers_.Mutable(index);
 }
-::vqro::rpc::Server* LocateSeriesResults::add_servers() {
+ ::vqro::rpc::Server* LocateSeriesResults::add_servers() {
   // @@protoc_insertion_point(field_add:vqro.rpc.LocateSeriesResults.servers)
   return servers_.Add();
 }
-::google::protobuf::RepeatedPtrField< ::vqro::rpc::Server >*
-LocateSeriesResults::mutable_servers() {
-  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.LocateSeriesResults.servers)
-  return &servers_;
-}
-const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Server >&
+ const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Server >&
 LocateSeriesResults::servers() const {
   // @@protoc_insertion_point(field_list:vqro.rpc.LocateSeriesResults.servers)
   return servers_;
 }
+ ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Server >*
+LocateSeriesResults::mutable_servers() {
+  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.LocateSeriesResults.servers)
+  return &servers_;
+}
 
 // optional .vqro.rpc.StatusMessage status = 2;
-bool LocateSeriesResults::has_status() const {
+ bool LocateSeriesResults::has_status() const {
   return !_is_default_instance_ && status_ != NULL;
 }
-void LocateSeriesResults::clear_status() {
-  if (GetArenaNoVirtual() == NULL && status_ != NULL) delete status_;
+ void LocateSeriesResults::clear_status() {
+  if (status_ != NULL) delete status_;
   status_ = NULL;
 }
-const ::vqro::rpc::StatusMessage& LocateSeriesResults::status() const {
+ const ::vqro::rpc::StatusMessage& LocateSeriesResults::status() const {
   // @@protoc_insertion_point(field_get:vqro.rpc.LocateSeriesResults.status)
   return status_ != NULL ? *status_ : *default_instance_->status_;
 }
-::vqro::rpc::StatusMessage* LocateSeriesResults::mutable_status() {
+ ::vqro::rpc::StatusMessage* LocateSeriesResults::mutable_status() {
   
   if (status_ == NULL) {
-    _slow_mutable_status();
-  }
+    _slow_mutable_status();  }
   // @@protoc_insertion_point(field_mutable:vqro.rpc.LocateSeriesResults.status)
   return status_;
 }
-::vqro::rpc::StatusMessage* LocateSeriesResults::release_status() {
+ ::vqro::rpc::StatusMessage* LocateSeriesResults::release_status() {
   
   if (GetArenaNoVirtual() != NULL) {
     return _slow_release_status();
@@ -825,36 +828,15 @@ const ::vqro::rpc::StatusMessage& LocateSeriesResults::status() const {
 
 // ===================================================================
 
-const ::google::protobuf::EnumDescriptor* Server_AF_descriptor() {
-  protobuf_AssignDescriptorsOnce();
-  return Server_AF_descriptor_;
-}
-bool Server_AF_IsValid(int value) {
-  switch(value) {
-    case 0:
-    case 1:
-      return true;
-    default:
-      return false;
-  }
-}
-
-#ifndef _MSC_VER
-const Server_AF Server::IPV4;
-const Server_AF Server::IPV6;
-const Server_AF Server::AF_MIN;
-const Server_AF Server::AF_MAX;
-const int Server::AF_ARRAYSIZE;
-#endif  // _MSC_VER
 #ifndef _MSC_VER
 const int Server::kNameFieldNumber;
-const int Server::kAddressFieldNumber;
-const int Server::kAddressFamilyFieldNumber;
+const int Server::kIpv4AddressFieldNumber;
+const int Server::kIpv6AddressFieldNumber;
 const int Server::kPortFieldNumber;
 #endif  // !_MSC_VER
 
 Server::Server()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() , _internal_metadata_(NULL)  {
   SharedCtor();
   // @@protoc_insertion_point(constructor:vqro.rpc.Server)
 }
@@ -869,6 +851,8 @@ Server::Server(::google::protobuf::Arena* arena)
 
 void Server::InitAsDefaultInstance() {
   _is_default_instance_ = true;
+  Server_default_oneof_instance_->ipv4_address_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  Server_default_oneof_instance_->ipv6_address_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 Server::Server(const Server& from)
@@ -884,9 +868,8 @@ void Server::SharedCtor() {
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  address_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  address_family_ = 0;
   port_ = 0;
+  clear_has_address();
 }
 
 Server::~Server() {
@@ -900,7 +883,9 @@ void Server::SharedDtor() {
   }
 
   name_.Destroy(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), GetArenaNoVirtual());
-  address_.Destroy(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), GetArenaNoVirtual());
+  if (has_address()) {
+    clear_address();
+  }
   if (this != default_instance_) {
   }
 }
@@ -932,22 +917,30 @@ Server* Server::New(::google::protobuf::Arena* arena) const {
   return ::google::protobuf::Arena::CreateMessage<Server>(arena);
 }
 
+void Server::clear_address() {
+  switch(address_case()) {
+    case kIpv4Address: {
+      address_.ipv4_address_.Destroy(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+          GetArenaNoVirtual());
+      break;
+    }
+    case kIpv6Address: {
+      address_.ipv6_address_.Destroy(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+          GetArenaNoVirtual());
+      break;
+    }
+    case ADDRESS_NOT_SET: {
+      break;
+    }
+  }
+  _oneof_case_[0] = ADDRESS_NOT_SET;
+}
+
+
 void Server::Clear() {
-#define ZR_HELPER_(f) reinterpret_cast<char*>(\
-  &reinterpret_cast<Server*>(16)->f)
-
-#define ZR_(first, last) do {\
-  ::memset(&first, 0,\
-           ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
-} while (0)
-
-  ZR_(address_family_, port_);
   name_.ClearToEmpty(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), GetArenaNoVirtual());
-  address_.ClearToEmpty(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), GetArenaNoVirtual());
-
-#undef ZR_HELPER_
-#undef ZR_
-
+  port_ = 0;
+  clear_address();
 }
 
 bool Server::MergePartialFromCodedStream(
@@ -965,43 +958,44 @@ bool Server::MergePartialFromCodedStream(
         if (tag == 10) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_name()));
-          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
             this->name().data(), this->name().length(),
-            ::google::protobuf::internal::WireFormatLite::PARSE,
-            "vqro.rpc.Server.name"));
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "vqro.rpc.Server.name");
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(18)) goto parse_address;
+        if (input->ExpectTag(18)) goto parse_ipv4_address;
         break;
       }
 
-      // optional string address = 2;
+      // optional string ipv4_address = 2;
       case 2: {
         if (tag == 18) {
-         parse_address:
+         parse_ipv4_address:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_address()));
-          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-            this->address().data(), this->address().length(),
-            ::google::protobuf::internal::WireFormatLite::PARSE,
-            "vqro.rpc.Server.address"));
+                input, this->mutable_ipv4_address()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->ipv4_address().data(), this->ipv4_address().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "vqro.rpc.Server.ipv4_address");
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(24)) goto parse_address_family;
+        if (input->ExpectTag(26)) goto parse_ipv6_address;
         break;
       }
 
-      // optional .vqro.rpc.Server.AF address_family = 3;
+      // optional string ipv6_address = 3;
       case 3: {
-        if (tag == 24) {
-         parse_address_family:
-          int value;
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
-                 input, &value)));
-          set_address_family(static_cast< ::vqro::rpc::Server_AF >(value));
+        if (tag == 26) {
+         parse_ipv6_address:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_ipv6_address()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->ipv6_address().data(), this->ipv6_address().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "vqro.rpc.Server.ipv6_address");
         } else {
           goto handle_unusual;
         }
@@ -1050,28 +1044,32 @@ void Server::SerializeWithCachedSizes(
   // @@protoc_insertion_point(serialize_start:vqro.rpc.Server)
   // optional string name = 1;
   if (this->name().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->name().data(), this->name().length(),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
       "vqro.rpc.Server.name");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       1, this->name(), output);
   }
 
-  // optional string address = 2;
-  if (this->address().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->address().data(), this->address().length(),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "vqro.rpc.Server.address");
+  // optional string ipv4_address = 2;
+  if (has_ipv4_address()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->ipv4_address().data(), this->ipv4_address().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "vqro.rpc.Server.ipv4_address");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      2, this->address(), output);
+      2, this->ipv4_address(), output);
   }
 
-  // optional .vqro.rpc.Server.AF address_family = 3;
-  if (this->address_family() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteEnum(
-      3, this->address_family(), output);
+  // optional string ipv6_address = 3;
+  if (has_ipv6_address()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->ipv6_address().data(), this->ipv6_address().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "vqro.rpc.Server.ipv6_address");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      3, this->ipv6_address(), output);
   }
 
   // optional int32 port = 4;
@@ -1087,30 +1085,35 @@ void Server::SerializeWithCachedSizes(
   // @@protoc_insertion_point(serialize_to_array_start:vqro.rpc.Server)
   // optional string name = 1;
   if (this->name().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->name().data(), this->name().length(),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
       "vqro.rpc.Server.name");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         1, this->name(), target);
   }
 
-  // optional string address = 2;
-  if (this->address().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->address().data(), this->address().length(),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "vqro.rpc.Server.address");
+  // optional string ipv4_address = 2;
+  if (has_ipv4_address()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->ipv4_address().data(), this->ipv4_address().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "vqro.rpc.Server.ipv4_address");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        2, this->address(), target);
+        2, this->ipv4_address(), target);
   }
 
-  // optional .vqro.rpc.Server.AF address_family = 3;
-  if (this->address_family() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
-      3, this->address_family(), target);
+  // optional string ipv6_address = 3;
+  if (has_ipv6_address()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->ipv6_address().data(), this->ipv6_address().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "vqro.rpc.Server.ipv6_address");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        3, this->ipv6_address(), target);
   }
 
   // optional int32 port = 4;
@@ -1132,19 +1135,6 @@ int Server::ByteSize() const {
         this->name());
   }
 
-  // optional string address = 2;
-  if (this->address().size() > 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::StringSize(
-        this->address());
-  }
-
-  // optional .vqro.rpc.Server.AF address_family = 3;
-  if (this->address_family() != 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::EnumSize(this->address_family());
-  }
-
   // optional int32 port = 4;
   if (this->port() != 0) {
     total_size += 1 +
@@ -1152,6 +1142,25 @@ int Server::ByteSize() const {
         this->port());
   }
 
+  switch (address_case()) {
+    // optional string ipv4_address = 2;
+    case kIpv4Address: {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->ipv4_address());
+      break;
+    }
+    // optional string ipv6_address = 3;
+    case kIpv6Address: {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->ipv6_address());
+      break;
+    }
+    case ADDRESS_NOT_SET: {
+      break;
+    }
+  }
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
@@ -1160,9 +1169,9 @@ int Server::ByteSize() const {
 
 void Server::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const Server* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const Server>(
-          &from);
+  const Server* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Server*>(
+      &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
@@ -1172,14 +1181,21 @@ void Server::MergeFrom(const ::google::protobuf::Message& from) {
 
 void Server::MergeFrom(const Server& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  switch (from.address_case()) {
+    case kIpv4Address: {
+      set_ipv4_address(from.ipv4_address());
+      break;
+    }
+    case kIpv6Address: {
+      set_ipv6_address(from.ipv6_address());
+      break;
+    }
+    case ADDRESS_NOT_SET: {
+      break;
+    }
+  }
   if (from.name().size() > 0) {
     set_name(from.name());
-  }
-  if (from.address().size() > 0) {
-    set_address(from.address());
-  }
-  if (from.address_family() != 0) {
-    set_address_family(from.address_family());
   }
   if (from.port() != 0) {
     set_port(from.port());
@@ -1221,9 +1237,9 @@ void Server::UnsafeArenaSwap(Server* other) {
 }
 void Server::InternalSwap(Server* other) {
   name_.Swap(&other->name_);
-  address_.Swap(&other->address_);
-  std::swap(address_family_, other->address_family_);
   std::swap(port_, other->port_);
+  std::swap(address_, other->address_);
+  std::swap(_oneof_case_[0], other->_oneof_case_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
 }
@@ -1240,7 +1256,7 @@ void Server::InternalSwap(Server* other) {
 // Server
 
 // optional string name = 1;
-void Server::clear_name() {
+ void Server::clear_name() {
   name_.ClearToEmpty(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), GetArenaNoVirtual());
 }
  const ::std::string& Server::name() const {
@@ -1298,91 +1314,228 @@ void Server::clear_name() {
   } else {
     
   }
+  
   name_.UnsafeArenaSetAllocated(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       name, GetArenaNoVirtual());
   // @@protoc_insertion_point(field_set_allocated:vqro.rpc.Server.name)
 }
 
-// optional string address = 2;
-void Server::clear_address() {
-  address_.ClearToEmpty(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), GetArenaNoVirtual());
+// optional string ipv4_address = 2;
+ bool Server::has_ipv4_address() const {
+  return address_case() == kIpv4Address;
 }
- const ::std::string& Server::address() const {
-  // @@protoc_insertion_point(field_get:vqro.rpc.Server.address)
-  return address_.Get(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+ void Server::set_has_ipv4_address() {
+  _oneof_case_[0] = kIpv4Address;
 }
- void Server::set_address(const ::std::string& value) {
-  
-  address_.Set(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value, GetArenaNoVirtual());
-  // @@protoc_insertion_point(field_set:vqro.rpc.Server.address)
-}
- void Server::set_address(const char* value) {
-  
-  address_.Set(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value),
-              GetArenaNoVirtual());
-  // @@protoc_insertion_point(field_set_char:vqro.rpc.Server.address)
-}
- void Server::set_address(const char* value,
-    size_t size) {
-  
-  address_.Set(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(
-      reinterpret_cast<const char*>(value), size), GetArenaNoVirtual());
-  // @@protoc_insertion_point(field_set_pointer:vqro.rpc.Server.address)
-}
- ::std::string* Server::mutable_address() {
-  
-  // @@protoc_insertion_point(field_mutable:vqro.rpc.Server.address)
-  return address_.Mutable(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), GetArenaNoVirtual());
-}
- ::std::string* Server::release_address() {
-  
-  return address_.Release(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), GetArenaNoVirtual());
-}
- ::std::string* Server::unsafe_arena_release_address() {
-  GOOGLE_DCHECK(GetArenaNoVirtual() != NULL);
-  
-  return address_.UnsafeArenaRelease(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      GetArenaNoVirtual());
-}
- void Server::set_allocated_address(::std::string* address) {
-  if (address != NULL) {
-    
-  } else {
-    
+ void Server::clear_ipv4_address() {
+  if (has_ipv4_address()) {
+    address_.ipv4_address_.Destroy(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        GetArenaNoVirtual());
+    clear_has_address();
   }
-  address_.SetAllocated(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), address,
-      GetArenaNoVirtual());
-  // @@protoc_insertion_point(field_set_allocated:vqro.rpc.Server.address)
 }
- void Server::unsafe_arena_set_allocated_address(
-    ::std::string* address) {
-  GOOGLE_DCHECK(GetArenaNoVirtual() != NULL);
-  if (address != NULL) {
-    
-  } else {
-    
+ const ::std::string& Server::ipv4_address() const {
+  // @@protoc_insertion_point(field_get:vqro.rpc.Server.ipv4_address)
+  if (has_ipv4_address()) {
+    return address_.ipv4_address_.Get(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   }
-  address_.UnsafeArenaSetAllocated(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      address, GetArenaNoVirtual());
-  // @@protoc_insertion_point(field_set_allocated:vqro.rpc.Server.address)
+  return *&::google::protobuf::internal::GetEmptyStringAlreadyInited();
+}
+ void Server::set_ipv4_address(const ::std::string& value) {
+  if (!has_ipv4_address()) {
+    clear_address();
+    set_has_ipv4_address();
+    address_.ipv4_address_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  address_.ipv4_address_.Set(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value,
+      GetArenaNoVirtual());
+  // @@protoc_insertion_point(field_set:vqro.rpc.Server.ipv4_address)
+}
+ void Server::set_ipv4_address(const char* value) {
+  if (!has_ipv4_address()) {
+    clear_address();
+    set_has_ipv4_address();
+    address_.ipv4_address_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  address_.ipv4_address_.Set(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(value), GetArenaNoVirtual());
+  // @@protoc_insertion_point(field_set_char:vqro.rpc.Server.ipv4_address)
+}
+ void Server::set_ipv4_address(const char* value,
+                             size_t size) {
+  if (!has_ipv4_address()) {
+    clear_address();
+    set_has_ipv4_address();
+    address_.ipv4_address_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  address_.ipv4_address_.Set(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(
+      reinterpret_cast<const char*>(value), size),
+      GetArenaNoVirtual());
+  // @@protoc_insertion_point(field_set_pointer:vqro.rpc.Server.ipv4_address)
+}
+ ::std::string* Server::mutable_ipv4_address() {
+  if (!has_ipv4_address()) {
+    clear_address();
+    set_has_ipv4_address();
+    address_.ipv4_address_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  return address_.ipv4_address_.Mutable(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      GetArenaNoVirtual());
+  // @@protoc_insertion_point(field_mutable:vqro.rpc.Server.ipv4_address)
+}
+ ::std::string* Server::release_ipv4_address() {
+  if (has_ipv4_address()) {
+    clear_has_address();
+    return address_.ipv4_address_.Release(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        GetArenaNoVirtual());
+  } else {
+    return NULL;
+  }
+}
+ ::std::string* Server::unsafe_arena_release_ipv4_address() {
+  GOOGLE_DCHECK(GetArenaNoVirtual() != NULL);
+  if (has_ipv4_address()) {
+    clear_has_address();
+    return address_.ipv4_address_.UnsafeArenaRelease(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(), GetArenaNoVirtual());
+  } else {
+    return NULL;
+  }
+}
+ void Server::set_allocated_ipv4_address(::std::string* ipv4_address) {
+  if (!has_ipv4_address()) {
+    address_.ipv4_address_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  clear_address();
+  if (ipv4_address != NULL) {
+    set_has_ipv4_address();
+    address_.ipv4_address_.SetAllocated(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ipv4_address,
+        GetArenaNoVirtual());
+  }
+  // @@protoc_insertion_point(field_set_allocated:vqro.rpc.Server.ipv4_address)
+}
+ void Server::unsafe_arena_set_allocated_ipv4_address(::std::string* ipv4_address) {
+  GOOGLE_DCHECK(GetArenaNoVirtual() != NULL);
+  if (!has_ipv4_address()) {
+    address_.ipv4_address_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  clear_address();
+  if (ipv4_address) {
+    set_has_ipv4_address();
+    address_.ipv4_address_.UnsafeArenaSetAllocated(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ipv4_address, GetArenaNoVirtual());
+  }
+  // @@protoc_insertion_point(field_set_allocated:vqro.rpc.Server.ipv4_address)
 }
 
-// optional .vqro.rpc.Server.AF address_family = 3;
-void Server::clear_address_family() {
-  address_family_ = 0;
+// optional string ipv6_address = 3;
+ bool Server::has_ipv6_address() const {
+  return address_case() == kIpv6Address;
 }
- ::vqro::rpc::Server_AF Server::address_family() const {
-  // @@protoc_insertion_point(field_get:vqro.rpc.Server.address_family)
-  return static_cast< ::vqro::rpc::Server_AF >(address_family_);
+ void Server::set_has_ipv6_address() {
+  _oneof_case_[0] = kIpv6Address;
 }
- void Server::set_address_family(::vqro::rpc::Server_AF value) {
-  
-  address_family_ = value;
-  // @@protoc_insertion_point(field_set:vqro.rpc.Server.address_family)
+ void Server::clear_ipv6_address() {
+  if (has_ipv6_address()) {
+    address_.ipv6_address_.Destroy(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        GetArenaNoVirtual());
+    clear_has_address();
+  }
+}
+ const ::std::string& Server::ipv6_address() const {
+  // @@protoc_insertion_point(field_get:vqro.rpc.Server.ipv6_address)
+  if (has_ipv6_address()) {
+    return address_.ipv6_address_.Get(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  return *&::google::protobuf::internal::GetEmptyStringAlreadyInited();
+}
+ void Server::set_ipv6_address(const ::std::string& value) {
+  if (!has_ipv6_address()) {
+    clear_address();
+    set_has_ipv6_address();
+    address_.ipv6_address_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  address_.ipv6_address_.Set(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value,
+      GetArenaNoVirtual());
+  // @@protoc_insertion_point(field_set:vqro.rpc.Server.ipv6_address)
+}
+ void Server::set_ipv6_address(const char* value) {
+  if (!has_ipv6_address()) {
+    clear_address();
+    set_has_ipv6_address();
+    address_.ipv6_address_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  address_.ipv6_address_.Set(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(value), GetArenaNoVirtual());
+  // @@protoc_insertion_point(field_set_char:vqro.rpc.Server.ipv6_address)
+}
+ void Server::set_ipv6_address(const char* value,
+                             size_t size) {
+  if (!has_ipv6_address()) {
+    clear_address();
+    set_has_ipv6_address();
+    address_.ipv6_address_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  address_.ipv6_address_.Set(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(
+      reinterpret_cast<const char*>(value), size),
+      GetArenaNoVirtual());
+  // @@protoc_insertion_point(field_set_pointer:vqro.rpc.Server.ipv6_address)
+}
+ ::std::string* Server::mutable_ipv6_address() {
+  if (!has_ipv6_address()) {
+    clear_address();
+    set_has_ipv6_address();
+    address_.ipv6_address_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  return address_.ipv6_address_.Mutable(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      GetArenaNoVirtual());
+  // @@protoc_insertion_point(field_mutable:vqro.rpc.Server.ipv6_address)
+}
+ ::std::string* Server::release_ipv6_address() {
+  if (has_ipv6_address()) {
+    clear_has_address();
+    return address_.ipv6_address_.Release(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+        GetArenaNoVirtual());
+  } else {
+    return NULL;
+  }
+}
+ ::std::string* Server::unsafe_arena_release_ipv6_address() {
+  GOOGLE_DCHECK(GetArenaNoVirtual() != NULL);
+  if (has_ipv6_address()) {
+    clear_has_address();
+    return address_.ipv6_address_.UnsafeArenaRelease(
+        &::google::protobuf::internal::GetEmptyStringAlreadyInited(), GetArenaNoVirtual());
+  } else {
+    return NULL;
+  }
+}
+ void Server::set_allocated_ipv6_address(::std::string* ipv6_address) {
+  if (!has_ipv6_address()) {
+    address_.ipv6_address_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  clear_address();
+  if (ipv6_address != NULL) {
+    set_has_ipv6_address();
+    address_.ipv6_address_.SetAllocated(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ipv6_address,
+        GetArenaNoVirtual());
+  }
+  // @@protoc_insertion_point(field_set_allocated:vqro.rpc.Server.ipv6_address)
+}
+ void Server::unsafe_arena_set_allocated_ipv6_address(::std::string* ipv6_address) {
+  GOOGLE_DCHECK(GetArenaNoVirtual() != NULL);
+  if (!has_ipv6_address()) {
+    address_.ipv6_address_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  clear_address();
+  if (ipv6_address) {
+    set_has_ipv6_address();
+    address_.ipv6_address_.UnsafeArenaSetAllocated(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ipv6_address, GetArenaNoVirtual());
+  }
+  // @@protoc_insertion_point(field_set_allocated:vqro.rpc.Server.ipv6_address)
 }
 
 // optional int32 port = 4;
-void Server::clear_port() {
+ void Server::clear_port() {
   port_ = 0;
 }
  ::google::protobuf::int32 Server::port() const {
@@ -1395,6 +1548,15 @@ void Server::clear_port() {
   // @@protoc_insertion_point(field_set:vqro.rpc.Server.port)
 }
 
+ bool Server::has_address() const {
+  return address_case() != ADDRESS_NOT_SET;
+}
+ void Server::clear_has_address() {
+  _oneof_case_[0] = ADDRESS_NOT_SET;
+}
+Server::AddressCase Server::address_case() const {
+  return Server::AddressCase(_oneof_case_[0]);
+}
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // ===================================================================
@@ -1406,7 +1568,7 @@ const int Range::kNotSyncedFieldNumber;
 #endif  // !_MSC_VER
 
 Range::Range()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() , _internal_metadata_(NULL)  {
   SharedCtor();
   // @@protoc_insertion_point(constructor:vqro.rpc.Range)
 }
@@ -1644,9 +1806,9 @@ int Range::ByteSize() const {
 
 void Range::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const Range* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const Range>(
-          &from);
+  const Range* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Range*>(
+      &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
@@ -1720,7 +1882,7 @@ void Range::InternalSwap(Range* other) {
 // Range
 
 // optional int32 lower_bound = 1;
-void Range::clear_lower_bound() {
+ void Range::clear_lower_bound() {
   lower_bound_ = 0;
 }
  ::google::protobuf::int32 Range::lower_bound() const {
@@ -1734,7 +1896,7 @@ void Range::clear_lower_bound() {
 }
 
 // optional int32 upper_bound = 2;
-void Range::clear_upper_bound() {
+ void Range::clear_upper_bound() {
   upper_bound_ = 0;
 }
  ::google::protobuf::int32 Range::upper_bound() const {
@@ -1748,7 +1910,7 @@ void Range::clear_upper_bound() {
 }
 
 // optional bool not_synced = 3;
-void Range::clear_not_synced() {
+ void Range::clear_not_synced() {
   not_synced_ = false;
 }
  bool Range::not_synced() const {
@@ -1767,7 +1929,7 @@ void Range::clear_not_synced() {
 
 void ServerRanges::_slow_mutable_server() {
   server_ = ::google::protobuf::Arena::CreateMessage< ::vqro::rpc::Server >(
-      GetArenaNoVirtual());
+        GetArenaNoVirtual());
 }
 ::vqro::rpc::Server* ServerRanges::_slow_release_server() {
   if (server_ == NULL) {
@@ -1818,7 +1980,7 @@ const int ServerRanges::kRangeFieldNumber;
 #endif  // !_MSC_VER
 
 ServerRanges::ServerRanges()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() , _internal_metadata_(NULL)  {
   SharedCtor();
   // @@protoc_insertion_point(constructor:vqro.rpc.ServerRanges)
 }
@@ -1894,7 +2056,7 @@ ServerRanges* ServerRanges::New(::google::protobuf::Arena* arena) const {
 }
 
 void ServerRanges::Clear() {
-  if (GetArenaNoVirtual() == NULL && server_ != NULL) delete server_;
+  if (server_ != NULL) delete server_;
   server_ = NULL;
   range_.Clear();
 }
@@ -1925,15 +2087,12 @@ bool ServerRanges::MergePartialFromCodedStream(
       case 2: {
         if (tag == 18) {
          parse_range:
-          DO_(input->IncrementRecursionDepth());
-         parse_loop_range:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtualNoRecursionDepth(
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                 input, add_range()));
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(18)) goto parse_loop_range;
-        input->UnsafeDecrementRecursionDepth();
+        if (input->ExpectTag(18)) goto parse_range;
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -2024,9 +2183,9 @@ int ServerRanges::ByteSize() const {
 
 void ServerRanges::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const ServerRanges* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const ServerRanges>(
-          &from);
+  const ServerRanges* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const ServerRanges*>(
+      &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
@@ -2094,26 +2253,25 @@ void ServerRanges::InternalSwap(ServerRanges* other) {
 // ServerRanges
 
 // optional .vqro.rpc.Server server = 1;
-bool ServerRanges::has_server() const {
+ bool ServerRanges::has_server() const {
   return !_is_default_instance_ && server_ != NULL;
 }
-void ServerRanges::clear_server() {
-  if (GetArenaNoVirtual() == NULL && server_ != NULL) delete server_;
+ void ServerRanges::clear_server() {
+  if (server_ != NULL) delete server_;
   server_ = NULL;
 }
-const ::vqro::rpc::Server& ServerRanges::server() const {
+ const ::vqro::rpc::Server& ServerRanges::server() const {
   // @@protoc_insertion_point(field_get:vqro.rpc.ServerRanges.server)
   return server_ != NULL ? *server_ : *default_instance_->server_;
 }
-::vqro::rpc::Server* ServerRanges::mutable_server() {
+ ::vqro::rpc::Server* ServerRanges::mutable_server() {
   
   if (server_ == NULL) {
-    _slow_mutable_server();
-  }
+    _slow_mutable_server();  }
   // @@protoc_insertion_point(field_mutable:vqro.rpc.ServerRanges.server)
   return server_;
 }
-::vqro::rpc::Server* ServerRanges::release_server() {
+ ::vqro::rpc::Server* ServerRanges::release_server() {
   
   if (GetArenaNoVirtual() != NULL) {
     return _slow_release_server();
@@ -2141,33 +2299,33 @@ const ::vqro::rpc::Server& ServerRanges::server() const {
 }
 
 // repeated .vqro.rpc.Range range = 2;
-int ServerRanges::range_size() const {
+ int ServerRanges::range_size() const {
   return range_.size();
 }
-void ServerRanges::clear_range() {
+ void ServerRanges::clear_range() {
   range_.Clear();
 }
-const ::vqro::rpc::Range& ServerRanges::range(int index) const {
+ const ::vqro::rpc::Range& ServerRanges::range(int index) const {
   // @@protoc_insertion_point(field_get:vqro.rpc.ServerRanges.range)
   return range_.Get(index);
 }
-::vqro::rpc::Range* ServerRanges::mutable_range(int index) {
+ ::vqro::rpc::Range* ServerRanges::mutable_range(int index) {
   // @@protoc_insertion_point(field_mutable:vqro.rpc.ServerRanges.range)
   return range_.Mutable(index);
 }
-::vqro::rpc::Range* ServerRanges::add_range() {
+ ::vqro::rpc::Range* ServerRanges::add_range() {
   // @@protoc_insertion_point(field_add:vqro.rpc.ServerRanges.range)
   return range_.Add();
 }
-::google::protobuf::RepeatedPtrField< ::vqro::rpc::Range >*
-ServerRanges::mutable_range() {
-  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.ServerRanges.range)
-  return &range_;
-}
-const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Range >&
+ const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Range >&
 ServerRanges::range() const {
   // @@protoc_insertion_point(field_list:vqro.rpc.ServerRanges.range)
   return range_;
+}
+ ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Range >*
+ServerRanges::mutable_range() {
+  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.ServerRanges.range)
+  return &range_;
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -2176,7 +2334,7 @@ ServerRanges::range() const {
 
 void ExchangeStateRequest::_slow_mutable_local_state() {
   local_state_ = ::google::protobuf::Arena::CreateMessage< ::vqro::rpc::CellLocalState >(
-      GetArenaNoVirtual());
+        GetArenaNoVirtual());
 }
 ::vqro::rpc::CellLocalState* ExchangeStateRequest::_slow_release_local_state() {
   if (local_state_ == NULL) {
@@ -2227,7 +2385,7 @@ const int ExchangeStateRequest::kOnlyDiffSinceRevisionFieldNumber;
 #endif  // !_MSC_VER
 
 ExchangeStateRequest::ExchangeStateRequest()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() , _internal_metadata_(NULL)  {
   SharedCtor();
   // @@protoc_insertion_point(constructor:vqro.rpc.ExchangeStateRequest)
 }
@@ -2303,7 +2461,7 @@ ExchangeStateRequest* ExchangeStateRequest::New(::google::protobuf::Arena* arena
 }
 
 void ExchangeStateRequest::Clear() {
-  if (GetArenaNoVirtual() == NULL && local_state_ != NULL) delete local_state_;
+  if (local_state_ != NULL) delete local_state_;
   local_state_ = NULL;
   only_diff_since_revision_ = GOOGLE_LONGLONG(0);
 }
@@ -2427,9 +2585,9 @@ int ExchangeStateRequest::ByteSize() const {
 
 void ExchangeStateRequest::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const ExchangeStateRequest* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const ExchangeStateRequest>(
-          &from);
+  const ExchangeStateRequest* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const ExchangeStateRequest*>(
+      &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
@@ -2499,26 +2657,25 @@ void ExchangeStateRequest::InternalSwap(ExchangeStateRequest* other) {
 // ExchangeStateRequest
 
 // optional .vqro.rpc.CellLocalState local_state = 1;
-bool ExchangeStateRequest::has_local_state() const {
+ bool ExchangeStateRequest::has_local_state() const {
   return !_is_default_instance_ && local_state_ != NULL;
 }
-void ExchangeStateRequest::clear_local_state() {
-  if (GetArenaNoVirtual() == NULL && local_state_ != NULL) delete local_state_;
+ void ExchangeStateRequest::clear_local_state() {
+  if (local_state_ != NULL) delete local_state_;
   local_state_ = NULL;
 }
-const ::vqro::rpc::CellLocalState& ExchangeStateRequest::local_state() const {
+ const ::vqro::rpc::CellLocalState& ExchangeStateRequest::local_state() const {
   // @@protoc_insertion_point(field_get:vqro.rpc.ExchangeStateRequest.local_state)
   return local_state_ != NULL ? *local_state_ : *default_instance_->local_state_;
 }
-::vqro::rpc::CellLocalState* ExchangeStateRequest::mutable_local_state() {
+ ::vqro::rpc::CellLocalState* ExchangeStateRequest::mutable_local_state() {
   
   if (local_state_ == NULL) {
-    _slow_mutable_local_state();
-  }
+    _slow_mutable_local_state();  }
   // @@protoc_insertion_point(field_mutable:vqro.rpc.ExchangeStateRequest.local_state)
   return local_state_;
 }
-::vqro::rpc::CellLocalState* ExchangeStateRequest::release_local_state() {
+ ::vqro::rpc::CellLocalState* ExchangeStateRequest::release_local_state() {
   
   if (GetArenaNoVirtual() != NULL) {
     return _slow_release_local_state();
@@ -2546,7 +2703,7 @@ const ::vqro::rpc::CellLocalState& ExchangeStateRequest::local_state() const {
 }
 
 // optional int64 only_diff_since_revision = 2;
-void ExchangeStateRequest::clear_only_diff_since_revision() {
+ void ExchangeStateRequest::clear_only_diff_since_revision() {
   only_diff_since_revision_ = GOOGLE_LONGLONG(0);
 }
  ::google::protobuf::int64 ExchangeStateRequest::only_diff_since_revision() const {
@@ -2569,7 +2726,7 @@ const int ExchangeStateResponse::kDiffFieldNumber;
 #endif  // !_MSC_VER
 
 ExchangeStateResponse::ExchangeStateResponse()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() , _internal_metadata_(NULL)  {
   SharedCtor();
   // @@protoc_insertion_point(constructor:vqro.rpc.ExchangeStateResponse)
 }
@@ -2797,9 +2954,9 @@ int ExchangeStateResponse::ByteSize() const {
 
 void ExchangeStateResponse::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const ExchangeStateResponse* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const ExchangeStateResponse>(
-          &from);
+  const ExchangeStateResponse* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const ExchangeStateResponse*>(
+      &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
@@ -2876,13 +3033,13 @@ void ExchangeStateResponse::InternalSwap(ExchangeStateResponse* other) {
 // ExchangeStateResponse
 
 // optional .vqro.rpc.CellGlobalState full = 1;
-bool ExchangeStateResponse::has_full() const {
+ bool ExchangeStateResponse::has_full() const {
   return state_case() == kFull;
 }
-void ExchangeStateResponse::set_has_full() {
+ void ExchangeStateResponse::set_has_full() {
   _oneof_case_[0] = kFull;
 }
-void ExchangeStateResponse::clear_full() {
+ void ExchangeStateResponse::clear_full() {
   if (has_full()) {
     if (GetArenaNoVirtual() == NULL) {
       delete state_.full_;
@@ -2892,11 +3049,10 @@ void ExchangeStateResponse::clear_full() {
 }
  const ::vqro::rpc::CellGlobalState& ExchangeStateResponse::full() const {
   // @@protoc_insertion_point(field_get:vqro.rpc.ExchangeStateResponse.full)
-  return has_full()
-      ? *state_.full_
-      : ::vqro::rpc::CellGlobalState::default_instance();
+  return has_full() ? *state_.full_
+                      : ::vqro::rpc::CellGlobalState::default_instance();
 }
-::vqro::rpc::CellGlobalState* ExchangeStateResponse::mutable_full() {
+ ::vqro::rpc::CellGlobalState* ExchangeStateResponse::mutable_full() {
   if (!has_full()) {
     clear_state();
     set_has_full();
@@ -2907,7 +3063,7 @@ void ExchangeStateResponse::clear_full() {
   // @@protoc_insertion_point(field_mutable:vqro.rpc.ExchangeStateResponse.full)
   return state_.full_;
 }
-::vqro::rpc::CellGlobalState* ExchangeStateResponse::release_full() {
+ ::vqro::rpc::CellGlobalState* ExchangeStateResponse::release_full() {
   if (has_full()) {
     clear_has_state();
     if (GetArenaNoVirtual() != NULL) {
@@ -2924,7 +3080,17 @@ void ExchangeStateResponse::clear_full() {
     return NULL;
   }
 }
-void ExchangeStateResponse::set_allocated_full(::vqro::rpc::CellGlobalState* full) {
+ ::vqro::rpc::CellGlobalState* ExchangeStateResponse::unsafe_arena_release_full() {
+  if (has_full()) {
+    clear_has_state();
+    ::vqro::rpc::CellGlobalState* temp = state_.full_;
+    state_.full_ = NULL;
+    return temp;
+  } else {
+    return NULL;
+  }
+}
+ void ExchangeStateResponse::set_allocated_full(::vqro::rpc::CellGlobalState* full) {
   clear_state();
   if (full) {
     if (GetArenaNoVirtual() != NULL &&
@@ -2943,16 +3109,6 @@ void ExchangeStateResponse::set_allocated_full(::vqro::rpc::CellGlobalState* ful
   }
   // @@protoc_insertion_point(field_set_allocated:vqro.rpc.ExchangeStateResponse.full)
 }
- ::vqro::rpc::CellGlobalState* ExchangeStateResponse::unsafe_arena_release_full() {
-  if (has_full()) {
-    clear_has_state();
-    ::vqro::rpc::CellGlobalState* temp = state_.full_;
-    state_.full_ = NULL;
-    return temp;
-  } else {
-    return NULL;
-  }
-}
  void ExchangeStateResponse::unsafe_arena_set_allocated_full(::vqro::rpc::CellGlobalState* full) {
   clear_state();
   if (full) {
@@ -2963,13 +3119,13 @@ void ExchangeStateResponse::set_allocated_full(::vqro::rpc::CellGlobalState* ful
 }
 
 // optional .vqro.rpc.CellGlobalStateDiff diff = 2;
-bool ExchangeStateResponse::has_diff() const {
+ bool ExchangeStateResponse::has_diff() const {
   return state_case() == kDiff;
 }
-void ExchangeStateResponse::set_has_diff() {
+ void ExchangeStateResponse::set_has_diff() {
   _oneof_case_[0] = kDiff;
 }
-void ExchangeStateResponse::clear_diff() {
+ void ExchangeStateResponse::clear_diff() {
   if (has_diff()) {
     if (GetArenaNoVirtual() == NULL) {
       delete state_.diff_;
@@ -2979,11 +3135,10 @@ void ExchangeStateResponse::clear_diff() {
 }
  const ::vqro::rpc::CellGlobalStateDiff& ExchangeStateResponse::diff() const {
   // @@protoc_insertion_point(field_get:vqro.rpc.ExchangeStateResponse.diff)
-  return has_diff()
-      ? *state_.diff_
-      : ::vqro::rpc::CellGlobalStateDiff::default_instance();
+  return has_diff() ? *state_.diff_
+                      : ::vqro::rpc::CellGlobalStateDiff::default_instance();
 }
-::vqro::rpc::CellGlobalStateDiff* ExchangeStateResponse::mutable_diff() {
+ ::vqro::rpc::CellGlobalStateDiff* ExchangeStateResponse::mutable_diff() {
   if (!has_diff()) {
     clear_state();
     set_has_diff();
@@ -2994,7 +3149,7 @@ void ExchangeStateResponse::clear_diff() {
   // @@protoc_insertion_point(field_mutable:vqro.rpc.ExchangeStateResponse.diff)
   return state_.diff_;
 }
-::vqro::rpc::CellGlobalStateDiff* ExchangeStateResponse::release_diff() {
+ ::vqro::rpc::CellGlobalStateDiff* ExchangeStateResponse::release_diff() {
   if (has_diff()) {
     clear_has_state();
     if (GetArenaNoVirtual() != NULL) {
@@ -3011,7 +3166,17 @@ void ExchangeStateResponse::clear_diff() {
     return NULL;
   }
 }
-void ExchangeStateResponse::set_allocated_diff(::vqro::rpc::CellGlobalStateDiff* diff) {
+ ::vqro::rpc::CellGlobalStateDiff* ExchangeStateResponse::unsafe_arena_release_diff() {
+  if (has_diff()) {
+    clear_has_state();
+    ::vqro::rpc::CellGlobalStateDiff* temp = state_.diff_;
+    state_.diff_ = NULL;
+    return temp;
+  } else {
+    return NULL;
+  }
+}
+ void ExchangeStateResponse::set_allocated_diff(::vqro::rpc::CellGlobalStateDiff* diff) {
   clear_state();
   if (diff) {
     if (GetArenaNoVirtual() != NULL &&
@@ -3030,16 +3195,6 @@ void ExchangeStateResponse::set_allocated_diff(::vqro::rpc::CellGlobalStateDiff*
   }
   // @@protoc_insertion_point(field_set_allocated:vqro.rpc.ExchangeStateResponse.diff)
 }
- ::vqro::rpc::CellGlobalStateDiff* ExchangeStateResponse::unsafe_arena_release_diff() {
-  if (has_diff()) {
-    clear_has_state();
-    ::vqro::rpc::CellGlobalStateDiff* temp = state_.diff_;
-    state_.diff_ = NULL;
-    return temp;
-  } else {
-    return NULL;
-  }
-}
  void ExchangeStateResponse::unsafe_arena_set_allocated_diff(::vqro::rpc::CellGlobalStateDiff* diff) {
   clear_state();
   if (diff) {
@@ -3049,10 +3204,10 @@ void ExchangeStateResponse::set_allocated_diff(::vqro::rpc::CellGlobalStateDiff*
   // @@protoc_insertion_point(field_unsafe_arena_set_allocated:vqro.rpc.ExchangeStateResponse.diff)
 }
 
-bool ExchangeStateResponse::has_state() const {
+ bool ExchangeStateResponse::has_state() const {
   return state_case() != STATE_NOT_SET;
 }
-void ExchangeStateResponse::clear_has_state() {
+ void ExchangeStateResponse::clear_has_state() {
   _oneof_case_[0] = STATE_NOT_SET;
 }
 ExchangeStateResponse::StateCase ExchangeStateResponse::state_case() const {
@@ -3069,7 +3224,7 @@ const int CellGlobalState::kRangeAssignmentsFieldNumber;
 #endif  // !_MSC_VER
 
 CellGlobalState::CellGlobalState()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() , _internal_metadata_(NULL)  {
   SharedCtor();
   // @@protoc_insertion_point(constructor:vqro.rpc.CellGlobalState)
 }
@@ -3177,31 +3332,26 @@ bool CellGlobalState::MergePartialFromCodedStream(
       case 2: {
         if (tag == 18) {
          parse_controllers:
-          DO_(input->IncrementRecursionDepth());
-         parse_loop_controllers:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtualNoRecursionDepth(
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                 input, add_controllers()));
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(18)) goto parse_loop_controllers;
-        if (input->ExpectTag(26)) goto parse_loop_range_assignments;
-        input->UnsafeDecrementRecursionDepth();
+        if (input->ExpectTag(18)) goto parse_controllers;
+        if (input->ExpectTag(26)) goto parse_range_assignments;
         break;
       }
 
       // repeated .vqro.rpc.ServerRanges range_assignments = 3;
       case 3: {
         if (tag == 26) {
-          DO_(input->IncrementRecursionDepth());
-         parse_loop_range_assignments:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtualNoRecursionDepth(
+         parse_range_assignments:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                 input, add_range_assignments()));
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(26)) goto parse_loop_range_assignments;
-        input->UnsafeDecrementRecursionDepth();
+        if (input->ExpectTag(26)) goto parse_range_assignments;
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -3310,9 +3460,9 @@ int CellGlobalState::ByteSize() const {
 
 void CellGlobalState::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const CellGlobalState* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const CellGlobalState>(
-          &from);
+  const CellGlobalState* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const CellGlobalState*>(
+      &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
@@ -3382,7 +3532,7 @@ void CellGlobalState::InternalSwap(CellGlobalState* other) {
 // CellGlobalState
 
 // optional int64 revision = 1;
-void CellGlobalState::clear_revision() {
+ void CellGlobalState::clear_revision() {
   revision_ = GOOGLE_LONGLONG(0);
 }
  ::google::protobuf::int64 CellGlobalState::revision() const {
@@ -3396,63 +3546,63 @@ void CellGlobalState::clear_revision() {
 }
 
 // repeated .vqro.rpc.Server controllers = 2;
-int CellGlobalState::controllers_size() const {
+ int CellGlobalState::controllers_size() const {
   return controllers_.size();
 }
-void CellGlobalState::clear_controllers() {
+ void CellGlobalState::clear_controllers() {
   controllers_.Clear();
 }
-const ::vqro::rpc::Server& CellGlobalState::controllers(int index) const {
+ const ::vqro::rpc::Server& CellGlobalState::controllers(int index) const {
   // @@protoc_insertion_point(field_get:vqro.rpc.CellGlobalState.controllers)
   return controllers_.Get(index);
 }
-::vqro::rpc::Server* CellGlobalState::mutable_controllers(int index) {
+ ::vqro::rpc::Server* CellGlobalState::mutable_controllers(int index) {
   // @@protoc_insertion_point(field_mutable:vqro.rpc.CellGlobalState.controllers)
   return controllers_.Mutable(index);
 }
-::vqro::rpc::Server* CellGlobalState::add_controllers() {
+ ::vqro::rpc::Server* CellGlobalState::add_controllers() {
   // @@protoc_insertion_point(field_add:vqro.rpc.CellGlobalState.controllers)
   return controllers_.Add();
 }
-::google::protobuf::RepeatedPtrField< ::vqro::rpc::Server >*
-CellGlobalState::mutable_controllers() {
-  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.CellGlobalState.controllers)
-  return &controllers_;
-}
-const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Server >&
+ const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Server >&
 CellGlobalState::controllers() const {
   // @@protoc_insertion_point(field_list:vqro.rpc.CellGlobalState.controllers)
   return controllers_;
 }
+ ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Server >*
+CellGlobalState::mutable_controllers() {
+  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.CellGlobalState.controllers)
+  return &controllers_;
+}
 
 // repeated .vqro.rpc.ServerRanges range_assignments = 3;
-int CellGlobalState::range_assignments_size() const {
+ int CellGlobalState::range_assignments_size() const {
   return range_assignments_.size();
 }
-void CellGlobalState::clear_range_assignments() {
+ void CellGlobalState::clear_range_assignments() {
   range_assignments_.Clear();
 }
-const ::vqro::rpc::ServerRanges& CellGlobalState::range_assignments(int index) const {
+ const ::vqro::rpc::ServerRanges& CellGlobalState::range_assignments(int index) const {
   // @@protoc_insertion_point(field_get:vqro.rpc.CellGlobalState.range_assignments)
   return range_assignments_.Get(index);
 }
-::vqro::rpc::ServerRanges* CellGlobalState::mutable_range_assignments(int index) {
+ ::vqro::rpc::ServerRanges* CellGlobalState::mutable_range_assignments(int index) {
   // @@protoc_insertion_point(field_mutable:vqro.rpc.CellGlobalState.range_assignments)
   return range_assignments_.Mutable(index);
 }
-::vqro::rpc::ServerRanges* CellGlobalState::add_range_assignments() {
+ ::vqro::rpc::ServerRanges* CellGlobalState::add_range_assignments() {
   // @@protoc_insertion_point(field_add:vqro.rpc.CellGlobalState.range_assignments)
   return range_assignments_.Add();
 }
-::google::protobuf::RepeatedPtrField< ::vqro::rpc::ServerRanges >*
-CellGlobalState::mutable_range_assignments() {
-  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.CellGlobalState.range_assignments)
-  return &range_assignments_;
-}
-const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::ServerRanges >&
+ const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::ServerRanges >&
 CellGlobalState::range_assignments() const {
   // @@protoc_insertion_point(field_list:vqro.rpc.CellGlobalState.range_assignments)
   return range_assignments_;
+}
+ ::google::protobuf::RepeatedPtrField< ::vqro::rpc::ServerRanges >*
+CellGlobalState::mutable_range_assignments() {
+  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.CellGlobalState.range_assignments)
+  return &range_assignments_;
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -3467,7 +3617,7 @@ const int CellGlobalStateDiff::kRemovalsFieldNumber;
 #endif  // !_MSC_VER
 
 CellGlobalStateDiff::CellGlobalStateDiff()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() , _internal_metadata_(NULL)  {
   SharedCtor();
   // @@protoc_insertion_point(constructor:vqro.rpc.CellGlobalStateDiff)
 }
@@ -3603,31 +3753,26 @@ bool CellGlobalStateDiff::MergePartialFromCodedStream(
       case 3: {
         if (tag == 26) {
          parse_additions:
-          DO_(input->IncrementRecursionDepth());
-         parse_loop_additions:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtualNoRecursionDepth(
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                 input, add_additions()));
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(26)) goto parse_loop_additions;
-        if (input->ExpectTag(34)) goto parse_loop_removals;
-        input->UnsafeDecrementRecursionDepth();
+        if (input->ExpectTag(26)) goto parse_additions;
+        if (input->ExpectTag(34)) goto parse_removals;
         break;
       }
 
       // repeated .vqro.rpc.ServerRanges removals = 4;
       case 4: {
         if (tag == 34) {
-          DO_(input->IncrementRecursionDepth());
-         parse_loop_removals:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtualNoRecursionDepth(
+         parse_removals:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                 input, add_removals()));
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(34)) goto parse_loop_removals;
-        input->UnsafeDecrementRecursionDepth();
+        if (input->ExpectTag(34)) goto parse_removals;
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -3753,9 +3898,9 @@ int CellGlobalStateDiff::ByteSize() const {
 
 void CellGlobalStateDiff::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const CellGlobalStateDiff* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const CellGlobalStateDiff>(
-          &from);
+  const CellGlobalStateDiff* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const CellGlobalStateDiff*>(
+      &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
@@ -3829,7 +3974,7 @@ void CellGlobalStateDiff::InternalSwap(CellGlobalStateDiff* other) {
 // CellGlobalStateDiff
 
 // optional int64 from_revision = 1;
-void CellGlobalStateDiff::clear_from_revision() {
+ void CellGlobalStateDiff::clear_from_revision() {
   from_revision_ = GOOGLE_LONGLONG(0);
 }
  ::google::protobuf::int64 CellGlobalStateDiff::from_revision() const {
@@ -3843,7 +3988,7 @@ void CellGlobalStateDiff::clear_from_revision() {
 }
 
 // optional int64 to_revision = 2;
-void CellGlobalStateDiff::clear_to_revision() {
+ void CellGlobalStateDiff::clear_to_revision() {
   to_revision_ = GOOGLE_LONGLONG(0);
 }
  ::google::protobuf::int64 CellGlobalStateDiff::to_revision() const {
@@ -3857,63 +4002,63 @@ void CellGlobalStateDiff::clear_to_revision() {
 }
 
 // repeated .vqro.rpc.ServerRanges additions = 3;
-int CellGlobalStateDiff::additions_size() const {
+ int CellGlobalStateDiff::additions_size() const {
   return additions_.size();
 }
-void CellGlobalStateDiff::clear_additions() {
+ void CellGlobalStateDiff::clear_additions() {
   additions_.Clear();
 }
-const ::vqro::rpc::ServerRanges& CellGlobalStateDiff::additions(int index) const {
+ const ::vqro::rpc::ServerRanges& CellGlobalStateDiff::additions(int index) const {
   // @@protoc_insertion_point(field_get:vqro.rpc.CellGlobalStateDiff.additions)
   return additions_.Get(index);
 }
-::vqro::rpc::ServerRanges* CellGlobalStateDiff::mutable_additions(int index) {
+ ::vqro::rpc::ServerRanges* CellGlobalStateDiff::mutable_additions(int index) {
   // @@protoc_insertion_point(field_mutable:vqro.rpc.CellGlobalStateDiff.additions)
   return additions_.Mutable(index);
 }
-::vqro::rpc::ServerRanges* CellGlobalStateDiff::add_additions() {
+ ::vqro::rpc::ServerRanges* CellGlobalStateDiff::add_additions() {
   // @@protoc_insertion_point(field_add:vqro.rpc.CellGlobalStateDiff.additions)
   return additions_.Add();
 }
-::google::protobuf::RepeatedPtrField< ::vqro::rpc::ServerRanges >*
-CellGlobalStateDiff::mutable_additions() {
-  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.CellGlobalStateDiff.additions)
-  return &additions_;
-}
-const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::ServerRanges >&
+ const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::ServerRanges >&
 CellGlobalStateDiff::additions() const {
   // @@protoc_insertion_point(field_list:vqro.rpc.CellGlobalStateDiff.additions)
   return additions_;
 }
+ ::google::protobuf::RepeatedPtrField< ::vqro::rpc::ServerRanges >*
+CellGlobalStateDiff::mutable_additions() {
+  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.CellGlobalStateDiff.additions)
+  return &additions_;
+}
 
 // repeated .vqro.rpc.ServerRanges removals = 4;
-int CellGlobalStateDiff::removals_size() const {
+ int CellGlobalStateDiff::removals_size() const {
   return removals_.size();
 }
-void CellGlobalStateDiff::clear_removals() {
+ void CellGlobalStateDiff::clear_removals() {
   removals_.Clear();
 }
-const ::vqro::rpc::ServerRanges& CellGlobalStateDiff::removals(int index) const {
+ const ::vqro::rpc::ServerRanges& CellGlobalStateDiff::removals(int index) const {
   // @@protoc_insertion_point(field_get:vqro.rpc.CellGlobalStateDiff.removals)
   return removals_.Get(index);
 }
-::vqro::rpc::ServerRanges* CellGlobalStateDiff::mutable_removals(int index) {
+ ::vqro::rpc::ServerRanges* CellGlobalStateDiff::mutable_removals(int index) {
   // @@protoc_insertion_point(field_mutable:vqro.rpc.CellGlobalStateDiff.removals)
   return removals_.Mutable(index);
 }
-::vqro::rpc::ServerRanges* CellGlobalStateDiff::add_removals() {
+ ::vqro::rpc::ServerRanges* CellGlobalStateDiff::add_removals() {
   // @@protoc_insertion_point(field_add:vqro.rpc.CellGlobalStateDiff.removals)
   return removals_.Add();
 }
-::google::protobuf::RepeatedPtrField< ::vqro::rpc::ServerRanges >*
-CellGlobalStateDiff::mutable_removals() {
-  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.CellGlobalStateDiff.removals)
-  return &removals_;
-}
-const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::ServerRanges >&
+ const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::ServerRanges >&
 CellGlobalStateDiff::removals() const {
   // @@protoc_insertion_point(field_list:vqro.rpc.CellGlobalStateDiff.removals)
   return removals_;
+}
+ ::google::protobuf::RepeatedPtrField< ::vqro::rpc::ServerRanges >*
+CellGlobalStateDiff::mutable_removals() {
+  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.CellGlobalStateDiff.removals)
+  return &removals_;
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -3925,7 +4070,7 @@ const int CellLocalState::kVaquerosFieldNumber;
 #endif  // !_MSC_VER
 
 CellLocalState::CellLocalState()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() , _internal_metadata_(NULL)  {
   SharedCtor();
   // @@protoc_insertion_point(constructor:vqro.rpc.CellLocalState)
 }
@@ -4014,15 +4159,13 @@ bool CellLocalState::MergePartialFromCodedStream(
       // repeated .vqro.rpc.VaqueroState vaqueros = 1;
       case 1: {
         if (tag == 10) {
-          DO_(input->IncrementRecursionDepth());
-         parse_loop_vaqueros:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtualNoRecursionDepth(
+         parse_vaqueros:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                 input, add_vaqueros()));
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(10)) goto parse_loop_vaqueros;
-        input->UnsafeDecrementRecursionDepth();
+        if (input->ExpectTag(10)) goto parse_vaqueros;
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -4093,9 +4236,9 @@ int CellLocalState::ByteSize() const {
 
 void CellLocalState::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const CellLocalState* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const CellLocalState>(
-          &from);
+  const CellLocalState* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const CellLocalState*>(
+      &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
@@ -4159,33 +4302,33 @@ void CellLocalState::InternalSwap(CellLocalState* other) {
 // CellLocalState
 
 // repeated .vqro.rpc.VaqueroState vaqueros = 1;
-int CellLocalState::vaqueros_size() const {
+ int CellLocalState::vaqueros_size() const {
   return vaqueros_.size();
 }
-void CellLocalState::clear_vaqueros() {
+ void CellLocalState::clear_vaqueros() {
   vaqueros_.Clear();
 }
-const ::vqro::rpc::VaqueroState& CellLocalState::vaqueros(int index) const {
+ const ::vqro::rpc::VaqueroState& CellLocalState::vaqueros(int index) const {
   // @@protoc_insertion_point(field_get:vqro.rpc.CellLocalState.vaqueros)
   return vaqueros_.Get(index);
 }
-::vqro::rpc::VaqueroState* CellLocalState::mutable_vaqueros(int index) {
+ ::vqro::rpc::VaqueroState* CellLocalState::mutable_vaqueros(int index) {
   // @@protoc_insertion_point(field_mutable:vqro.rpc.CellLocalState.vaqueros)
   return vaqueros_.Mutable(index);
 }
-::vqro::rpc::VaqueroState* CellLocalState::add_vaqueros() {
+ ::vqro::rpc::VaqueroState* CellLocalState::add_vaqueros() {
   // @@protoc_insertion_point(field_add:vqro.rpc.CellLocalState.vaqueros)
   return vaqueros_.Add();
 }
-::google::protobuf::RepeatedPtrField< ::vqro::rpc::VaqueroState >*
-CellLocalState::mutable_vaqueros() {
-  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.CellLocalState.vaqueros)
-  return &vaqueros_;
-}
-const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::VaqueroState >&
+ const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::VaqueroState >&
 CellLocalState::vaqueros() const {
   // @@protoc_insertion_point(field_list:vqro.rpc.CellLocalState.vaqueros)
   return vaqueros_;
+}
+ ::google::protobuf::RepeatedPtrField< ::vqro::rpc::VaqueroState >*
+CellLocalState::mutable_vaqueros() {
+  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.CellLocalState.vaqueros)
+  return &vaqueros_;
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -4194,7 +4337,7 @@ CellLocalState::vaqueros() const {
 
 void VaqueroState::_slow_mutable_server() {
   server_ = ::google::protobuf::Arena::CreateMessage< ::vqro::rpc::Server >(
-      GetArenaNoVirtual());
+        GetArenaNoVirtual());
 }
 ::vqro::rpc::Server* VaqueroState::_slow_release_server() {
   if (server_ == NULL) {
@@ -4241,7 +4384,7 @@ void VaqueroState::unsafe_arena_set_allocated_server(
 }
 void VaqueroState::_slow_mutable_metrics() {
   metrics_ = ::google::protobuf::Arena::CreateMessage< ::vqro::rpc::VaqueroMetrics >(
-      GetArenaNoVirtual());
+        GetArenaNoVirtual());
 }
 ::vqro::rpc::VaqueroMetrics* VaqueroState::_slow_release_metrics() {
   if (metrics_ == NULL) {
@@ -4294,7 +4437,7 @@ const int VaqueroState::kExpiredSeriesFieldNumber;
 #endif  // !_MSC_VER
 
 VaqueroState::VaqueroState()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() , _internal_metadata_(NULL)  {
   SharedCtor();
   // @@protoc_insertion_point(constructor:vqro.rpc.VaqueroState)
 }
@@ -4374,9 +4517,9 @@ VaqueroState* VaqueroState::New(::google::protobuf::Arena* arena) const {
 }
 
 void VaqueroState::Clear() {
-  if (GetArenaNoVirtual() == NULL && server_ != NULL) delete server_;
+  if (server_ != NULL) delete server_;
   server_ = NULL;
-  if (GetArenaNoVirtual() == NULL && metrics_ != NULL) delete metrics_;
+  if (metrics_ != NULL) delete metrics_;
   metrics_ = NULL;
   new_series_.Clear();
   expired_series_.Clear();
@@ -4421,31 +4564,26 @@ bool VaqueroState::MergePartialFromCodedStream(
       case 3: {
         if (tag == 26) {
          parse_new_series:
-          DO_(input->IncrementRecursionDepth());
-         parse_loop_new_series:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtualNoRecursionDepth(
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                 input, add_new_series()));
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(26)) goto parse_loop_new_series;
-        if (input->ExpectTag(34)) goto parse_loop_expired_series;
-        input->UnsafeDecrementRecursionDepth();
+        if (input->ExpectTag(26)) goto parse_new_series;
+        if (input->ExpectTag(34)) goto parse_expired_series;
         break;
       }
 
       // repeated .vqro.rpc.Series expired_series = 4;
       case 4: {
         if (tag == 34) {
-          DO_(input->IncrementRecursionDepth());
-         parse_loop_expired_series:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtualNoRecursionDepth(
+         parse_expired_series:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                 input, add_expired_series()));
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(34)) goto parse_loop_expired_series;
-        input->UnsafeDecrementRecursionDepth();
+        if (input->ExpectTag(34)) goto parse_expired_series;
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -4577,9 +4715,9 @@ int VaqueroState::ByteSize() const {
 
 void VaqueroState::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const VaqueroState* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const VaqueroState>(
-          &from);
+  const VaqueroState* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const VaqueroState*>(
+      &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
@@ -4653,26 +4791,25 @@ void VaqueroState::InternalSwap(VaqueroState* other) {
 // VaqueroState
 
 // optional .vqro.rpc.Server server = 1;
-bool VaqueroState::has_server() const {
+ bool VaqueroState::has_server() const {
   return !_is_default_instance_ && server_ != NULL;
 }
-void VaqueroState::clear_server() {
-  if (GetArenaNoVirtual() == NULL && server_ != NULL) delete server_;
+ void VaqueroState::clear_server() {
+  if (server_ != NULL) delete server_;
   server_ = NULL;
 }
-const ::vqro::rpc::Server& VaqueroState::server() const {
+ const ::vqro::rpc::Server& VaqueroState::server() const {
   // @@protoc_insertion_point(field_get:vqro.rpc.VaqueroState.server)
   return server_ != NULL ? *server_ : *default_instance_->server_;
 }
-::vqro::rpc::Server* VaqueroState::mutable_server() {
+ ::vqro::rpc::Server* VaqueroState::mutable_server() {
   
   if (server_ == NULL) {
-    _slow_mutable_server();
-  }
+    _slow_mutable_server();  }
   // @@protoc_insertion_point(field_mutable:vqro.rpc.VaqueroState.server)
   return server_;
 }
-::vqro::rpc::Server* VaqueroState::release_server() {
+ ::vqro::rpc::Server* VaqueroState::release_server() {
   
   if (GetArenaNoVirtual() != NULL) {
     return _slow_release_server();
@@ -4700,26 +4837,25 @@ const ::vqro::rpc::Server& VaqueroState::server() const {
 }
 
 // optional .vqro.rpc.VaqueroMetrics metrics = 2;
-bool VaqueroState::has_metrics() const {
+ bool VaqueroState::has_metrics() const {
   return !_is_default_instance_ && metrics_ != NULL;
 }
-void VaqueroState::clear_metrics() {
-  if (GetArenaNoVirtual() == NULL && metrics_ != NULL) delete metrics_;
+ void VaqueroState::clear_metrics() {
+  if (metrics_ != NULL) delete metrics_;
   metrics_ = NULL;
 }
-const ::vqro::rpc::VaqueroMetrics& VaqueroState::metrics() const {
+ const ::vqro::rpc::VaqueroMetrics& VaqueroState::metrics() const {
   // @@protoc_insertion_point(field_get:vqro.rpc.VaqueroState.metrics)
   return metrics_ != NULL ? *metrics_ : *default_instance_->metrics_;
 }
-::vqro::rpc::VaqueroMetrics* VaqueroState::mutable_metrics() {
+ ::vqro::rpc::VaqueroMetrics* VaqueroState::mutable_metrics() {
   
   if (metrics_ == NULL) {
-    _slow_mutable_metrics();
-  }
+    _slow_mutable_metrics();  }
   // @@protoc_insertion_point(field_mutable:vqro.rpc.VaqueroState.metrics)
   return metrics_;
 }
-::vqro::rpc::VaqueroMetrics* VaqueroState::release_metrics() {
+ ::vqro::rpc::VaqueroMetrics* VaqueroState::release_metrics() {
   
   if (GetArenaNoVirtual() != NULL) {
     return _slow_release_metrics();
@@ -4747,63 +4883,63 @@ const ::vqro::rpc::VaqueroMetrics& VaqueroState::metrics() const {
 }
 
 // repeated .vqro.rpc.Series new_series = 3;
-int VaqueroState::new_series_size() const {
+ int VaqueroState::new_series_size() const {
   return new_series_.size();
 }
-void VaqueroState::clear_new_series() {
+ void VaqueroState::clear_new_series() {
   new_series_.Clear();
 }
-const ::vqro::rpc::Series& VaqueroState::new_series(int index) const {
+ const ::vqro::rpc::Series& VaqueroState::new_series(int index) const {
   // @@protoc_insertion_point(field_get:vqro.rpc.VaqueroState.new_series)
   return new_series_.Get(index);
 }
-::vqro::rpc::Series* VaqueroState::mutable_new_series(int index) {
+ ::vqro::rpc::Series* VaqueroState::mutable_new_series(int index) {
   // @@protoc_insertion_point(field_mutable:vqro.rpc.VaqueroState.new_series)
   return new_series_.Mutable(index);
 }
-::vqro::rpc::Series* VaqueroState::add_new_series() {
+ ::vqro::rpc::Series* VaqueroState::add_new_series() {
   // @@protoc_insertion_point(field_add:vqro.rpc.VaqueroState.new_series)
   return new_series_.Add();
 }
-::google::protobuf::RepeatedPtrField< ::vqro::rpc::Series >*
-VaqueroState::mutable_new_series() {
-  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.VaqueroState.new_series)
-  return &new_series_;
-}
-const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Series >&
+ const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Series >&
 VaqueroState::new_series() const {
   // @@protoc_insertion_point(field_list:vqro.rpc.VaqueroState.new_series)
   return new_series_;
 }
+ ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Series >*
+VaqueroState::mutable_new_series() {
+  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.VaqueroState.new_series)
+  return &new_series_;
+}
 
 // repeated .vqro.rpc.Series expired_series = 4;
-int VaqueroState::expired_series_size() const {
+ int VaqueroState::expired_series_size() const {
   return expired_series_.size();
 }
-void VaqueroState::clear_expired_series() {
+ void VaqueroState::clear_expired_series() {
   expired_series_.Clear();
 }
-const ::vqro::rpc::Series& VaqueroState::expired_series(int index) const {
+ const ::vqro::rpc::Series& VaqueroState::expired_series(int index) const {
   // @@protoc_insertion_point(field_get:vqro.rpc.VaqueroState.expired_series)
   return expired_series_.Get(index);
 }
-::vqro::rpc::Series* VaqueroState::mutable_expired_series(int index) {
+ ::vqro::rpc::Series* VaqueroState::mutable_expired_series(int index) {
   // @@protoc_insertion_point(field_mutable:vqro.rpc.VaqueroState.expired_series)
   return expired_series_.Mutable(index);
 }
-::vqro::rpc::Series* VaqueroState::add_expired_series() {
+ ::vqro::rpc::Series* VaqueroState::add_expired_series() {
   // @@protoc_insertion_point(field_add:vqro.rpc.VaqueroState.expired_series)
   return expired_series_.Add();
 }
-::google::protobuf::RepeatedPtrField< ::vqro::rpc::Series >*
-VaqueroState::mutable_expired_series() {
-  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.VaqueroState.expired_series)
-  return &expired_series_;
-}
-const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Series >&
+ const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Series >&
 VaqueroState::expired_series() const {
   // @@protoc_insertion_point(field_list:vqro.rpc.VaqueroState.expired_series)
   return expired_series_;
+}
+ ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Series >*
+VaqueroState::mutable_expired_series() {
+  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.VaqueroState.expired_series)
+  return &expired_series_;
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -4818,7 +4954,7 @@ const int VaqueroMetrics::kStorageBytesChangeFieldNumber;
 #endif  // !_MSC_VER
 
 VaqueroMetrics::VaqueroMetrics()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() , _internal_metadata_(NULL)  {
   SharedCtor();
   // @@protoc_insertion_point(constructor:vqro.rpc.VaqueroMetrics)
 }
@@ -5089,9 +5225,9 @@ int VaqueroMetrics::ByteSize() const {
 
 void VaqueroMetrics::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const VaqueroMetrics* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const VaqueroMetrics>(
-          &from);
+  const VaqueroMetrics* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const VaqueroMetrics*>(
+      &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
@@ -5169,7 +5305,7 @@ void VaqueroMetrics::InternalSwap(VaqueroMetrics* other) {
 // VaqueroMetrics
 
 // optional double cpu_usage = 1;
-void VaqueroMetrics::clear_cpu_usage() {
+ void VaqueroMetrics::clear_cpu_usage() {
   cpu_usage_ = 0;
 }
  double VaqueroMetrics::cpu_usage() const {
@@ -5183,7 +5319,7 @@ void VaqueroMetrics::clear_cpu_usage() {
 }
 
 // optional int32 num_series_written_to = 2;
-void VaqueroMetrics::clear_num_series_written_to() {
+ void VaqueroMetrics::clear_num_series_written_to() {
   num_series_written_to_ = 0;
 }
  ::google::protobuf::int32 VaqueroMetrics::num_series_written_to() const {
@@ -5197,7 +5333,7 @@ void VaqueroMetrics::clear_num_series_written_to() {
 }
 
 // optional int32 num_datapoints_written = 3;
-void VaqueroMetrics::clear_num_datapoints_written() {
+ void VaqueroMetrics::clear_num_datapoints_written() {
   num_datapoints_written_ = 0;
 }
  ::google::protobuf::int32 VaqueroMetrics::num_datapoints_written() const {
@@ -5211,7 +5347,7 @@ void VaqueroMetrics::clear_num_datapoints_written() {
 }
 
 // optional int32 storage_bytes_change = 4;
-void VaqueroMetrics::clear_storage_bytes_change() {
+ void VaqueroMetrics::clear_storage_bytes_change() {
   storage_bytes_change_ = 0;
 }
  ::google::protobuf::int32 VaqueroMetrics::storage_bytes_change() const {

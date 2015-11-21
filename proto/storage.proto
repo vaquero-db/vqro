@@ -22,11 +22,19 @@ message WriteOperation {
 
 
 message ReadOperation {
-  SeriesQuery query = 1;
-  int64 start_time = 2;
-  int64 end_time = 3;
-  int64 datapoint_limit = 4;
-  bool prefer_latest = 5;
+  oneof selector {
+    SeriesQuery query = 1;
+    SeriesList list = 2;
+  }
+  int64 start_time = 3;
+  int64 end_time = 4;
+  int64 datapoint_limit = 5;
+  bool prefer_latest = 6;
+}
+
+
+message SeriesList {
+  repeated Series series = 1;
 }
 
 

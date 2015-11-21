@@ -243,7 +243,7 @@ const int SeriesQuery::kResultLimitFieldNumber;
 #endif  // !_MSC_VER
 
 SeriesQuery::SeriesQuery()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() , _internal_metadata_(NULL)  {
   SharedCtor();
   // @@protoc_insertion_point(constructor:vqro.rpc.SeriesQuery)
 }
@@ -347,15 +347,13 @@ bool SeriesQuery::MergePartialFromCodedStream(
       // repeated .vqro.rpc.LabelConstraint constraints = 1;
       case 1: {
         if (tag == 10) {
-          DO_(input->IncrementRecursionDepth());
-         parse_loop_constraints:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtualNoRecursionDepth(
+         parse_constraints:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                 input, add_constraints()));
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(10)) goto parse_loop_constraints;
-        input->UnsafeDecrementRecursionDepth();
+        if (input->ExpectTag(10)) goto parse_constraints;
         if (input->ExpectTag(16)) goto parse_result_offset;
         break;
       }
@@ -490,9 +488,9 @@ int SeriesQuery::ByteSize() const {
 
 void SeriesQuery::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const SeriesQuery* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const SeriesQuery>(
-          &from);
+  const SeriesQuery* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const SeriesQuery*>(
+      &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
@@ -564,37 +562,37 @@ void SeriesQuery::InternalSwap(SeriesQuery* other) {
 // SeriesQuery
 
 // repeated .vqro.rpc.LabelConstraint constraints = 1;
-int SeriesQuery::constraints_size() const {
+ int SeriesQuery::constraints_size() const {
   return constraints_.size();
 }
-void SeriesQuery::clear_constraints() {
+ void SeriesQuery::clear_constraints() {
   constraints_.Clear();
 }
-const ::vqro::rpc::LabelConstraint& SeriesQuery::constraints(int index) const {
+ const ::vqro::rpc::LabelConstraint& SeriesQuery::constraints(int index) const {
   // @@protoc_insertion_point(field_get:vqro.rpc.SeriesQuery.constraints)
   return constraints_.Get(index);
 }
-::vqro::rpc::LabelConstraint* SeriesQuery::mutable_constraints(int index) {
+ ::vqro::rpc::LabelConstraint* SeriesQuery::mutable_constraints(int index) {
   // @@protoc_insertion_point(field_mutable:vqro.rpc.SeriesQuery.constraints)
   return constraints_.Mutable(index);
 }
-::vqro::rpc::LabelConstraint* SeriesQuery::add_constraints() {
+ ::vqro::rpc::LabelConstraint* SeriesQuery::add_constraints() {
   // @@protoc_insertion_point(field_add:vqro.rpc.SeriesQuery.constraints)
   return constraints_.Add();
 }
-::google::protobuf::RepeatedPtrField< ::vqro::rpc::LabelConstraint >*
-SeriesQuery::mutable_constraints() {
-  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.SeriesQuery.constraints)
-  return &constraints_;
-}
-const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::LabelConstraint >&
+ const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::LabelConstraint >&
 SeriesQuery::constraints() const {
   // @@protoc_insertion_point(field_list:vqro.rpc.SeriesQuery.constraints)
   return constraints_;
 }
+ ::google::protobuf::RepeatedPtrField< ::vqro::rpc::LabelConstraint >*
+SeriesQuery::mutable_constraints() {
+  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.SeriesQuery.constraints)
+  return &constraints_;
+}
 
 // optional int64 result_offset = 2;
-void SeriesQuery::clear_result_offset() {
+ void SeriesQuery::clear_result_offset() {
   result_offset_ = GOOGLE_LONGLONG(0);
 }
  ::google::protobuf::int64 SeriesQuery::result_offset() const {
@@ -608,7 +606,7 @@ void SeriesQuery::clear_result_offset() {
 }
 
 // optional int64 result_limit = 3;
-void SeriesQuery::clear_result_limit() {
+ void SeriesQuery::clear_result_limit() {
   result_limit_ = GOOGLE_LONGLONG(0);
 }
  ::google::protobuf::int64 SeriesQuery::result_limit() const {
@@ -632,7 +630,7 @@ const int LabelConstraint::kRegexFieldNumber;
 #endif  // !_MSC_VER
 
 LabelConstraint::LabelConstraint()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() , _internal_metadata_(NULL)  {
   SharedCtor();
   // @@protoc_insertion_point(constructor:vqro.rpc.LabelConstraint)
 }
@@ -752,10 +750,10 @@ bool LabelConstraint::MergePartialFromCodedStream(
         if (tag == 10) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_label_name()));
-          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
             this->label_name().data(), this->label_name().length(),
-            ::google::protobuf::internal::WireFormatLite::PARSE,
-            "vqro.rpc.LabelConstraint.label_name"));
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "vqro.rpc.LabelConstraint.label_name");
         } else {
           goto handle_unusual;
         }
@@ -769,10 +767,10 @@ bool LabelConstraint::MergePartialFromCodedStream(
          parse_exact_value:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_exact_value()));
-          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
             this->exact_value().data(), this->exact_value().length(),
-            ::google::protobuf::internal::WireFormatLite::PARSE,
-            "vqro.rpc.LabelConstraint.exact_value"));
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "vqro.rpc.LabelConstraint.exact_value");
         } else {
           goto handle_unusual;
         }
@@ -786,10 +784,10 @@ bool LabelConstraint::MergePartialFromCodedStream(
          parse_regex:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_regex()));
-          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
             this->regex().data(), this->regex().length(),
-            ::google::protobuf::internal::WireFormatLite::PARSE,
-            "vqro.rpc.LabelConstraint.regex"));
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "vqro.rpc.LabelConstraint.regex");
         } else {
           goto handle_unusual;
         }
@@ -823,9 +821,9 @@ void LabelConstraint::SerializeWithCachedSizes(
   // @@protoc_insertion_point(serialize_start:vqro.rpc.LabelConstraint)
   // optional string label_name = 1;
   if (this->label_name().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->label_name().data(), this->label_name().length(),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
       "vqro.rpc.LabelConstraint.label_name");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       1, this->label_name(), output);
@@ -833,9 +831,9 @@ void LabelConstraint::SerializeWithCachedSizes(
 
   // optional string exact_value = 2;
   if (has_exact_value()) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->exact_value().data(), this->exact_value().length(),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
       "vqro.rpc.LabelConstraint.exact_value");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       2, this->exact_value(), output);
@@ -843,9 +841,9 @@ void LabelConstraint::SerializeWithCachedSizes(
 
   // optional string regex = 3;
   if (has_regex()) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->regex().data(), this->regex().length(),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
       "vqro.rpc.LabelConstraint.regex");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       3, this->regex(), output);
@@ -859,9 +857,9 @@ void LabelConstraint::SerializeWithCachedSizes(
   // @@protoc_insertion_point(serialize_to_array_start:vqro.rpc.LabelConstraint)
   // optional string label_name = 1;
   if (this->label_name().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->label_name().data(), this->label_name().length(),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
       "vqro.rpc.LabelConstraint.label_name");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
@@ -870,9 +868,9 @@ void LabelConstraint::SerializeWithCachedSizes(
 
   // optional string exact_value = 2;
   if (has_exact_value()) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->exact_value().data(), this->exact_value().length(),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
       "vqro.rpc.LabelConstraint.exact_value");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
@@ -881,9 +879,9 @@ void LabelConstraint::SerializeWithCachedSizes(
 
   // optional string regex = 3;
   if (has_regex()) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->regex().data(), this->regex().length(),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
       "vqro.rpc.LabelConstraint.regex");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
@@ -931,9 +929,9 @@ int LabelConstraint::ByteSize() const {
 
 void LabelConstraint::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const LabelConstraint* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const LabelConstraint>(
-          &from);
+  const LabelConstraint* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const LabelConstraint*>(
+      &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
@@ -1014,7 +1012,7 @@ void LabelConstraint::InternalSwap(LabelConstraint* other) {
 // LabelConstraint
 
 // optional string label_name = 1;
-void LabelConstraint::clear_label_name() {
+ void LabelConstraint::clear_label_name() {
   label_name_.ClearToEmpty(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), GetArenaNoVirtual());
 }
  const ::std::string& LabelConstraint::label_name() const {
@@ -1072,19 +1070,20 @@ void LabelConstraint::clear_label_name() {
   } else {
     
   }
+  
   label_name_.UnsafeArenaSetAllocated(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       label_name, GetArenaNoVirtual());
   // @@protoc_insertion_point(field_set_allocated:vqro.rpc.LabelConstraint.label_name)
 }
 
 // optional string exact_value = 2;
-bool LabelConstraint::has_exact_value() const {
+ bool LabelConstraint::has_exact_value() const {
   return predicate_case() == kExactValue;
 }
-void LabelConstraint::set_has_exact_value() {
+ void LabelConstraint::set_has_exact_value() {
   _oneof_case_[0] = kExactValue;
 }
-void LabelConstraint::clear_exact_value() {
+ void LabelConstraint::clear_exact_value() {
   if (has_exact_value()) {
     predicate_.exact_value_.Destroy(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
         GetArenaNoVirtual());
@@ -1185,13 +1184,13 @@ void LabelConstraint::clear_exact_value() {
 }
 
 // optional string regex = 3;
-bool LabelConstraint::has_regex() const {
+ bool LabelConstraint::has_regex() const {
   return predicate_case() == kRegex;
 }
-void LabelConstraint::set_has_regex() {
+ void LabelConstraint::set_has_regex() {
   _oneof_case_[0] = kRegex;
 }
-void LabelConstraint::clear_regex() {
+ void LabelConstraint::clear_regex() {
   if (has_regex()) {
     predicate_.regex_.Destroy(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
         GetArenaNoVirtual());
@@ -1291,10 +1290,10 @@ void LabelConstraint::clear_regex() {
   // @@protoc_insertion_point(field_set_allocated:vqro.rpc.LabelConstraint.regex)
 }
 
-bool LabelConstraint::has_predicate() const {
+ bool LabelConstraint::has_predicate() const {
   return predicate_case() != PREDICATE_NOT_SET;
 }
-void LabelConstraint::clear_has_predicate() {
+ void LabelConstraint::clear_has_predicate() {
   _oneof_case_[0] = PREDICATE_NOT_SET;
 }
 LabelConstraint::PredicateCase LabelConstraint::predicate_case() const {
@@ -1306,7 +1305,7 @@ LabelConstraint::PredicateCase LabelConstraint::predicate_case() const {
 
 void SearchSeriesResults::_slow_mutable_status() {
   status_ = ::google::protobuf::Arena::CreateMessage< ::vqro::rpc::StatusMessage >(
-      GetArenaNoVirtual());
+        GetArenaNoVirtual());
 }
 ::vqro::rpc::StatusMessage* SearchSeriesResults::_slow_release_status() {
   if (status_ == NULL) {
@@ -1357,7 +1356,7 @@ const int SearchSeriesResults::kStatusFieldNumber;
 #endif  // !_MSC_VER
 
 SearchSeriesResults::SearchSeriesResults()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() , _internal_metadata_(NULL)  {
   SharedCtor();
   // @@protoc_insertion_point(constructor:vqro.rpc.SearchSeriesResults)
 }
@@ -1433,7 +1432,7 @@ SearchSeriesResults* SearchSeriesResults::New(::google::protobuf::Arena* arena) 
 }
 
 void SearchSeriesResults::Clear() {
-  if (GetArenaNoVirtual() == NULL && status_ != NULL) delete status_;
+  if (status_ != NULL) delete status_;
   status_ = NULL;
   matches_.Clear();
 }
@@ -1451,15 +1450,13 @@ bool SearchSeriesResults::MergePartialFromCodedStream(
       // repeated .vqro.rpc.Series matches = 1;
       case 1: {
         if (tag == 10) {
-          DO_(input->IncrementRecursionDepth());
-         parse_loop_matches:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtualNoRecursionDepth(
+         parse_matches:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                 input, add_matches()));
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(10)) goto parse_loop_matches;
-        input->UnsafeDecrementRecursionDepth();
+        if (input->ExpectTag(10)) goto parse_matches;
         if (input->ExpectTag(18)) goto parse_status;
         break;
       }
@@ -1563,9 +1560,9 @@ int SearchSeriesResults::ByteSize() const {
 
 void SearchSeriesResults::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const SearchSeriesResults* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const SearchSeriesResults>(
-          &from);
+  const SearchSeriesResults* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const SearchSeriesResults*>(
+      &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
@@ -1633,56 +1630,55 @@ void SearchSeriesResults::InternalSwap(SearchSeriesResults* other) {
 // SearchSeriesResults
 
 // repeated .vqro.rpc.Series matches = 1;
-int SearchSeriesResults::matches_size() const {
+ int SearchSeriesResults::matches_size() const {
   return matches_.size();
 }
-void SearchSeriesResults::clear_matches() {
+ void SearchSeriesResults::clear_matches() {
   matches_.Clear();
 }
-const ::vqro::rpc::Series& SearchSeriesResults::matches(int index) const {
+ const ::vqro::rpc::Series& SearchSeriesResults::matches(int index) const {
   // @@protoc_insertion_point(field_get:vqro.rpc.SearchSeriesResults.matches)
   return matches_.Get(index);
 }
-::vqro::rpc::Series* SearchSeriesResults::mutable_matches(int index) {
+ ::vqro::rpc::Series* SearchSeriesResults::mutable_matches(int index) {
   // @@protoc_insertion_point(field_mutable:vqro.rpc.SearchSeriesResults.matches)
   return matches_.Mutable(index);
 }
-::vqro::rpc::Series* SearchSeriesResults::add_matches() {
+ ::vqro::rpc::Series* SearchSeriesResults::add_matches() {
   // @@protoc_insertion_point(field_add:vqro.rpc.SearchSeriesResults.matches)
   return matches_.Add();
 }
-::google::protobuf::RepeatedPtrField< ::vqro::rpc::Series >*
-SearchSeriesResults::mutable_matches() {
-  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.SearchSeriesResults.matches)
-  return &matches_;
-}
-const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Series >&
+ const ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Series >&
 SearchSeriesResults::matches() const {
   // @@protoc_insertion_point(field_list:vqro.rpc.SearchSeriesResults.matches)
   return matches_;
 }
+ ::google::protobuf::RepeatedPtrField< ::vqro::rpc::Series >*
+SearchSeriesResults::mutable_matches() {
+  // @@protoc_insertion_point(field_mutable_list:vqro.rpc.SearchSeriesResults.matches)
+  return &matches_;
+}
 
 // optional .vqro.rpc.StatusMessage status = 2;
-bool SearchSeriesResults::has_status() const {
+ bool SearchSeriesResults::has_status() const {
   return !_is_default_instance_ && status_ != NULL;
 }
-void SearchSeriesResults::clear_status() {
-  if (GetArenaNoVirtual() == NULL && status_ != NULL) delete status_;
+ void SearchSeriesResults::clear_status() {
+  if (status_ != NULL) delete status_;
   status_ = NULL;
 }
-const ::vqro::rpc::StatusMessage& SearchSeriesResults::status() const {
+ const ::vqro::rpc::StatusMessage& SearchSeriesResults::status() const {
   // @@protoc_insertion_point(field_get:vqro.rpc.SearchSeriesResults.status)
   return status_ != NULL ? *status_ : *default_instance_->status_;
 }
-::vqro::rpc::StatusMessage* SearchSeriesResults::mutable_status() {
+ ::vqro::rpc::StatusMessage* SearchSeriesResults::mutable_status() {
   
   if (status_ == NULL) {
-    _slow_mutable_status();
-  }
+    _slow_mutable_status();  }
   // @@protoc_insertion_point(field_mutable:vqro.rpc.SearchSeriesResults.status)
   return status_;
 }
-::vqro::rpc::StatusMessage* SearchSeriesResults::release_status() {
+ ::vqro::rpc::StatusMessage* SearchSeriesResults::release_status() {
   
   if (GetArenaNoVirtual() != NULL) {
     return _slow_release_status();
@@ -1720,7 +1716,7 @@ const int LabelsQuery::kResultLimitFieldNumber;
 #endif  // !_MSC_VER
 
 LabelsQuery::LabelsQuery()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() , _internal_metadata_(NULL)  {
   SharedCtor();
   // @@protoc_insertion_point(constructor:vqro.rpc.LabelsQuery)
 }
@@ -1828,10 +1824,10 @@ bool LabelsQuery::MergePartialFromCodedStream(
         if (tag == 10) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_regex()));
-          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
             this->regex().data(), this->regex().length(),
-            ::google::protobuf::internal::WireFormatLite::PARSE,
-            "vqro.rpc.LabelsQuery.regex"));
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "vqro.rpc.LabelsQuery.regex");
         } else {
           goto handle_unusual;
         }
@@ -1895,9 +1891,9 @@ void LabelsQuery::SerializeWithCachedSizes(
   // @@protoc_insertion_point(serialize_start:vqro.rpc.LabelsQuery)
   // optional string regex = 1;
   if (this->regex().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->regex().data(), this->regex().length(),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
       "vqro.rpc.LabelsQuery.regex");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       1, this->regex(), output);
@@ -1921,9 +1917,9 @@ void LabelsQuery::SerializeWithCachedSizes(
   // @@protoc_insertion_point(serialize_to_array_start:vqro.rpc.LabelsQuery)
   // optional string regex = 1;
   if (this->regex().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->regex().data(), this->regex().length(),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
       "vqro.rpc.LabelsQuery.regex");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
@@ -1976,9 +1972,9 @@ int LabelsQuery::ByteSize() const {
 
 void LabelsQuery::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const LabelsQuery* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const LabelsQuery>(
-          &from);
+  const LabelsQuery* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const LabelsQuery*>(
+      &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
@@ -2052,7 +2048,7 @@ void LabelsQuery::InternalSwap(LabelsQuery* other) {
 // LabelsQuery
 
 // optional string regex = 1;
-void LabelsQuery::clear_regex() {
+ void LabelsQuery::clear_regex() {
   regex_.ClearToEmpty(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), GetArenaNoVirtual());
 }
  const ::std::string& LabelsQuery::regex() const {
@@ -2110,13 +2106,14 @@ void LabelsQuery::clear_regex() {
   } else {
     
   }
+  
   regex_.UnsafeArenaSetAllocated(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       regex, GetArenaNoVirtual());
   // @@protoc_insertion_point(field_set_allocated:vqro.rpc.LabelsQuery.regex)
 }
 
 // optional int64 result_offset = 2;
-void LabelsQuery::clear_result_offset() {
+ void LabelsQuery::clear_result_offset() {
   result_offset_ = GOOGLE_LONGLONG(0);
 }
  ::google::protobuf::int64 LabelsQuery::result_offset() const {
@@ -2130,7 +2127,7 @@ void LabelsQuery::clear_result_offset() {
 }
 
 // optional int64 result_limit = 3;
-void LabelsQuery::clear_result_limit() {
+ void LabelsQuery::clear_result_limit() {
   result_limit_ = GOOGLE_LONGLONG(0);
 }
  ::google::protobuf::int64 LabelsQuery::result_limit() const {
@@ -2149,7 +2146,7 @@ void LabelsQuery::clear_result_limit() {
 
 void SearchLabelsResults::_slow_mutable_status() {
   status_ = ::google::protobuf::Arena::CreateMessage< ::vqro::rpc::StatusMessage >(
-      GetArenaNoVirtual());
+        GetArenaNoVirtual());
 }
 ::vqro::rpc::StatusMessage* SearchLabelsResults::_slow_release_status() {
   if (status_ == NULL) {
@@ -2200,7 +2197,7 @@ const int SearchLabelsResults::kStatusFieldNumber;
 #endif  // !_MSC_VER
 
 SearchLabelsResults::SearchLabelsResults()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  : ::google::protobuf::Message() , _internal_metadata_(NULL)  {
   SharedCtor();
   // @@protoc_insertion_point(constructor:vqro.rpc.SearchLabelsResults)
 }
@@ -2277,7 +2274,7 @@ SearchLabelsResults* SearchLabelsResults::New(::google::protobuf::Arena* arena) 
 }
 
 void SearchLabelsResults::Clear() {
-  if (GetArenaNoVirtual() == NULL && status_ != NULL) delete status_;
+  if (status_ != NULL) delete status_;
   status_ = NULL;
   labels_.Clear();
 }
@@ -2298,11 +2295,11 @@ bool SearchLabelsResults::MergePartialFromCodedStream(
          parse_labels:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->add_labels()));
-          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
             this->labels(this->labels_size() - 1).data(),
             this->labels(this->labels_size() - 1).length(),
-            ::google::protobuf::internal::WireFormatLite::PARSE,
-            "vqro.rpc.SearchLabelsResults.labels"));
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "vqro.rpc.SearchLabelsResults.labels");
         } else {
           goto handle_unusual;
         }
@@ -2350,10 +2347,10 @@ void SearchLabelsResults::SerializeWithCachedSizes(
   // @@protoc_insertion_point(serialize_start:vqro.rpc.SearchLabelsResults)
   // repeated string labels = 1;
   for (int i = 0; i < this->labels_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->labels(i).data(), this->labels(i).length(),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "vqro.rpc.SearchLabelsResults.labels");
+  ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+    this->labels(i).data(), this->labels(i).length(),
+    ::google::protobuf::internal::WireFormat::SERIALIZE,
+    "vqro.rpc.SearchLabelsResults.labels");
     ::google::protobuf::internal::WireFormatLite::WriteString(
       1, this->labels(i), output);
   }
@@ -2372,9 +2369,9 @@ void SearchLabelsResults::SerializeWithCachedSizes(
   // @@protoc_insertion_point(serialize_to_array_start:vqro.rpc.SearchLabelsResults)
   // repeated string labels = 1;
   for (int i = 0; i < this->labels_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->labels(i).data(), this->labels(i).length(),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
       "vqro.rpc.SearchLabelsResults.labels");
     target = ::google::protobuf::internal::WireFormatLite::
       WriteStringToArray(1, this->labels(i), target);
@@ -2416,9 +2413,9 @@ int SearchLabelsResults::ByteSize() const {
 
 void SearchLabelsResults::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const SearchLabelsResults* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const SearchLabelsResults>(
-          &from);
+  const SearchLabelsResults* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const SearchLabelsResults*>(
+      &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
@@ -2486,10 +2483,10 @@ void SearchLabelsResults::InternalSwap(SearchLabelsResults* other) {
 // SearchLabelsResults
 
 // repeated string labels = 1;
-int SearchLabelsResults::labels_size() const {
+ int SearchLabelsResults::labels_size() const {
   return labels_.size();
 }
-void SearchLabelsResults::clear_labels() {
+ void SearchLabelsResults::clear_labels() {
   labels_.Clear();
 }
  const ::std::string& SearchLabelsResults::labels(int index) const {
@@ -2540,26 +2537,25 @@ SearchLabelsResults::mutable_labels() {
 }
 
 // optional .vqro.rpc.StatusMessage status = 2;
-bool SearchLabelsResults::has_status() const {
+ bool SearchLabelsResults::has_status() const {
   return !_is_default_instance_ && status_ != NULL;
 }
-void SearchLabelsResults::clear_status() {
-  if (GetArenaNoVirtual() == NULL && status_ != NULL) delete status_;
+ void SearchLabelsResults::clear_status() {
+  if (status_ != NULL) delete status_;
   status_ = NULL;
 }
-const ::vqro::rpc::StatusMessage& SearchLabelsResults::status() const {
+ const ::vqro::rpc::StatusMessage& SearchLabelsResults::status() const {
   // @@protoc_insertion_point(field_get:vqro.rpc.SearchLabelsResults.status)
   return status_ != NULL ? *status_ : *default_instance_->status_;
 }
-::vqro::rpc::StatusMessage* SearchLabelsResults::mutable_status() {
+ ::vqro::rpc::StatusMessage* SearchLabelsResults::mutable_status() {
   
   if (status_ == NULL) {
-    _slow_mutable_status();
-  }
+    _slow_mutable_status();  }
   // @@protoc_insertion_point(field_mutable:vqro.rpc.SearchLabelsResults.status)
   return status_;
 }
-::vqro::rpc::StatusMessage* SearchLabelsResults::release_status() {
+ ::vqro::rpc::StatusMessage* SearchLabelsResults::release_status() {
   
   if (GetArenaNoVirtual() != NULL) {
     return _slow_release_status();

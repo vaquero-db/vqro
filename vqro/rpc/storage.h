@@ -13,13 +13,14 @@ using grpc::ServerReader;
 using grpc::ServerReaderWriter;
 using grpc::ServerWriter;
 using grpc::Status;
+using grpc::StatusCode;
 
 using vqro::rpc::VaqueroStorage;
 using vqro::rpc::StatusMessage;
 using vqro::rpc::WriteOperation;
 using vqro::rpc::ReadOperation;
 using vqro::rpc::ReadResult;
-using vqro::rpc::SeriesQuery;
+using vqro::rpc::SearchSeriesResults;
 using vqro::db::Database;
 
 
@@ -99,11 +100,29 @@ class VaqueroStorageServiceImpl final : public VaqueroStorage::Service {
     }; // read_series
 
     // Kick off the search, read, respond sequence.
-    try {
-      db->search_engine->SearchSeries(read_op->query(),
-                                      read_series);
-    } catch (vqro::db::SqliteError& err) {
-      //TODO: increment an error counter
+    switch (read_op->selector_case()) {
+
+      case ReadOperation::kQuery:
+        try {
+          db->search_engine->SearchSeries(read_op->query(),
+                                          read_series);
+        } catch (vqro::db::SqliteError& err) {
+          //TODO: increment an error counter
+          LOG(ERROR) << "SqliteError exception doing SearchSeries: " << err.message;
+        }
+        break;
+
+      case ReadOperation::kList:
+        {
+          SearchSeriesResults results;
+          *results.mutable_matches() = read_op->list().series();
+          read_series(results);
+        }
+        break;
+
+      case ReadOperation::SELECTOR_NOT_SET:
+        LOG(ERROR) << "Invalid ReadOperation, selector not set.";
+        return Status(StatusCode::INVALID_ARGUMENT, "Selector not specified");
     }
 
     LOG(INFO) << "ReadDatapoints() matched " << matched_series
