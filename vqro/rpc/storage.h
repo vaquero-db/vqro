@@ -99,9 +99,8 @@ class VaqueroStorageServiceImpl final : public VaqueroStorage::Service {
       }
     }; // read_series
 
-    // Kick off the search, read, respond sequence.
+    // Kick off the read, respond sequence.
     switch (read_op->selector_case()) {
-
       case ReadOperation::kQuery:
         try {
           db->search_engine->SearchSeries(read_op->query(),

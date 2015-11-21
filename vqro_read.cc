@@ -31,11 +31,13 @@ using vqro::rpc::Datapoint;
 using vqro::rpc::ReadOperation;
 using vqro::rpc::ReadResult;
 using vqro::rpc::SeriesQuery;
+using vqro::rpc::SeriesList;
 using vqro::rpc::LabelsQuery;
 using vqro::rpc::LabelConstraint;
 using vqro::rpc::SearchSeriesResults;
 using vqro::rpc::SearchLabelsResults;
 
+using std::cin;
 using std::cout;
 using std::cerr;
 using std::endl;
@@ -66,6 +68,9 @@ DEFINE_bool(search_labels, false, "If true, perform a SearchLabels call instead 
             "of ReadDatapoints.");
 DEFINE_bool(search_series, false, "If true, perform a SearchSeries call instead "
             "of ReadDatapoints.");
+DEFINE_bool(series_list_from_stdin, false, "If true, specify which Series to "
+            "read via STDIN. Each line must contain a JSON object specifying "
+            "the labels of a series that shall be read.");
 
 
 const string kUsage(R"(
@@ -86,22 +91,11 @@ class VaqueroClient {
       : storage_stub(VaqueroStorage::NewStub(channel)),
         search_stub(VaqueroSearch::NewStub(channel)) {}
 
-  bool ReadDatapoints(const SeriesQuery& query,
-                      int64_t start_time,
-                      int64_t end_time,
-                      int64_t datapoint_limit,
-                      bool prefer_latest,
+  bool ReadDatapoints(ReadOperation& read_op,
                       std::function<void(const ReadResult&)> callback)
   {
     ClientContext context;
-    ReadResult result;;
-    ReadOperation read_op;
-
-    read_op.mutable_query()->CopyFrom(query);
-    read_op.set_start_time(start_time);
-    read_op.set_end_time(end_time);
-    read_op.set_datapoint_limit(datapoint_limit);
-    read_op.set_prefer_latest(prefer_latest);
+    ReadResult result;
 
     std::unique_ptr<ClientReader<ReadResult>> reader(
         storage_stub->ReadDatapoints(&context, read_op)
@@ -494,20 +488,7 @@ int DoSearchSeries(int argc, char** argv) {
 }
 
 
-int DoReadDatapoints(int argc, char** argv) {
-  if (argc < 2) {
-    PrintUsage("Insufficient arguments");
-    return 1;
-  }
-
-  SeriesQuery query;
-  try {
-    query = BuildSeriesQuery(argc, argv);
-  } catch (string& err) {
-    cerr << err << endl;
-    return 1;
-  }
-
+int DoReadDatapoints(ReadOperation read_op) {
   // Set tick_unit appropriately
   string env_tick_unit = vqro::GetEnvVar("VQRO_TICK_UNIT");
   if (!env_tick_unit.empty()) {
@@ -525,7 +506,6 @@ int DoReadDatapoints(int argc, char** argv) {
     }
     tick_unit = TickUnitByString.at(FLAGS_tick_unit);
   }
-
 
   int64_t start_time;
   int64_t end_time;
@@ -573,16 +553,73 @@ int DoReadDatapoints(int argc, char** argv) {
   if (FLAGS_debug)
     cerr << "ReadDatapoints() start=" << start_time << " end=" << end_time << endl;
 
-  client.ReadDatapoints(query,
-                        start_time,
-                        end_time,
-                        FLAGS_datapoint_limit,
-                        FLAGS_prefer_latest,
-                        (FLAGS_json) ? PrintReadResultJson : PrintReadResult);
+  read_op.set_start_time(start_time);
+  read_op.set_end_time(end_time);
+  read_op.set_datapoint_limit(FLAGS_datapoint_limit);
+  read_op.set_prefer_latest(FLAGS_prefer_latest);
+
+  client.ReadDatapoints(
+      read_op,
+      (FLAGS_json) ? PrintReadResultJson : PrintReadResult);
 
   client.Shutdown();
   grpc_shutdown();
   return 0;
+}
+
+
+int DoReadDatapointsWithList() {
+  ReadOperation read_op;
+  SeriesList* list = read_op.mutable_list();
+  google::protobuf::Map<string,string>* labels;
+  string line;
+  Json::Reader reader;
+  Json::Value record;
+  static const Json::Value null_val;
+
+  cin.sync_with_stdio(false);
+  while (true) {
+    std::getline(cin, line);
+
+    if (cin.eof())
+      break;
+
+    if (line.empty())
+      continue;
+
+    record.clear();
+    if (!reader.parse(line, record, false)) {
+      cerr << "Failed to parse JSON: " << line << endl;
+      cerr << reader.getFormattedErrorMessages();
+      return 1;
+    }
+
+    labels = list->add_series()->mutable_labels();
+    for (auto name : record.getMemberNames()) {
+      (*labels)[name] = record.get(name, null_val).asString();
+    }
+  }
+
+  return DoReadDatapoints(read_op);
+}
+
+
+int DoReadDatapointsWithQuery(int argc, char** argv) {
+  if (argc < 2) {
+    PrintUsage("Insufficient arguments");
+    return 1;
+  }
+
+  ReadOperation read_op;
+  SeriesQuery* query = read_op.mutable_query();
+  try {
+    *query = BuildSeriesQuery(argc, argv);
+  } catch (string& err) {
+    cerr << err << endl;
+    return 1;
+  }
+
+  return DoReadDatapoints(read_op);
 }
 
 
@@ -599,7 +636,9 @@ int main(int argc, char** argv) {
     return DoSearchLabels(argc, argv);
   } else if (FLAGS_search_series) {
     return DoSearchSeries(argc, argv);
+  } else if (FLAGS_series_list_from_stdin) {
+    return DoReadDatapointsWithList();
   } else {
-    return DoReadDatapoints(argc, argv);
+    return DoReadDatapointsWithQuery(argc, argv);
   }
 }
