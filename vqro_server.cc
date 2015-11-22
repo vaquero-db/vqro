@@ -81,7 +81,10 @@ void RunServer(string server_address) {
   builder.RegisterService(&search_service);
   std::unique_ptr<grpc::Server> server(builder.BuildAndStart());
   std::cout << "Server listening on " << server_address << std::endl;
-  main_server = server.get();
+  {
+    lock_guard<mutex> lck(main_server_mutex);
+    main_server = server.get();
+  }
   try {
     server->Wait();
   } catch (...) {
