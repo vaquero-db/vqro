@@ -30,8 +30,8 @@ using std::string;
 using std::to_string;
 
 
-DEFINE_string(ip, "127.0.0.1", "Server IP to connect to");
-DEFINE_int32(port, 7950, "Server port to connect to");
+DEFINE_string(server_ip, "127.0.0.1", "Server IP to connect to");
+DEFINE_int32(server_port, 7950, "Server port to connect to");
 DEFINE_bool(h, false, "Print help on important flags");
 
 bool running = true;
@@ -114,7 +114,7 @@ int main(int argc, char** argv) {
     return 0;
   }
 
-  string server_address(FLAGS_ip + ":" + to_string(FLAGS_port));
+  string server_address(FLAGS_server_ip + ":" + to_string(FLAGS_server_port));
 
   grpc_init();
   signal(SIGINT, handle_sigint);
