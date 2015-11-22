@@ -29,7 +29,6 @@ std::unique_ptr<DatapointFile> ConstantFile::FromFilename(
     char* filename)
 {
   // constant filename format is "<start_time>@<duration>x<count>=<value>"
-  std::unique_ptr<DatapointFile> failed_to_parse(nullptr);
   char* endptr;
   int64_t start_time;
   int64_t duration;
@@ -38,26 +37,26 @@ std::unique_ptr<DatapointFile> ConstantFile::FromFilename(
 
   start_time = strtoll(filename, &endptr, 10);
   if (endptr == filename || *endptr != '@')
-    return failed_to_parse;
+    return nullptr;
 
   filename = endptr + 1;
   duration = strtoll(filename, &endptr, 10);
   if (endptr == filename || *endptr != 'x')
-    return failed_to_parse;
+    return nullptr;
 
   filename = endptr + 1;
   count = strtoll(filename, &endptr, 10);
   if (endptr == filename || *endptr != '=')
-    return failed_to_parse;
+    return nullptr;
 
   filename = endptr + 1;
   value = strtod(filename, &endptr);
   if (endptr == filename || *endptr != '\0')
-    return failed_to_parse;
+    return nullptr;
 
   if (std::isnan(value)) {
     LOG(ERROR) << "ConstantFile with value=NAN in " << dir->path;
-    return failed_to_parse;
+    return nullptr;
   }
 
   return std::unique_ptr<DatapointFile>(

@@ -53,7 +53,7 @@ class WriteBuffer: public DatapointBuffer {
       iov_count = 0;
       writable_datapoints = 0;
       if (buf->num_datapoints == 0)
-        return std::unique_ptr<Iovec[]>(nullptr);
+        return nullptr;
 
       if (!buf->IsSorted())
         buf->Sort();
@@ -64,7 +64,7 @@ class WriteBuffer: public DatapointBuffer {
 
       // All remaining datapoints exceed max_writable_timestamp
       if (end_it.Pos() <= pos)
-        return std::unique_ptr<Iovec[]>(nullptr);
+        return nullptr;
 
       // Figure out how many allocs/iovecs we will need
       int alloc_index = pos / buf->datapoints_per_alloc;

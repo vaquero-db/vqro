@@ -40,7 +40,6 @@ std::unique_ptr<DatapointFile> SparseFile::FromFilename(
     DatapointDirectory* dir,
     char* filename) {
   // sparse filename format is "<min_timestamp>-<max_timestamp>(.opt)?"
-  std::unique_ptr<DatapointFile> failed_to_parse(nullptr);
   char* endptr;
   int64_t min;
   int64_t max;
@@ -48,12 +47,12 @@ std::unique_ptr<DatapointFile> SparseFile::FromFilename(
 
   min = strtoll(filename, &endptr, 10);
   if (endptr == filename || *endptr != '-')
-    return failed_to_parse;
+    return nullptr;
 
   filename = endptr + 1;
   max = strtoll(filename, &endptr, 10);
   if (endptr == filename)
-    return failed_to_parse;
+    return nullptr;
 
   if (strncmp(endptr, SPARSE_OPT_SUFFIX, SPARSE_OPT_SUFFIX_LEN) == 0) {
     opt = true;
@@ -61,7 +60,7 @@ std::unique_ptr<DatapointFile> SparseFile::FromFilename(
   }
 
   if (*endptr != '\0')
-    return failed_to_parse;
+    return nullptr;
 
   return std::unique_ptr<DatapointFile>(
     static_cast<DatapointFile*>(new SparseFile(dir, min, max, opt))

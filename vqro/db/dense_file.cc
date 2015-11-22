@@ -33,19 +33,18 @@ std::unique_ptr<DatapointFile> DenseFile::FromFilename(
     char* filename)
 {
   // dense filename format is "<start_time>@<duration>"
-  std::unique_ptr<DatapointFile> failed_to_parse(nullptr);
   char* endptr;
   int64_t start_time;
   int64_t duration;
 
   start_time = strtoll(filename, &endptr, 10);
   if (endptr == filename || *endptr != '@')
-    return failed_to_parse;
+    return nullptr;
 
   filename = endptr + 1;
   duration = strtoll(filename, &endptr, 10);
   if (endptr == filename || *endptr != '\0')
-    return failed_to_parse;
+    return nullptr;
 
   return std::unique_ptr<DatapointFile>(
     static_cast<DatapointFile*>(new DenseFile(dir, start_time, duration))

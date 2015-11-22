@@ -40,7 +40,7 @@ class RawBuffer: public DatapointBuffer {
 
       if (!writable_datapoints) {
         iov_count = 0;
-        return std::unique_ptr<Iovec[]>(nullptr);
+        return nullptr;
       }
 
       std::unique_ptr<Iovec[]> iov(new Iovec[iov_count]);
