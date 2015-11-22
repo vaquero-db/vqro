@@ -1,0 +1,1 @@
+{"labels": {"ami": "ami-1ff39b", "instance": "i-e125d33d", "state": "user", "resource": "cpu_time", "zone": "c", "region": "us-east-1", "what": "utilization"}, "datapoints": [[0, 10, 6], [10, 10, -37.3758677633372], [20, 10, 48], [30, 10, 26.2798093946951], [40, 10, -10]]}
