@@ -27,11 +27,11 @@ FLOAT_ABSOLUTE_TOLERANCE = 1e-9
 
 gflags.DEFINE_string(
     'testdata',
-    'testdata/basic.json',
+    'testing/func/testdata/basic.json',
     'Path to file containing json output of generate_datapoints.py')
 gflags.DEFINE_string(
     'bin_dir',
-    '.',
+    'bazel-bin',
     'Path to directory containing vqro binaries')
 gflags.DEFINE_string(
     'tmp_dir',
@@ -177,10 +177,7 @@ def ReadBackData(port, testdata):
 
   returned_data = ReadAllLines(vqro_read.stdout)
   print 'Comparing %d returned series data...' % len(returned_data)
-  error_msg = ("Read validation failed:\nexpected %s\n  !=\nreturned %s" %
-      (str(testdata)[:500], str(returned_data)[:500]))
   assert DatasetEquals(testdata, returned_data)
-  return True
 
 
 def DatasetEquals(dataset_a, dataset_b):

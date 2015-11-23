@@ -7,9 +7,8 @@ stress on resources.
 To run the test, cd to the root of your vqro checkout and run:
 
 ```
-$ cd ~/git/vqro/  # I assume everyone does it this way
 $ bazel build :all
-$ testing/func/basic_server_func.py --bin_dir=bazel-bin --testdata=testing/func/testdata/basic.json
+$ testing/func/basic_server_func.py
 ```
 
 Observe the wondrous functional magic (or fix whatever broke).
