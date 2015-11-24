@@ -34,7 +34,7 @@ cc_library(
     ],
     hdrs = [
         "search.grpc.pb.h",
-        "search.h",
+        "search_service.h",
     ],
     linkopts = [
         "-lm",
@@ -56,7 +56,7 @@ cc_library(
     ],
     hdrs = [
         "storage.grpc.pb.h",
-        "storage.h",
+        "storage_service.h",
     ],
     linkopts = [
         "-lm",
@@ -78,7 +78,7 @@ cc_library(
     ],
     hdrs = [
         "controller.grpc.pb.h",
-        "controller.h",
+        "controller_service.h",
     ],
     linkopts = [
         "-lm",

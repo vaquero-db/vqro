@@ -11,8 +11,8 @@
 #include "vqro/base/fileutil.h"
 #include "vqro/control/controller.h"
 #include "vqro/rpc/core.pb.h"
-#include "vqro/rpc/controller.h"
-#include "vqro/rpc/search.h"
+#include "vqro/rpc/controller_service.h"
+#include "vqro/rpc/search_service.h"
 
 using grpc::Server;
 using grpc::ServerBuilder;

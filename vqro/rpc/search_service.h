@@ -39,7 +39,6 @@ class VaqueroSearchServiceImpl final : public VaqueroSearch::Service {
   Status SearchLabels(ServerContext* context,
                       const LabelsQuery* query,
                       ServerWriter<SearchLabelsResults>* writer) override {
-    
     auto respond = [&] (SearchLabelsResults& results) { writer->Write(results); };
     try {
       search_engine->SearchLabels(*query, respond);

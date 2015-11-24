@@ -15,8 +15,8 @@
 #include "vqro/rpc/core.pb.h"
 #include "vqro/rpc/search.grpc.pb.h"
 #include "vqro/rpc/storage.grpc.pb.h"
-#include "vqro/rpc/search.h"
-#include "vqro/rpc/storage.h"
+#include "vqro/rpc/search_service.h"
+#include "vqro/rpc/storage_service.h"
 
 
 DEFINE_string(listen_ip, "127.0.0.1", "IP to listen on");
